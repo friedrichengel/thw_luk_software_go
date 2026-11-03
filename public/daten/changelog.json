@@ -8,6 +8,7 @@
       "show": false,
       "items": [
         "Die Sicherheitsregeln der Seiten (Content Security Policy) erlauben Inline-Scripts nur noch mit einem je Aufruf erzeugten Nonce. Eingeschleuster Script-Code, etwa aus Fremddaten, wird vom Browser nicht mehr ausgeführt. Alle Schaltflächen und Formulare der Serververwaltung und des Dashboards arbeiten jetzt ohne Inline-Handler.",
+        "Dashboard: Die Waldbrandkarte des DWD wird wieder angezeigt (das Bild kommt als Blob, das die Sicherheitsregeln jetzt für Bilder zulassen).",
         "STEIN-Webhook: Nach 20 abgelehnten Aufrufen (unbekannter Token oder falsches Secret) von einer IP-Adresse antwortet der Endpunkt 15 Minuten lang mit „zu viele Anfragen“. Gültige Aufrufe zählen nicht mit."
       ]
     },

@@ -38,7 +38,7 @@ func TestSecurityHeadersDefaultCSP(t *testing.T) {
 	if got := directive(csp, "connect-src"); got != "connect-src 'self'" {
 		t.Fatalf("connect-src = %q", got)
 	}
-	if got := directive(csp, "img-src"); got != "img-src 'self' data: https:" {
+	if got := directive(csp, "img-src"); got != "img-src 'self' data: blob: https:" {
 		t.Fatalf("img-src = %q", got)
 	}
 }
@@ -51,7 +51,7 @@ func TestSecurityHeadersTileOrigin(t *testing.T) {
 	if got := directive(csp, "connect-src"); got != "connect-src 'self' https://tiles.example.org" {
 		t.Fatalf("connect-src = %q", got)
 	}
-	if got := directive(csp, "img-src"); got != "img-src 'self' data: https:" {
+	if got := directive(csp, "img-src"); got != "img-src 'self' data: blob: https:" {
 		t.Fatalf("img-src (https) = %q", got)
 	}
 
@@ -59,7 +59,7 @@ func TestSecurityHeadersTileOrigin(t *testing.T) {
 	if got := directive(csp, "connect-src"); got != "connect-src 'self' http://tiles.example.org" {
 		t.Fatalf("connect-src (http) = %q", got)
 	}
-	if got := directive(csp, "img-src"); got != "img-src 'self' data: https: http://tiles.example.org" {
+	if got := directive(csp, "img-src"); got != "img-src 'self' data: blob: https: http://tiles.example.org" {
 		t.Fatalf("img-src (http) = %q", got)
 	}
 }

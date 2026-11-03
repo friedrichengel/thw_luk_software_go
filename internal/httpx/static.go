@@ -111,7 +111,7 @@ func SecurityHeaders(next http.Handler) http.Handler {
 // Karte im PDF leer. Kein 'unsafe-eval': eingebettete Bibliotheken muessen
 // ohne eval/Function() laden (exceljs.min.js ist dafuer angepasst).
 func SecurityHeadersWith(tileOrigin string) func(http.Handler) http.Handler {
-	imgSrc := "img-src 'self' data: https:"
+	imgSrc := "img-src 'self' data: blob: https:"
 	connectSrc := "connect-src 'self'"
 	if tileOrigin = strings.TrimSpace(tileOrigin); tileOrigin != "" {
 		if !strings.HasPrefix(tileOrigin, "https://") {
