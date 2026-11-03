@@ -9,6 +9,8 @@
 # Optionales Secret MINISIGN_SECRET_KEY: Inhalt einer ohne Passwort erzeugten
 # minisign-Schluesseldatei (minisign -G -W). Dann werden Binaries und Archiv
 # signiert; Server mit UPDATE_PUBKEY nehmen nur noch signierte Dateien an.
+# Optionales Secret GHCR_TOKEN: persoenliches Token (write:packages), falls der
+# Workflow-Token das Paket auf ghcr.io nicht beschreiben darf (403).
 name: Build
 
 on:
@@ -97,7 +99,9 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          # GHCR_TOKEN (optional, PAT mit write:packages) hat Vorrang, wenn das
+          # Paket nicht mit diesem Repository verknuepft ist und der Workflow-Token 403 bekommt.
+          password: ${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Image bauen
         uses: docker/build-push-action@v6
