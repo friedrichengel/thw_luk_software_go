@@ -87,8 +87,15 @@ func TestOrgSettings(t *testing.T) {
 	for raw, ok := range map[string]bool{
 		"https://a.example/feed.xml": true, "http://a.example/f": true, "ftp://a.example/f": false,
 		"https://user:pw@a.example/f": false, "https:///f": false, "a.example/f": false, "": false,
+		// interne Ziele (SSRF): Loopback, localhost, private und link-lokale Netze
+		"http://127.0.0.1:8080/f": false, "http://localhost/f": false, "http://[::1]/f": false,
+		"http://10.1.2.3/f": false, "http://192.168.0.1/f": false, "http://169.254.169.254/latest": false,
+		"http://100.64.0.1/f": false, "http://0.0.0.0/f": false,
 	} {
-		if org.ValidFeedURL(raw) != ok {
+		if raw == "http://localhost/f" && !org.ValidFeedURL(raw, true) {
+			t.Fatal("RSS_ALLOW_PRIVATE muss localhost erlauben")
+		}
+		if org.ValidFeedURL(raw, false) != ok {
 			t.Fatalf("ValidFeedURL(%q) != %v", raw, ok)
 		}
 	}

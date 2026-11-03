@@ -988,7 +988,8 @@
   // ---- Externer Link ----
   function openExtern(node) {
     $extText.textContent = (node.extern_link_label || 'Externer Stab') + ' – ' + node.extern_link_url;
-    $extOpen.href = node.extern_link_url;
+    // Nur http(s) als Ziel; alles andere (z.B. javascript:) bleibt totes Ziel.
+    $extOpen.href = /^https?:\/\//i.test(node.extern_link_url || '') ? node.extern_link_url : '#';
     $ext.showModal();
   }
   $extCancel.addEventListener('click', () => $ext.close());

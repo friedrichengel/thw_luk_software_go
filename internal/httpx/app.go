@@ -310,8 +310,15 @@ func SafeRedirect(p string) string {
 	if p == "/" {
 		return p
 	}
-	if len(p) < 2 || p[0] != '/' || p[1] == '/' || p[1] == '\\' || strings.ContainsAny(p, "\r\n") {
+	if len(p) < 2 || p[0] != '/' || p[1] == '/' || p[1] == '\\' {
 		return ""
+	}
+	// Steuerzeichen (auch Tab) verwerfen: Browser entfernen sie beim Parsen,
+	// aus "/<Tab>/evil" wuerde "//evil" und damit eine fremde Domain.
+	for i := 0; i < len(p); i++ {
+		if p[i] < 0x20 || p[i] == 0x7f {
+			return ""
+		}
 	}
 	return p
 }

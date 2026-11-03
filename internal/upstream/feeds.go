@@ -162,7 +162,13 @@ func (f *Feeds) fetchFeed(ctx context.Context, feedURL string, allowed func(host
 	headers := map[string]string{"Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*"}
 	cur := feedURL
 	for hop := 0; hop < 4; hop++ {
-		raw, _, status, err := Do(ctx, Request{URL: cur, Headers: headers})
+		// Hosts aus RSS_ALLOWED_HOSTS (Betreiber) duerfen auch intern liegen;
+		// alles andere (eigene Feeds einer Organisation) nur oeffentlich.
+		cu, perr := url.Parse(cur)
+		if perr != nil {
+			return nil, ErrNotAllowed
+		}
+		raw, _, status, err := Do(ctx, Request{URL: cur, Headers: headers, PublicOnly: !f.Cfg.RSSHostAllowed(cu.Hostname()) && !f.Cfg.RSSAllowPrivate})
 		if err == nil {
 			return raw, nil
 		}
@@ -200,7 +206,7 @@ func (f *Feeds) RSS(ctx context.Context, feedURL string, extra func(host string)
 	allowed := func(host string) bool {
 		return f.Cfg.RSSHostAllowed(host) || (extra != nil && extra(host))
 	}
-	if !allowed(pu.Hostname()) {
+	if !allowed(pu.Hostname()) || (!f.Cfg.RSSHostAllowed(pu.Hostname()) && !f.Cfg.RSSAllowPrivate && PrivateHost(pu.Hostname())) {
 		return Result{}, ErrNotAllowed
 	}
 	return f.Cache.Get("rss:"+feedURL, rssTTL, rssStale, func() ([]byte, string, error) {

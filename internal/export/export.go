@@ -396,7 +396,7 @@ func Import(q db.Q, p access.Principal, data map[string]any, validBereich func(s
 				nid, einsatzID, pid, input.Int(n["sort_order"], 0), typ,
 				input.Str(n["bezeichnung"], 160), input.Str(n["funkruf"], 120), input.Str(n["ov"], 120), kraftKey(n["kraft_key"]), input.StrRaw(n["note"], 500),
 				status, statusAt,
-				input.Str(n["extern_link_url"], 500), input.Str(n["extern_link_label"], 160),
+				einsatz.SafeExternURL(input.Str(n["extern_link_url"], 500)), input.Str(n["extern_link_label"], 160),
 				now, uid, strOr(n, "updated_at", now), uid, nullable(n, "deleted_at")); err != nil {
 				return err
 			}

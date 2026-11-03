@@ -63,3 +63,15 @@ func TestSecurityHeadersTileOrigin(t *testing.T) {
 		t.Fatalf("img-src (http) = %q", got)
 	}
 }
+
+// SafeRedirect: nur lokale Pfade; "//", "/\\" und Steuerzeichen (Tab, CR, LF)
+// fuehren sonst auf fremde Domains, weil Browser die Zeichen entfernen.
+func TestSafeRedirect(t *testing.T) {
+	for in, want := range map[string]string{
+		"/": "/", "/harke?einsatz=1": "/harke?einsatz=1", "/a b": "/a b", "": "", "x": "", "//evil.example": "", "/\\evil.example": "", "/\t/evil.example": "", "/\r\n/evil": "", "/\x00": "", "/\x7f": "", "https://evil.example": "",
+	} {
+		if got := SafeRedirect(in); got != want {
+			t.Fatalf("SafeRedirect(%q) = %q, want %q", in, got, want)
+		}
+	}
+}

@@ -72,6 +72,9 @@ type Config struct {
 	NominatimURL    string   // https://nominatim.openstreetmap.org (Adresssuche)
 	OSRMURL         string   // https://router.project-osrm.org (Routing)
 	RSSAllowedHosts []string // Hosts, deren Feeds der RSS-Abruf zulaesst
+	// RSSAllowPrivate: eigene Feeds einer Organisation duerfen auch auf localhost
+	// und private Netze zeigen (sonst nur Hosts aus RSS_ALLOWED_HOSTS, SSRF-Schutz).
+	RSSAllowPrivate bool
 
 	// Kacheln: TileURL ist die URL fuer den Browser (Standard: eingebauter
 	// Cache /tiles/...), TileSource die Quelle, aus der der eingebaute Cache
@@ -292,6 +295,7 @@ func Load() (*Config, error) {
 			c.RSSAllowedHosts = append(c.RSSAllowedHosts, h)
 		}
 	}
+	c.RSSAllowPrivate = e.get("RSS_ALLOW_PRIVATE", "") == "1"
 
 	c.UpdateDir = strings.TrimRight(e.get("UPDATE_DIR", ""), "/")
 	c.UpdateMode = strings.ToLower(strings.TrimSpace(e.get("UPDATE_MODE", "")))

@@ -3,10 +3,12 @@ package upstream
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -51,6 +53,10 @@ type Request struct {
 	Headers  map[string]string
 	Body     []byte
 	MaxBytes int64
+	// PublicOnly: nur oeffentliche Ziele (kein localhost, keine privaten oder
+	// link-lokalen Netze), geprueft nach der Namensaufloesung. Fuer Adressen,
+	// die nicht der Betreiber, sondern eine Organisation vorgibt (SSRF).
+	PublicOnly bool
 }
 
 // Do fuehrt den Abruf aus und liefert Body, Content-Type und Status. Ein
@@ -83,8 +89,15 @@ func DoHeaders(ctx context.Context, rq Request) ([]byte, http.Header, int, error
 	for k, v := range rq.Headers {
 		req.Header.Set(k, v)
 	}
-	resp, err := Client.Do(req)
+	cl := Client
+	if rq.PublicOnly {
+		cl = publicClient
+	}
+	resp, err := cl.Do(req)
 	if err != nil {
+		if errors.Is(err, ErrNotAllowed) {
+			return nil, http.Header{}, 0, ErrNotAllowed
+		}
 		return nil, http.Header{}, 0, fmt.Errorf("%w: %v", ErrUpstream, err)
 	}
 	defer resp.Body.Close()
@@ -115,4 +128,77 @@ func GetJSON(ctx context.Context, url string, headers map[string]string) ([]byte
 		ctype = "application/json; charset=utf-8"
 	}
 	return body, ctype, nil
+}
+
+// publicClient ist Client mit einem Dialer, der nur oeffentliche Adressen
+// ansteuert (Request.PublicOnly).
+var publicClient = &http.Client{
+	Timeout: 30 * time.Second,
+	Transport: &http.Transport{
+		DialContext:           publicDial,
+		ResponseHeaderTimeout: 20 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		MaxIdleConnsPerHost:   4,
+		ForceAttemptHTTP2:     true,
+	},
+	CheckRedirect: func(req *http.Request, via []*http.Request) error {
+		return http.ErrUseLastResponse
+	},
+}
+
+// PrivateHost: Hostname oder IP-Literal, das auf das eigene System oder ein
+// internes Netz zeigt (localhost, Loopback, private und link-lokale Bereiche,
+// CGNAT, unspezifiziert, Multicast). Von Organisationen eingetragene
+// Adressen duerfen solche Ziele nicht ansteuern.
+func PrivateHost(host string) bool {
+	h := strings.ToLower(strings.TrimSuffix(strings.TrimSpace(host), "."))
+	if h == "" || h == "localhost" || strings.HasSuffix(h, ".localhost") {
+		return true
+	}
+	if ip := net.ParseIP(strings.Trim(h, "[]")); ip != nil {
+		return privateIP(ip)
+	}
+	return false
+}
+
+func privateIP(ip net.IP) bool {
+	if ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() || ip.IsLinkLocalMulticast() ||
+		ip.IsUnspecified() || ip.IsMulticast() || ip.IsInterfaceLocalMulticast() {
+		return true
+	}
+	if v4 := ip.To4(); v4 != nil {
+		// 0.0.0.0/8, CGNAT 100.64.0.0/10, Broadcast
+		return v4[0] == 0 || (v4[0] == 100 && v4[1]&0xc0 == 64) || v4.Equal(net.IPv4bcast)
+	}
+	return false
+}
+
+// publicDial loest den Host auf und verbindet nur zu oeffentlichen Adressen;
+// ein DNS-Name, der auf 127.0.0.1 oder ein privates Netz zeigt, laeuft so
+// ins Leere (ErrNotAllowed).
+func publicDial(ctx context.Context, network, addr string) (net.Conn, error) {
+	host, port, err := net.SplitHostPort(addr)
+	if err != nil {
+		return nil, err
+	}
+	if PrivateHost(host) {
+		return nil, ErrNotAllowed
+	}
+	ips, err := net.DefaultResolver.LookupIPAddr(ctx, host)
+	if err != nil {
+		return nil, err
+	}
+	d := &net.Dialer{Timeout: 5 * time.Second}
+	var last error = ErrNotAllowed
+	for _, ip := range ips {
+		if privateIP(ip.IP) {
+			continue
+		}
+		c, err := d.DialContext(ctx, network, net.JoinHostPort(ip.IP.String(), port))
+		if err == nil {
+			return c, nil
+		}
+		last = err
+	}
+	return nil, last
 }

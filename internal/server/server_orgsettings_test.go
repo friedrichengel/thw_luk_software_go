@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/friedrichengel/thw_luk_software_go/internal/config"
 	"github.com/friedrichengel/thw_luk_software_go/internal/org"
 	"github.com/friedrichengel/thw_luk_software_go/internal/user"
 )
@@ -23,7 +24,9 @@ func TestOrgSettingsPage(t *testing.T) {
 	}))
 	defer rss.Close()
 
-	srv, d := newTestServer(t)
+	// Der Mock-Feed laeuft auf 127.0.0.1; ohne RSS_ALLOW_PRIVATE lehnt der
+	// Server solche Org-Feeds ab (SSRF-Schutz, eigener Test unten).
+	srv, d := newTestServerWith(t, func(c *config.Config) { c.RSSAllowPrivate = true })
 	base := srv.URL
 	oidA, _ := org.Create(d, "OV Alpha", "", "ov")
 	oidB, _ := org.Create(d, "OV Beta", "", "ov")
@@ -105,5 +108,38 @@ func TestOrgSettingsPage(t *testing.T) {
 	_, body = postForm(t, ca, base+"/admin", url.Values{"csrf": {csrfFrom(t, body)}, "action": {"set_map"}, "map_lat": {"1"}, "map_lng": {"1"}})
 	if !strings.Contains(body, "setzt der Org-Admin") {
 		t.Fatal("globaler Admin konnte Mittelpunkt setzen")
+	}
+}
+
+// Ohne RSS_ALLOW_PRIVATE: eigene Feeds einer Organisation duerfen nicht auf
+// die eigene Maschine oder private Netze zeigen - weder beim Speichern noch
+// beim Abruf (der Host koennte spaeter dorthin aufloesen).
+func TestOrgFeedPrivateRejected(t *testing.T) {
+	rss := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/rss+xml")
+		io.WriteString(w, `<?xml version="1.0"?><rss version="2.0"><channel><title>Lokal</title></channel></rss>`)
+	}))
+	defer rss.Close()
+	srv, d := newTestServer(t)
+	base := srv.URL
+	oid, _ := org.Create(d, "OV Gamma", "", "ov")
+	la, _ := user.Create(d, "leiter_g", "geheim1234", nil, nil, "leiter", false)
+	user.SetOrg(d, la, &oid)
+	user.SetOrgAdmin(d, la, true)
+	c := newClient()
+	loginAs(t, c, base, "leiter_g", "geheim1234")
+	_, body, _ := getBody(t, c, base+"/admin?tab=einstellungen")
+	csrf := csrfFrom(t, body)
+	for _, u := range []string{rss.URL + "/feed.xml", "http://localhost:9/f", "http://10.0.0.5/f", "http://169.254.169.254/latest"} {
+		_, body = postForm(t, c, base+"/admin", url.Values{"csrf": {csrf}, "action": {"set_feeds"}, "tab": {"einstellungen"}, "feed_urls_4-1": {u}})
+		if !strings.Contains(body, "Feed-Adresse ungültig") {
+			t.Fatalf("interne Feed-Adresse angenommen: %s", u)
+		}
+	}
+	// Direkt in der Datenbank hinterlegt (z.B. Altbestand): der Abruf bleibt gesperrt
+	org.SetRSSFeeds(d, oid, []org.RSSFeed{{Slot: "4-1", Title: "Lokal", URLs: []string{rss.URL + "/feed.xml"}}})
+	st, body, _ := getBody(t, c, base+"/api/proxy?type=rss&url="+url.QueryEscape(rss.URL+"/feed.xml"))
+	if st != 400 || !strings.Contains(body, "url not allowed") {
+		t.Fatalf("Abruf interner Org-Feed: %d %s", st, body)
 	}
 }

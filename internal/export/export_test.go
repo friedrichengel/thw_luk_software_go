@@ -97,6 +97,10 @@ func TestExportImport(t *testing.T) {
 	if err := json.Unmarshal(js, &data); err != nil {
 		t.Fatal(err)
 	}
+	// Import darf die URL-Pruefung der API nicht umgehen (javascript:-Link)
+	for _, nv := range data["nodes"].([]any) {
+		nv.(map[string]any)["extern_link_url"] = "javascript:alert(1)"
+	}
 	res, err := Import(d, p, data, func(string) bool { return true })
 	if err != nil {
 		t.Fatal(err)
@@ -108,6 +112,11 @@ func TestExportImport(t *testing.T) {
 	tree, _ := einsatz.TreeOf(d, ctxI.Einsatz.ID, false)
 	if len(tree.Nodes) != 3 || len(tree.Schichten) != 2 || len(tree.Mitglieder) != 1 {
 		t.Fatalf("tree: %d nodes, %d schichten", len(tree.Nodes), len(tree.Schichten))
+	}
+	for _, n := range tree.Nodes {
+		if n.ExternLinkURL != "" {
+			t.Fatalf("javascript:-Link im Import muss verworfen werden: %q", n.ExternLinkURL)
+		}
 	}
 	kk := 0
 	for _, n := range tree.Nodes {

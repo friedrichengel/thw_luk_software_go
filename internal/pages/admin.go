@@ -655,7 +655,7 @@ func (p *Pages) adminAction(r *http.Request, sc adminScope, me *user.User, d *ad
 					if line == "" {
 						continue
 					}
-					if !org.ValidFeedURL(line) {
+					if !org.ValidFeedURL(line, p.app.Cfg.RSSAllowPrivate) {
 						return errText("Feed-Adresse ungültig: " + line + " (http(s)://host/…, ohne Zugangsdaten).")
 					}
 					urls = append(urls, line)

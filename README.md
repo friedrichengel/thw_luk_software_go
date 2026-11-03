@@ -80,7 +80,9 @@ der Stammdaten) und die **Nachrichten-Feeds** der vier Dashboard-Kacheln ein
 (Standard: Tagesschau und GDACS, dazu die regionalen Quellen aus dem Abschnitt
 `feeds` der Stammdaten; eigene RSS/Atom-Adressen und Reitertitel je Kachel).
 Hosts der Standard-Feeds und eigener Feeds sind für den RSS-Abruf zusätzlich
-zu `RSS_ALLOWED_HOSTS` erlaubt.
+zu `RSS_ALLOWED_HOSTS` erlaubt. Eigene Feeds dürfen nicht auf localhost oder
+private Netze zeigen (auch nicht über einen Namen, der dorthin auflöst);
+`RSS_ALLOW_PRIVATE=1` hebt das für Feed-Server im eigenen Netz auf.
 ### Stabsrollen je Einsatz (`internal/stab`)
 
 Der Ersteller eines Einsatzes vergibt pro Nutzer beliebig viele Rollen.

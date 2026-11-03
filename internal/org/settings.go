@@ -2,6 +2,7 @@ package org
 
 import (
 	"encoding/json"
+	"github.com/friedrichengel/thw_luk_software_go/internal/upstream"
 	"net/url"
 	"strings"
 	"sync"
@@ -54,7 +55,7 @@ func SetDefaultFeeds(feeds []RSSFeed) {
 		}
 		urls := []string{}
 		for _, u := range f.URLs {
-			if ValidFeedURL(u) {
+			if ValidFeedURL(u, true) {
 				urls = append(urls, strings.TrimSpace(u))
 			}
 		}
@@ -119,14 +120,15 @@ func parseFeeds(s string) []RSSFeed {
 	return out
 }
 
-// ValidFeedURL: http(s), mit Host, ohne Zugangsdaten, nicht ueberlang.
-func ValidFeedURL(raw string) bool {
+// ValidFeedURL: http(s), mit Host, ohne Zugangsdaten, nicht ueberlang und
+// - ausser mit allowPrivate (RSS_ALLOW_PRIVATE) - kein internes Ziel (SSRF).
+func ValidFeedURL(raw string, allowPrivate bool) bool {
 	raw = strings.TrimSpace(raw)
 	if raw == "" || len(raw) > 500 || strings.ContainsAny(raw, " \t\r\n") {
 		return false
 	}
 	u, err := url.Parse(raw)
-	return err == nil && (u.Scheme == "http" || u.Scheme == "https") && u.Hostname() != "" && u.User == nil
+	return err == nil && (u.Scheme == "http" || u.Scheme == "https") && u.Hostname() != "" && u.User == nil && (allowPrivate || !upstream.PrivateHost(u.Hostname()))
 }
 
 // SetRSSFeeds speichert eigene Feeds (nur Slots mit Titel oder Adressen);

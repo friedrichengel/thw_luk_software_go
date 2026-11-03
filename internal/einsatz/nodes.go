@@ -14,6 +14,16 @@ import (
 
 var reHTTP = regexp.MustCompile(`(?i)^https?://`)
 
+// SafeExternURL laesst fuer extern_link_url nur http(s)-Adressen durch
+// (sonst ""), fuer Pfade wie den Import, die nicht ueber SanitizeNodeFields
+// laufen.
+func SafeExternURL(v string) string {
+	if v == "" || !reHTTP.MatchString(v) {
+		return ""
+	}
+	return v
+}
+
 // SanitizeNodeFields prueft die erlaubten Felder eines Knotens.
 func SanitizeNodeFields(in map[string]any, allowed []string) (Fields, error) {
 	out := Fields{}

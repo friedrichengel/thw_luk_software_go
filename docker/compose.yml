@@ -41,6 +41,7 @@ services:
       TILE_TOKEN: ${TILE_TOKEN:-}
       TILE_CACHE_MAX_MB: ${TILE_CACHE_MAX_MB:-2000}
       RSS_ALLOWED_HOSTS: ${RSS_ALLOWED_HOSTS:-}
+      RSS_ALLOW_PRIVATE: ${RSS_ALLOW_PRIVATE:-0}
 
       # Kartenzentrum: leer = Abschnitt "karte" der eingebetteten Stammdaten
       MAP_CENTER_LAT: ${MAP_CENTER_LAT:-}

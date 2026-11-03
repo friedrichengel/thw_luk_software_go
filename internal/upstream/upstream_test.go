@@ -310,3 +310,49 @@ func TestFeeds(t *testing.T) {
 		t.Fatal("lhp 404 muss Fehler liefern")
 	}
 }
+
+// Eigene Feeds einer Organisation duerfen keine internen Ziele ansteuern:
+// weder als IP-Literal noch ueber einen Namen, der dorthin aufloest.
+func TestPrivateHost(t *testing.T) {
+	for host, want := range map[string]bool{
+		"localhost": true, "LOCALHOST.": true, "app.localhost": true, "127.0.0.1": true, "::1": true, "[::1]": true,
+		"10.0.0.5": true, "172.16.3.4": true, "192.168.1.1": true, "169.254.169.254": true, "100.64.1.1": true,
+		"0.0.0.0": true, "fe80::1": true, "fd00::1": true, "::ffff:127.0.0.1": true, "::ffff:10.0.0.1": true,
+		"www.tagesschau.de": false, "8.8.8.8": false, "2001:db8::1": false, "": true,
+	} {
+		if got := PrivateHost(host); got != want {
+			t.Fatalf("PrivateHost(%q) = %v", host, got)
+		}
+	}
+	if _, err := publicDial(context.Background(), "tcp", "localhost:80"); !errors.Is(err, ErrNotAllowed) {
+		t.Fatalf("publicDial localhost: %v", err)
+	}
+	if _, err := publicDial(context.Background(), "tcp", "127.0.0.1:80"); !errors.Is(err, ErrNotAllowed) {
+		t.Fatalf("publicDial loopback: %v", err)
+	}
+}
+
+func TestRSSOrgFeedNotPrivate(t *testing.T) {
+	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/rss+xml")
+		w.Write([]byte(rssSample))
+	}))
+	defer up.Close()
+	cfg := &config.Config{RSSAllowedHosts: config.DefaultRSSHosts()}
+	f := &Feeds{Cfg: cfg, Cache: &Cache{}}
+	ctx := context.Background()
+	alle := func(string) bool { return true }
+	// Organisation gibt den Host frei, Ziel ist aber die eigene Maschine
+	if _, err := f.RSS(ctx, up.URL+"/feed.xml", alle); !errors.Is(err, ErrNotAllowed) {
+		t.Fatalf("Org-Feed auf 127.0.0.1 muss abgelehnt werden: %v", err)
+	}
+	loc := strings.Replace(up.URL, "127.0.0.1", "localhost", 1)
+	if _, err := f.RSS(ctx, loc+"/feed.xml", alle); !errors.Is(err, ErrNotAllowed) {
+		t.Fatalf("Org-Feed auf localhost muss abgelehnt werden: %v", err)
+	}
+	// Betreiber-Hosts (RSS_ALLOWED_HOSTS) duerfen weiterhin intern liegen
+	cfg.RSSAllowedHosts = append(cfg.RSSAllowedHosts, "127.0.0.1")
+	if _, err := f.RSS(ctx, up.URL+"/feed.xml", nil); err != nil {
+		t.Fatalf("Betreiber-Host intern: %v", err)
+	}
+}
