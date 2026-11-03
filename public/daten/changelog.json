@@ -2,6 +2,25 @@
   "hinweis": "Changelog fuer Nutzer (Dialog 'Was ist neu', Versionsstempel im Footer). Neuester Eintrag zuerst. 'show': true loest nach dem Login einmalig ein Overlay aus; kleinere Korrekturen mit 'show': false bleiben nur in der Liste. Version muss zu APP_VERSION in config/.env passen.",
   "entries": [
     {
+      "version": "3.2.6",
+      "date": "2026-11-03",
+      "title": "Sicherheitskorrekturen",
+      "show": false,
+      "items": [
+        "STEINboard und STEINmap: Texte aus STEIN (Label, Name, Funkrufname, Kommentar, Bearbeiter) sowie Adress- und Stammdaten-Texte werden vor der Anzeige entschärft; eingeschleustes HTML aus STEIN kann keine Skripte mehr ausführen.",
+        "2FA-Einrichtung: Der QR-Code entsteht im Browser. Das Geheimnis wird nicht mehr an einen externen QR-Dienst geschickt.",
+        "Einsatz-Import: Externe Links an Harke-Knoten müssen mit http(s) beginnen, wie bei der Eingabe über die Oberfläche.",
+        "Login: Die Weiterleitung nach dem Login verwirft Adressen mit Steuerzeichen; eine Weiterleitung auf fremde Domains ist damit ausgeschlossen.",
+        "Nachrichten-Feeds einer Organisation dürfen nicht auf den Server selbst oder private Netze zeigen. Neu RSS_ALLOW_PRIVATE=1 für Feed-Server im eigenen Netz; Hosts aus RSS_ALLOWED_HOSTS sind nicht betroffen.",
+        "Sitzungen enden bei Passwortwechsel (andere Geräte), Passwort-Reset, Rollenwechsel, 2FA-Reset und Löschung eines Kontos; eine geänderte Kontorolle wirkt ohne erneuten Login.",
+        "Abmelden nur noch per Schaltfläche; ein direkter Aufruf von /logout zeigt eine Bestätigung statt sofort abzumelden.",
+        "Mit https in APP_BASE_URL bekommt das Sitzungs-Cookie das Secure-Flag auch ohne TRUSTED_PROXIES.",
+        "Fehlversuche beim Login sperren ein Konto nur für die auslösende IP-Adresse; „Passwort vergessen“ ist zusätzlich je IP begrenzt.",
+        "Serververwaltung zeigt bei technischen Fehlern keine internen Details mehr (sie stehen im Server-Log); Divera-Downloads werden nur als PDF oder Bild direkt angezeigt, alles andere als Datei.",
+        "Dashboard: Popups der Warn-, Pegel- und Meldungskarten entschärfen Fremddaten; nicht mehr genutzte Skripte (jQuery, iframe-Reload, JSONP-Abfrage der DWD-Karte) sind entfernt."
+      ]
+    },
+    {
       "version": "3.2.5",
       "date": "2026-11-03",
       "title": "Export des STEINboards repariert",

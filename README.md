@@ -26,7 +26,9 @@ Eckpunkte:
   Admin-Seite „System-Update“: Docker lädt ein Image-Archiv hoch (Host-Dienst
   wie bisher), ohne Docker lädt der Admin ein neues Binary hoch, das nach
   Prüfsumme und optionaler minisign-Signatur eingetauscht wird.
-- Sitzungen liegen in der Datenbank und überleben Neustarts.
+- Sitzungen liegen in der Datenbank und überleben Neustarts. Sie enden bei
+  Passwortwechsel (alle anderen Geräte), Passwort-Reset, Rollenwechsel,
+  2FA-Reset und Löschung des Kontos; eine geänderte Rolle wirkt sofort.
 
 ## Rollenmodell
 
@@ -437,7 +439,8 @@ Release die eigene `public/daten/stammdaten.json` in den Arbeitsbaum legen
   Passwortwechsel beim nächsten Login Pflicht).
 - Hinter einem Proxy stimmen Client-IPs oder `Secure`-Cookies nicht:
   `TRUSTED_PROXIES` auf die Proxy-Adresse setzen, Proxy muss
-  `X-Forwarded-For` und `X-Forwarded-Proto` senden.
+  `X-Forwarded-For` und `X-Forwarded-Proto` senden. Mit `https://` in
+  `APP_BASE_URL` bekommt das Sitzungs-Cookie `Secure` auch ohne diese Angabe.
 - Hilfsmittel leer: der Server braucht ausgehendes HTTPS zu
   `warnung.bund.de`, `api.hochwasserzentralen.de`, den Nachrichten-Feeds,
   `stein.app` und `app.divera247.com`; Fehler stehen im Log (`upstream ...`).
