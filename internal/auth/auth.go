@@ -42,6 +42,7 @@ const (
 	tfaMax           = 5
 	pwResetWindow    = 1800
 	pwResetMax       = 3
+	pwResetMaxIP     = 10
 	PasswordMinChars = 10
 )
 
@@ -145,7 +146,7 @@ func (a *Auth) Login(s *session.Session, r *http.Request, identifier, password s
 		return "", err
 	}
 	if !limited {
-		limited, err = a.isUserRateLimited(identifier)
+		limited, err = a.isUserRateLimited(identifier, ipHash)
 		if err != nil {
 			return "", err
 		}
@@ -283,6 +284,11 @@ func (a *Auth) IsHTTPS(r *http.Request) bool {
 	if r.TLS != nil {
 		return true
 	}
+	// APP_BASE_URL mit https: der Betrieb hinter TLS ist erklaert, das Cookie
+	// bekommt Secure auch ohne TRUSTED_PROXIES.
+	if strings.HasPrefix(strings.ToLower(a.Cfg.BaseURL), "https://") {
+		return true
+	}
 	remote := r.RemoteAddr
 	if host, _, err := net.SplitHostPort(remote); err == nil {
 		remote = host
@@ -315,8 +321,11 @@ func (a *Auth) isRateLimited(ipHash string) (bool, error) {
 	return n >= loginMaxIP, err
 }
 
-func (a *Auth) isUserRateLimited(identifier string) (bool, error) {
-	n, err := db.QueryInt(a.DB, "SELECT COUNT(*) FROM login_attempts WHERE username = ? AND created_at >= ?", a.userKey(identifier), db.Ago(loginWindow*time.Second))
+// isUserRateLimited zaehlt Fehlversuche je Konto und IP: Fremde koennen ein
+// Konto nicht sperren, indem sie nur den Benutzernamen kennen; die IP-Grenze
+// (isRateLimited) begrenzt das Durchprobieren trotzdem.
+func (a *Auth) isUserRateLimited(identifier, ipHash string) (bool, error) {
+	n, err := db.QueryInt(a.DB, "SELECT COUNT(*) FROM login_attempts WHERE username = ? AND ip_hash = ? AND created_at >= ?", a.userKey(identifier), ipHash, db.Ago(loginWindow*time.Second))
 	return n >= loginMaxUser, err
 }
 
@@ -355,13 +364,24 @@ func (a *Auth) clearTfaAttempts(uid int64) error {
 
 // --- Password-Reset Throttling --------------------------------------------
 
-func (a *Auth) IsPasswordResetRateLimited(email string) (bool, error) {
+// IsPasswordResetRateLimited: je E-Mail (Mailbomb) und je IP (Massenversand
+// an viele Adressen) begrenzt.
+func (a *Auth) IsPasswordResetRateLimited(email, ipHash string) (bool, error) {
 	n, err := db.QueryInt(a.DB, "SELECT COUNT(*) FROM login_attempts WHERE username = ? AND ip_hash = 'pwreset' AND created_at >= ?",
 		a.userKey(email), db.Ago(pwResetWindow*time.Second))
-	return n >= pwResetMax, err
+	if err != nil || n >= pwResetMax {
+		return true, err
+	}
+	n, err = db.QueryInt(a.DB, "SELECT COUNT(*) FROM login_attempts WHERE username = 'pwreset' AND ip_hash = ? AND created_at >= ?",
+		ipHash, db.Ago(pwResetWindow*time.Second))
+	return n >= pwResetMaxIP, err
 }
 
-func (a *Auth) RecordPasswordResetRequest(email string) error {
-	_, err := a.DB.Exec("INSERT INTO login_attempts (ip_hash, username, created_at) VALUES (?, ?, ?)", "pwreset", a.userKey(email), db.Now())
+func (a *Auth) RecordPasswordResetRequest(email, ipHash string) error {
+	now := db.Now()
+	if _, err := a.DB.Exec("INSERT INTO login_attempts (ip_hash, username, created_at) VALUES (?, ?, ?)", "pwreset", a.userKey(email), now); err != nil {
+		return err
+	}
+	_, err := a.DB.Exec("INSERT INTO login_attempts (ip_hash, username, created_at) VALUES (?, ?, ?)", ipHash, "pwreset", now)
 	return err
 }

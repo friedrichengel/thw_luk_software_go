@@ -1,6 +1,7 @@
 package pages
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -201,7 +202,14 @@ func (p *Pages) admin(w http.ResponseWriter, r *http.Request) {
 			d.Tab = tab
 		}
 		if err := p.adminAction(r, sc, me, &d); err != nil {
-			d.Error = err.Error()
+			var et errText
+			if errors.As(err, &et) {
+				d.Error = err.Error()
+			} else {
+				// Technische Fehler (SQL, Zugaenge) nicht auf der Seite ausbreiten
+				p.app.Log.Printf("admin: %s: %v", r.FormValue("action"), err)
+				d.Error = "Die Aktion ist fehlgeschlagen. Details stehen im Server-Log."
+			}
 		}
 	}
 

@@ -1,128 +1,11 @@
-// Erweiterte WMS-Kachel mit JSONP-Unterstützung für GetFeatureInfo-Anfragen
-L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
-onAdd: function(map) {
-    // Wenn die Layer zur Karte hinzugefügt wird, registriere einen Klick-Listener
-    L.TileLayer.WMS.prototype.onAdd.call(this, map);
-    map.on("click", this.getFeatureInfoJsonp, this);
-},
-
-onRemove: function(map) {
-    // Entferne den Klick-Listener, wenn die Layer von der Karte entfernt wird
-    L.TileLayer.WMS.prototype.onRemove.call(this, map);
-    map.off("click", this.getFeatureInfoJsonp, this);
-},
-
-getFeatureInfo: function(evt) {
-    // Standard-AJAX-Anfrage (nicht JSONP)
-    var url = this.getFeatureInfoUrl(evt.latlng),
-        showResults = L.Util.bind(this.showGetFeatureInfo, this);
-    $.ajax({
-    url: url,
-    success: function(data, status, xhr) {
-        var err = typeof data === "string" ? null : data;
-        showResults(err, evt.latlng, data);
-    },
-    error: function(xhr, status, error) {
-        showResults(error);
-    }
-    });
-},
-
-// JSONP-Version der GetFeatureInfo-Anfrage
-getFeatureInfoJsonp: function(evt) {
-    var url = this.getFeatureInfoUrl(evt.latlng),
-        showResultsJson = L.Util.bind(this.showGetFeatureInfoJson, this);
-    $.ajax({
-    url: url,
-    dataType: "jsonp",
-    jsonpCallback: "parseResponse",
-    success: function(data) {
-        showResultsJson(evt.latlng, data);
-    }
-    });
-},
-
-getFeatureInfoUrl: function(latlng) {
-    // Erstelle die URL für die GetFeatureInfo-Anfrage
-    var point = this._map.latLngToContainerPoint(latlng, this._map.getZoom()),
-        size = this._map.getSize(),
-        params = {
-        request: "GetFeatureInfo",
-        service: "WMS",
-        srs: "EPSG:4326",
-        styles: this.wmsParams.styles,
-        transparent: this.wmsParams.transparent,
-        version: this.wmsParams.version,
-        format: this.wmsParams.format,
-        bbox: this._map.getBounds().toBBoxString(),
-        height: size.y,
-        width: size.x,
-        layers: this.wmsParams.layers,
-        query_layers: this.wmsParams.layers,
-        info_format: "text/javascript",
-        // Es werden nur ausgewählte Eigenschaften abgefragt
-        propertyName: "EVENT,ONSET,EXPIRES,SENT",
-        // Bei überlappenden Warnungen werden bis zu 50 Features abgefragt
-        FEATURE_COUNT: 50
-        };
-
-    params[params.version === "1.3.0" ? "i" : "x"] = point.x;
-    params[params.version === "1.3.0" ? "j" : "y"] = point.y;
-
-    return this._url + L.Util.getParamString(params, this._url, true);
-},
-
-showGetFeatureInfo: function(err, latlng, content) {
-    if (err) {
-    return;
-    }
-    // Zeige die rohe Antwort als Popup an
-    L.popup({ maxWidth: 800 })
-    .setLatLng(latlng)
-    .setContent(content)
-    .openOn(this._map);
-},
-
-showGetFeatureInfoJson: function(latlng, data) {
-    // Falls keine Features zurückgegeben wurden, tue nichts
-    if (!data.features || data.features.length === 0) {
-    return;
-    }
-    var content = "<h2>Amtliche Warnung</h2>";
-    $.each(data.features, function(i, item) {
-    var o = new Date(item.properties.ONSET);
-    var e = new Date(item.properties.EXPIRES);
-    var onset =
-        ("0" + o.getDate()).slice(-2) + "." +
-        ("0" + (o.getMonth() + 1)).slice(-2) + ". - " +
-        ("0" + o.getHours()).slice(-2) + ":" +
-        ("0" + o.getMinutes()).slice(-2) + " Uhr";
-    var end =
-        ("0" + e.getDate()).slice(-2) + "." +
-        ("0" + (e.getMonth() + 1)).slice(-2) + ". - " +
-        ("0" + e.getHours()).slice(-2) + ":" +
-        ("0" + e.getMinutes()).slice(-2) + " Uhr";
-    content +=
-        "<p><table><tr><td>Ereignis:</td><td><b>" +
-        item.properties.EVENT +
-        "</b></td></tr>" +
-        "<tr><td>Beginn:</td><td>" + onset + "</td></tr>" +
-        "<tr><td>Ende:</td><td>" + end + "</td></tr></table></p>";
-    });
-    content += "<a target='blank' href='https://www.dwd.de/warnungen'>www.dwd.de/warnungen</a>";
-
-    L.popup({ maxWidth: 800 })
-    .setLatLng(latlng)
-    .setContent(content)
-    .openOn(this._map);
-}
-});
-
-// Hilfsfunktion, um die neue Layer-Klasse zu instanziieren
-L.tileLayer.betterWms = function(url, options) {
-return new L.TileLayer.BetterWMS(url, options);
-};
-
+// DWD-Warnkarte: WMS-Ebenen des DWD-Geoproxys ueber Leaflet. Die fruehere
+// GetFeatureInfo-Abfrage per JSONP (Fremdscript von maps.dwd.de) ist entfernt:
+// die Content-Security-Policy laesst kein fremdes Script zu.
+// _esc: Fremddaten (Warnmeldungen, Pegel, Organisationsname) vor dem Einsetzen
+// in HTML entschaerfen.
+function _esc(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML; }
+// _safeUrl: nur http(s)-Adressen als Link, alles andere wird nicht verlinkt.
+function _safeUrl(u) { return /^https?:\/\//i.test(String(u || '')) ? String(u) : ''; }
 // Initialisierung der Leaflet-Karte im DIV mit der ID "kartencontainer"
 // Zentrum: Koordinaten des eingeloggten OV, sonst Deutschlandmitte
 var __dwdCenter = [51.163, 10.447]; // Deutschlandmitte
@@ -148,7 +31,7 @@ if (window.CURRENT_OV && window.CURRENT_OV.lat) {
         });
         L.marker([window.CURRENT_OV.lat, window.CURRENT_OV.lng], { icon: __ovIconDwd, title: window.CURRENT_OV.name })
             .addTo(karte)
-            .bindPopup('<strong>' + (window.CURRENT_OV.name || '') + '</strong>');
+            .bindPopup('<strong>' + _esc(window.CURRENT_OV.name) + '</strong>');
     } catch (e) { /* OV-Marker nicht setzbar, still ignorieren */ }
 }
 
@@ -160,7 +43,7 @@ maxZoom: 18
 });
 
 // Warnungs-Layer vom DWD-Geoserver (mit der erweiterten WMS-Funktionalität)
-var warnlayer = L.tileLayer.betterWms("https://maps.dwd.de/geoproxy_warnungen/service/", {
+var warnlayer = L.tileLayer.wms("https://maps.dwd.de/geoproxy_warnungen/service/", {
 layers: "Warnungen_Gemeinden_vereinigt",
 format: "image/png",
 transparent: true,

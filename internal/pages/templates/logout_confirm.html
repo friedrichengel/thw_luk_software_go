@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abmelden</title>
+<link rel="stylesheet" href="/css/auth.css?v={{.AssetVersion}}">
+</head>
+<body class="auth-page">
+<div class="card">
+  <h1>Abmelden</h1>
+  <p>Die Sitzung auf diesem Ger&auml;t beenden?</p>
+  <form method="post" action="/logout">
+    <input type="hidden" name="csrf" value="{{.CSRF}}">
+    <button type="submit">Abmelden</button>
+    &nbsp; <a href="/">Zur&uuml;ck</a>
+  </form>
+</div>
+</body>
+</html>

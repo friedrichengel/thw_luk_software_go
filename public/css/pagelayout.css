@@ -177,6 +177,8 @@
   white-space: nowrap;
 }
 .footer-pop-item:hover { background: #e7f1ff; }
+.footer-pop-form { margin: 0; }
+button.footer-pop-item { width: 100%; text-align: left; background: none; border: 0; font: inherit; cursor: pointer; }
 /* Aktueller Punkt: fett und mit Haken, damit man ihn auch im Menue findet */
 .footer-pop-item-active { font-weight: 700; color: rgb(0, 51, 153) !important; }
 .footer-pop-item-active::before {

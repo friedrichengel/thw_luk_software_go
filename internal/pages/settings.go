@@ -3,6 +3,7 @@ package pages
 import (
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/friedrichengel/thw_luk_software_go/internal/auth"
 	"github.com/friedrichengel/thw_luk_software_go/internal/httpx"
@@ -123,12 +124,15 @@ func (p *Pages) settings(w http.ResponseWriter, r *http.Request) {
 				if secret == "" {
 					return errText("Kein 2FA-Setup aktiv. Bitte erneut starten.")
 				}
-				if !totp.VerifyCode(secret, code) {
+				counter, ok := totp.VerifyCodeReturnCounter(secret, code, 0, 1, time.Now())
+				if !ok {
 					return errText("Der Code ist ungültig. Bitte erneut versuchen.")
 				}
 				if err := user.EnableTwoFactor(p.app.DB, u.ID, secret); err != nil {
 					return err
 				}
+				// Der Einrichtungscode gilt danach nicht noch einmal beim Login
+				_ = user.SetTwoFactorLastCounter(p.app.DB, u.ID, counter)
 				s.Delete("2fa_setup_secret")
 				d.Notice = "Zwei-Faktor-Authentifizierung aktiviert."
 			case "2fa_cancel":

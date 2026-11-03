@@ -132,7 +132,7 @@
 
             displayFeed(items, container);
           } catch (error) {
-            container.innerHTML = `<p>Fehler beim Laden des Feeds: ${error.message}</p>`;
+            container.innerHTML = `<p>Fehler beim Laden des Feeds: ${_esc(error.message)}</p>`;
           }
         }
 

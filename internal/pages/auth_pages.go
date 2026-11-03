@@ -105,9 +105,16 @@ func (p *Pages) login(w http.ResponseWriter, r *http.Request) {
 // ---------------------------------------------------------------------------
 // Logout
 
+// logout beendet die Sitzung nur per POST mit CSRF-Token; ein GET (auch von
+// einer fremden Seite ausgeloest) zeigt nur die Bestaetigungsseite.
 func (p *Pages) logout(w http.ResponseWriter, r *http.Request) {
-	auth.Logout(p.app.Sess(r))
-	p.render(w, "logout.html", nil)
+	s := p.app.Sess(r)
+	if !auth.IsLoggedIn(s) || (r.Method == http.MethodPost && auth.CSRFCheck(s, r.FormValue("csrf"))) {
+		auth.Logout(s)
+		p.render(w, "logout.html", nil)
+		return
+	}
+	p.render(w, "logout_confirm.html", map[string]any{"CSRF": auth.CSRFToken(s), "AssetVersion": p.app.Cfg.AssetVersion})
 }
 
 // ---------------------------------------------------------------------------
@@ -188,7 +195,7 @@ func (p *Pages) forgotPassword(w http.ResponseWriter, r *http.Request) {
 		const generic = "Wenn die E-Mail-Adresse bekannt ist, wurde ein Link zum Zuruecksetzen versendet."
 		if email == "" || !validEmail(email) {
 			d.Error = "Bitte eine gueltige E-Mail-Adresse angeben."
-		} else if limited, _ := p.app.Auth.IsPasswordResetRateLimited(email); limited {
+		} else if limited, _ := p.app.Auth.IsPasswordResetRateLimited(email, p.app.Auth.IPHash(r)); limited {
 			// Anti-Mailbomb: maximal wenige Anforderungen pro E-Mail im
 			// Zeitfenster. Antwort bleibt generisch, damit kein Hinweis
 			// entsteht, ob die Adresse existiert.
@@ -217,7 +224,7 @@ func (p *Pages) forgotPassword(w http.ResponseWriter, r *http.Request) {
 					p.app.Log.Printf("forgot_password: token: %v", err)
 				}
 			}
-			_ = p.app.Auth.RecordPasswordResetRequest(email)
+			_ = p.app.Auth.RecordPasswordResetRequest(email, p.app.Auth.IPHash(r))
 			d.Info = generic
 		}
 	}

@@ -354,6 +354,7 @@ func (a *App) SessionInfo(r *http.Request) string {
 		`</summary><div class="footer-pop-menu">` +
 		`<a href="/settings" class="footer-pop-item">Einstellungen</a>` +
 		orgAdminLink +
-		`<a href="/logout" class="footer-pop-item footer-pop-logout">Abmelden</a>` +
+		`<form method="post" action="/logout" class="footer-pop-form"><input type="hidden" name="csrf" value="` + E(auth.CSRFToken(s)) + `">` +
+		`<button type="submit" class="footer-pop-item footer-pop-logout">Abmelden</button></form>` +
 		`</div></details>`
 }

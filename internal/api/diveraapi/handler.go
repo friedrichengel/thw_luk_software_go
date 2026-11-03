@@ -114,7 +114,14 @@ func handle(w http.ResponseWriter, r *http.Request, app *httpx.App) error {
 		if err != nil {
 			return upstreamErr(app, action, err)
 		}
-		w.Header().Set("Content-Disposition", "inline")
+		// Nur PDF und Bilder inline im eigenen Origin; alles andere (etwa HTML
+		// eines manipulierten Upstreams) als Download ohne Rendering.
+		if lc := strings.ToLower(ctype); strings.HasPrefix(lc, "application/pdf") || strings.HasPrefix(lc, "image/") {
+			w.Header().Set("Content-Disposition", "inline")
+		} else {
+			ctype = "application/octet-stream"
+			w.Header().Set("Content-Disposition", "attachment")
+		}
 		writeRaw(w, body, ctype, 200, nil)
 	case "set_status":
 		if r.Method != http.MethodPost {

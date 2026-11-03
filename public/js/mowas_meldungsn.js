@@ -37,7 +37,7 @@ function displayWarnings(data) {
       title.textContent = warning.i18nTitle.de || 'Kein Titel verfügbar';
       // Beim Klick auf den Titel öffnet sich ein neuer Tab mit der URL
       title.addEventListener('click', () => {
-          window.open(`https://warnung.bund.de/meldungen/${warning.id}`, '_blank');
+          window.open(`https://warnung.bund.de/meldungen/${encodeURIComponent(warning.id)}`, '_blank', 'noopener');
       });
 
       // Erstelle weitere Elemente für Datum und Beschreibung

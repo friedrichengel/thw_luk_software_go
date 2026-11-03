@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -137,8 +138,10 @@ func handle(w http.ResponseWriter, r *http.Request, app *httpx.App, kat *kraefte
 	}
 	now := time.Now()
 	// Dasselbe STEIN-Ereignis erreicht den Server einmal je Organisation, die
-	// einen Webhook eingerichtet hat - verarbeitet wird es nur einmal.
-	if p.Meta.EventID != "" && markSeen(p.Meta.EventID, now) {
+	// einen Webhook eingerichtet hat. Duplikate werden je Organisation erkannt,
+	// damit niemand mit dem Secret einer Organisation Ereignisse einer anderen
+	// unterdruecken kann (das Vormerken der BUs ist idempotent).
+	if p.Meta.EventID != "" && markSeen(strconv.FormatInt(o.ID, 10)+":"+p.Meta.EventID, now) {
 		reply(w, 200, map[string]any{"ok": true, "duplicate": true})
 		return
 	}

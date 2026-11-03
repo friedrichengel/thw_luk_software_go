@@ -1,3 +1,8 @@
+// _esc: Fremddaten (Warnmeldungen, Pegel, Organisationsname) vor dem Einsetzen
+// in HTML entschaerfen.
+function _esc(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML; }
+// _safeUrl: nur http(s)-Adressen als Link, alles andere wird nicht verlinkt.
+function _safeUrl(u) { return /^https?:\/\//i.test(String(u || '')) ? String(u) : ''; }
 
 // Karte initialisieren – Mittelpunkt: eingeloggter OV oder Default Deutschland
 const __lhpCenter = [51.163, 10.447]; // Deutschlandmitte
@@ -17,7 +22,7 @@ if (window.CURRENT_OV && window.CURRENT_OV.lat) {
         });
         L.marker([window.CURRENT_OV.lat, window.CURRENT_OV.lng], { icon: __ovIcon, title: window.CURRENT_OV.name })
             .addTo(map)
-            .bindPopup('<strong>' + (window.CURRENT_OV.name || '') + '</strong>');
+            .bindPopup('<strong>' + _esc(window.CURRENT_OV.name) + '</strong>');
     } catch (e) { console.warn('OV-Marker LHP:', e); }
 }
 map.createPane("stationsPane");
@@ -69,12 +74,12 @@ async function updateAlerts() {
         // Popup-Inhalt: Anzeige der gewünschten Felder aus den Properties
         const popupContent = `
         <div>
-            <h3>${alert.properties?.alertHeadline || 'Hochwasserwarnung'}</h3>
-            <p>Beschreibung: ${alert.properties?.areaDesc || 'Keine Angabe'}</p>
-            <p>Typ: ${alert.properties?.areaType || 'Keine Angabe'}</p>
-            <p>Klasse: ${alert.properties?.lhpClassName || 'Keine Angabe'}</p>
-            ${alert.properties?.alertLink
-            ? `<p>Link: <a href="${alert.properties.alertLink}" target="_blank">${alert.properties.alertLink}</a></p>`
+            <h3>${_esc(alert.properties?.alertHeadline || 'Hochwasserwarnung')}</h3>
+            <p>Beschreibung: ${_esc(alert.properties?.areaDesc || 'Keine Angabe')}</p>
+            <p>Typ: ${_esc(alert.properties?.areaType || 'Keine Angabe')}</p>
+            <p>Klasse: ${_esc(alert.properties?.lhpClassName || 'Keine Angabe')}</p>
+            ${_safeUrl(alert.properties?.alertLink)
+            ? `<p>Link: <a href="${_esc(_safeUrl(alert.properties.alertLink))}" target="_blank" rel="noopener">${_esc(alert.properties.alertLink)}</a></p>`
             : ''}
         </div>
         `;
@@ -150,12 +155,12 @@ async function updateStations() {
         const props = station.properties;
         const popupContent = `
         <div>
-            <h3>${props.name || 'Station'}</h3>
-            <p>Gewässer: ${props.water || 'Keine Angabe'}</p>
-            ${props.stationLink
-            ? `<p>Link: <a href="${props.stationLink}" target="_blank">${props.stationLink}</a></p>`
+            <h3>${_esc(props.name || 'Station')}</h3>
+            <p>Gewässer: ${_esc(props.water || 'Keine Angabe')}</p>
+            ${_safeUrl(props.stationLink)
+            ? `<p>Link: <a href="${_esc(_safeUrl(props.stationLink))}" target="_blank" rel="noopener">${_esc(props.stationLink)}</a></p>`
             : ''}
-            <p>Zeitpunkt: ${props.timestamp || 'Keine Angabe'}</p>
+            <p>Zeitpunkt: ${_esc(props.timestamp || 'Keine Angabe')}</p>
         </div>
         `;
 

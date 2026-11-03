@@ -245,8 +245,20 @@ func TestPages(t *testing.T) {
 		t.Fatalf("freiwilliger Wechsel: %d", res.StatusCode)
 	}
 
-	// Logout
+	// Logout: GET zeigt nur die Bestaetigung (CSRF-Formular), erst POST beendet die Sitzung
 	res, _ = c.Get(base + "/logout")
+	b, _ = io.ReadAll(res.Body)
+	res.Body.Close()
+	if res.StatusCode != 200 || !strings.Contains(string(b), `action="/logout"`) {
+		t.Fatalf("logout GET: %d", res.StatusCode)
+	}
+	res, _ = c.Get(base + "/einsatz")
+	res.Body.Close()
+	if res.StatusCode != 200 {
+		t.Fatalf("GET /logout darf nicht abmelden: %d", res.StatusCode)
+	}
+	m = reCSRF.FindSubmatch(b)
+	res, _ = c.PostForm(base+"/logout", url.Values{"csrf": {string(m[1])}})
 	res.Body.Close()
 	res, _ = c.Get(base + "/einsatz")
 	res.Body.Close()

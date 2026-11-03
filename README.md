@@ -476,7 +476,6 @@ Laufzeitabhängigkeiten außerhalb des Binaries.
 | Leaflet | 1.2.0 | BSD-2-Clause | Vladimir Agafonkin, https://github.com/Leaflet/Leaflet |
 | Leaflet.draw | 1.0.4 | MIT | Jacob Toye und Leaflet-Mitwirkende, https://github.com/Leaflet/Leaflet.draw |
 | Leaflet.pattern | Stand 2015 (ohne Versionsnummer) | MIT | Tyler Eastman, https://github.com/teastman/Leaflet.pattern |
-| jQuery | 3.7.1 | MIT | OpenJS Foundation, https://github.com/jquery/jquery |
 | jsPDF | 2.5.1 | MIT | James Hall, yWorks GmbH und Mitwirkende, https://github.com/parallax/jsPDF |
 | html2canvas | 1.4.1 | MIT | Niklas von Hertzen, https://github.com/niklasvh/html2canvas |
 | pdf-lib | im Bundle nicht ausgewiesen (1.x) | MIT | Andrew Dillon, https://github.com/Hopding/pdf-lib |

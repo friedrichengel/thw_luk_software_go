@@ -35,10 +35,15 @@ if (window.CURRENT_OV && window.CURRENT_OV.lat) {
         });
         L.marker([window.CURRENT_OV.lat, window.CURRENT_OV.lng], { icon: __ovIconBlue, title: window.CURRENT_OV.name })
             .addTo(map3)
-            .bindPopup('<strong>' + (window.CURRENT_OV.name || '') + '</strong>');
+            .bindPopup('<strong>' + _esc(window.CURRENT_OV.name) + '</strong>');
     } catch (e) { console.warn('OV-Marker MOWAS:', e); }
 }
 
+// _esc: Fremddaten (Warnmeldungen, Pegel, Organisationsname) vor dem Einsetzen
+// in HTML entschaerfen.
+function _esc(s) { const d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML; }
+// _safeUrl: nur http(s)-Adressen als Link, alles andere wird nicht verlinkt.
+function _safeUrl(u) { return /^https?:\/\//i.test(String(u || '')) ? String(u) : ''; }
 // Funktion zum Abrufen und Anzeigen der Warnungs- und GeoJSON-Daten.
 function updateMapData() {
     // Vor dem Neuladen alle vorhandenen Layer entfernen.
@@ -55,15 +60,15 @@ function updateMapData() {
             const warningId = warning.id; // z.B. "mow.DE-HE-DA-W184-20240723-000"
             // Erstelle den Popup-Inhalt basierend auf den Warnungsdaten.
             const popupContent = `
-                <a href="https://warnung.bund.de/meldungen/${warningId}" target="_blank">
-                    <strong>${warning.i18nTitle.de}</strong>
+                <a href="https://warnung.bund.de/meldungen/${encodeURIComponent(warningId)}" target="_blank" rel="noopener">
+                    <strong>${_esc(warning.i18nTitle && warning.i18nTitle.de)}</strong>
                 </a><br>
-                Typ: ${warning.type} (${warning.severity})<br>
-                Datum: ${warning.startDate}<br>
-                Event: ${warning.transKeys.event}
+                Typ: ${_esc(warning.type)} (${_esc(warning.severity)})<br>
+                Datum: ${_esc(warning.startDate)}<br>
+                Event: ${_esc(warning.transKeys && warning.transKeys.event)}
             `;
             // URL der GeoJSON-Daten, hier wird die Warnungs-ID eingesetzt.
-            const geojsonUrl = `/api/proxy?type=nina-geo&id=${warningId}`;
+            const geojsonUrl = `/api/proxy?type=nina-geo&id=${encodeURIComponent(warningId)}`;
 
             // GeoJSON-Daten abrufen
             fetch(geojsonUrl)
