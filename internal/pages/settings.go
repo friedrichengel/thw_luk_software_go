@@ -7,6 +7,7 @@ import (
 	"github.com/friedrichengel/thw_luk_software_go/internal/auth"
 	"github.com/friedrichengel/thw_luk_software_go/internal/httpx"
 	"github.com/friedrichengel/thw_luk_software_go/internal/org"
+	"github.com/friedrichengel/thw_luk_software_go/internal/session"
 	"github.com/friedrichengel/thw_luk_software_go/internal/totp"
 	"github.com/friedrichengel/thw_luk_software_go/internal/user"
 )
@@ -100,6 +101,9 @@ func (p *Pages) settings(w http.ResponseWriter, r *http.Request) {
 				if err := user.UpdatePassword(p.app.DB, u.ID, new1, true); err != nil {
 					return err
 				}
+				// Andere Sitzungen dieses Kontos beenden, die eigene unter neuer ID weiterfuehren
+				_ = session.DeleteForUser(p.app.DB, u.ID)
+				s.Regenerate()
 				s.Set("must_change_password", false)
 				if wasForced {
 					// Erzwungener Wechsel (Initialpasswort): direkt dorthin weiter,

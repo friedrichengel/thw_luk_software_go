@@ -10,6 +10,7 @@ import (
 
 	"github.com/friedrichengel/thw_luk_software_go/internal/auth"
 	"github.com/friedrichengel/thw_luk_software_go/internal/httpx"
+	"github.com/friedrichengel/thw_luk_software_go/internal/session"
 	"github.com/friedrichengel/thw_luk_software_go/internal/user"
 )
 
@@ -274,6 +275,7 @@ func (p *Pages) resetPassword(w http.ResponseWriter, r *http.Request) {
 				p.app.Log.Printf("reset_password: %v", err)
 				d.Error = "Das Passwort konnte nicht gespeichert werden."
 			} else {
+				_ = session.DeleteForUser(p.app.DB, u.ID)
 				d.Done = true
 			}
 		}

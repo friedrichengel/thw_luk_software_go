@@ -215,6 +215,7 @@ func New(cfg *config.Config, database *db.DB, logger *log.Logger) (*Server, erro
 	pages.Register(mux, app, pageDeps)
 
 	var h http.Handler = mux
+	h = app.SessionSync(h)
 	h = app.Sessions.Middleware(h)
 	// Externe Kachel-URL in der CSP erlauben (Bildquelle und fetch fuer den
 	// Karten-PDF-Export); leer bei eingebautem Kachel-Cache.

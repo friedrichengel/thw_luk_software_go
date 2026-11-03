@@ -199,6 +199,15 @@ func (s *Session) Regenerate() {
 	s.dirty = true
 }
 
+// DeleteForUser loescht alle Sitzungen eines Kontos: nach Passwortwechsel
+// oder -Reset, Rollenwechsel, 2FA-Reset und Loeschung darf keine alte
+// Sitzung weiterlaufen. Wer sein eigenes Passwort aendert, regeneriert die
+// eigene Sitzung danach (Regenerate), damit sie als einzige bestehen bleibt.
+func DeleteForUser(q db.Q, uid int64) error {
+	_, err := q.Exec("DELETE FROM sessions WHERE json_extract(data, '$.uid') = ?", uid)
+	return err
+}
+
 // Destroy loescht die Sitzung (Logout).
 func (s *Session) Destroy() {
 	s.destroyed = true

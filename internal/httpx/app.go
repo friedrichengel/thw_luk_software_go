@@ -54,6 +54,28 @@ func (a *App) Sess(r *http.Request) *session.Session {
 	return session.FromContext(r.Context())
 }
 
+// SessionSync gleicht eine angemeldete Sitzung je Request mit der Datenbank
+// ab: Die Rolle kommt aus users.role (eine Herabstufung wirkt sofort, nicht
+// erst nach erneutem Login), ein geloeschtes Konto verliert die Sitzung.
+// Laeuft innerhalb von Sessions.Middleware.
+func (a *App) SessionSync(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		s := a.Sess(r)
+		if uid := auth.UID(s); uid > 0 {
+			u, err := user.FindByID(a.DB, uid)
+			switch {
+			case err == nil && u == nil:
+				s.Destroy()
+			case u != nil:
+				if role := user.NormalizeRole(u.Role); role != auth.Role(s) {
+					s.Set("role", role)
+				}
+			}
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
 // Principal baut den Zugriffs-Principal aus der Sitzung (mit Anzeigename).
 func (a *App) Principal(r *http.Request) access.Principal {
 	s := a.Sess(r)

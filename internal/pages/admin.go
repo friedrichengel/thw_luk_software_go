@@ -14,6 +14,7 @@ import (
 	"github.com/friedrichengel/thw_luk_software_go/internal/httpx"
 	"github.com/friedrichengel/thw_luk_software_go/internal/mail"
 	"github.com/friedrichengel/thw_luk_software_go/internal/org"
+	"github.com/friedrichengel/thw_luk_software_go/internal/session"
 	"github.com/friedrichengel/thw_luk_software_go/internal/settings"
 	"github.com/friedrichengel/thw_luk_software_go/internal/stab"
 	"github.com/friedrichengel/thw_luk_software_go/internal/tiles"
@@ -329,6 +330,7 @@ func (p *Pages) adminAction(r *http.Request, sc adminScope, me *user.User, d *ad
 			return err
 		}
 		d.GeneratedPassword = pw
+		_ = session.DeleteForUser(db, uid)
 		d.Notice = "Neues Initialpasswort gesetzt. Bitte sicher übergeben."
 	case "disable_2fa":
 		if _, err := p.adminTarget(sc, uid); err != nil {
@@ -337,6 +339,7 @@ func (p *Pages) adminAction(r *http.Request, sc adminScope, me *user.User, d *ad
 		if err := user.DisableTwoFactor(db, uid); err != nil {
 			return err
 		}
+		_ = session.DeleteForUser(db, uid)
 		d.Notice = "2FA für den Nutzer wurde zurückgesetzt."
 	case "set_email":
 		if _, err := p.adminTarget(sc, uid); err != nil {
@@ -381,6 +384,7 @@ func (p *Pages) adminAction(r *http.Request, sc adminScope, me *user.User, d *ad
 			_ = user.SetOrgAdmin(db, uid, false)
 			_ = user.SetDiveraAccess(db, uid, "off")
 		}
+		_ = session.DeleteForUser(db, uid)
 		d.Notice = "Kontorolle geändert."
 	case "delete_user":
 		target, err := p.adminTarget(sc, uid)
@@ -402,6 +406,7 @@ func (p *Pages) adminAction(r *http.Request, sc adminScope, me *user.User, d *ad
 		if err := user.Delete(db, uid); err != nil {
 			return err
 		}
+		_ = session.DeleteForUser(db, uid)
 		d.Notice = "Nutzer gelöscht."
 	case "set_org":
 		if !sc.Global {

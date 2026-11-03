@@ -33,6 +33,7 @@ import (
 	"github.com/friedrichengel/thw_luk_software_go/internal/mail"
 	"github.com/friedrichengel/thw_luk_software_go/internal/org"
 	"github.com/friedrichengel/thw_luk_software_go/internal/server"
+	"github.com/friedrichengel/thw_luk_software_go/internal/session"
 	"github.com/friedrichengel/thw_luk_software_go/internal/settings"
 	"github.com/friedrichengel/thw_luk_software_go/internal/update"
 	"github.com/friedrichengel/thw_luk_software_go/internal/user"
@@ -242,6 +243,7 @@ func seedAdmin(database *db.DB, username string, reset bool) (string, error) {
 		if err := user.UpdatePassword(database, existing.ID, pw, false); err != nil {
 			return "", err
 		}
+		_ = session.DeleteForUser(database, existing.ID)
 		if err := user.SetMustChangePassword(database, existing.ID, true); err != nil {
 			return "", err
 		}
