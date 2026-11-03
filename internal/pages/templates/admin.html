@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{.AppName}} – {{if .Global}}Serververwaltung{{else}}Organisation{{end}}</title>
+<link rel="icon" type="image/png" href="/images/favicon_dashboard.png">
+{{.PwaHead}}
+<link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}">
+<script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+<link rel="stylesheet" href="/css/admin.css?v={{.AssetVersion}}">
+{{if eq .Tab "einstellungen"}}<link rel="stylesheet" href="/css/leaflet.css"><script src="/js/leaflet.js"></script>{{end}}
+</head>
+<body>
+  {{.Header}}
+
+  <div class="admin-scroll">
+  <div class="admin-wrapper">
+
+  {{if and .Created .GeneratedPassword}}
+    <div class="pw-notice">Neuer Nutzer angelegt. Initial-Passwort: <span class="pw">{{.GeneratedPassword}}</span><br><small>Beim ersten Login muss das Passwort geändert werden. 2FA richtet der Nutzer selbst unter „Einstellungen" ein.</small></div>
+  {{else if .Notice}}
+    <div class="notice">{{.Notice}}
+      {{if .GeneratedPassword}}<br>Neues Passwort: <span class="pw">{{.GeneratedPassword}}</span>{{end}}
+    </div>
+  {{end}}
+  {{if .Error}}<div class="error">{{.Error}}</div>{{end}}
+
+  {{$csrf := .CSRF}}{{$roles := .RoleLabels}}{{$global := .Global}}{{$orgs := .Orgs}}{{$divera := .DiveraLevels}}{{$ebenen := .Ebenen}}{{$diveraKey := .DiveraKeySet}}
+
+  <div class="section section-tabbed">
+    <div class="section-header">
+      <h1 class="section-title">{{if .Global}}Serververwaltung{{else}}{{.OrgName}}{{end}}</h1>
+      <nav class="admin-tabs">
+        <a class="admin-tab{{if eq .Tab "users"}} active{{end}}" href="/admin?tab=users">Nutzer <span class="admin-tab-count">{{.Count}}</span></a>
+        {{if .Global}}<a class="admin-tab{{if eq .Tab "orgs"}} active{{end}}" href="/admin?tab=orgs">Organisationen <span class="admin-tab-count">{{.OrgCount}}</span></a>{{end}}
+        {{if .Global}}<a class="admin-tab{{if eq .Tab "server"}} active{{end}}" href="/admin?tab=server">Server</a>{{end}}
+        {{if not .Global}}<a class="admin-tab{{if eq .Tab "zugaenge"}} active{{end}}" href="/admin?tab=zugaenge">Zugänge</a>{{end}}
+        {{if not .Global}}<a class="admin-tab{{if eq .Tab "einstellungen"}} active{{end}}" href="/admin?tab=einstellungen">Einstellungen</a>{{end}}
+      </nav>
+    </div>
+
+    {{if eq .Tab "users"}}
+    <p class="admin-hint">
+      <strong>Kontorollen:</strong> <em>User</em> kann sich anmelden und an Einsätzen mitarbeiten, für die eine Stabsrolle vergeben wurde.
+      <em>Leiter</em> kann zusätzlich Einsätze anlegen, Mitglieder und Rollen vergeben, Freigabelinks erstellen.
+      {{if .Global}}<em>Admin</em> verwaltet Nutzerkonten und Organisationen, hat keinen Zugriff auf Einsätze und sieht keine Zugänge (Schlüssel) der Organisationen.{{end}}
+      <em>Org-Admin</em> ist ein Einsatz-Konto, das die Nutzer, Divera-Rechte und Zugänge (STEIN, Divera) seiner Organisation verwaltet.
+      {{if not .Global}}Das Divera-Recht wirkt nur, wenn unter „Zugänge" ein Divera-Zugangsschlüssel hinterlegt ist.{{end}}
+    </p>
+    {{if and (not .Global) (not .DiveraKeySet)}}
+    <div class="error">Für diese Organisation ist noch <strong>kein Divera-Zugangsschlüssel</strong> hinterlegt. Divera-Rechte an Konten bleiben deshalb ohne Wirkung: weder der Tab „Divera" im Dashboard noch die DiveraMap erscheinen. Schlüssel hinterlegen unter <a href="/admin?tab=zugaenge">Zugänge</a>.</div>
+    {{end}}
+
+    <h2>Neuen Nutzer anlegen</h2>
+    <form method="post" class="new-user-form" autocomplete="off">
+      <input type="hidden" name="csrf" value="{{$csrf}}">
+      <input type="hidden" name="action" value="create_user">
+      <input type="hidden" name="tab" value="users">
+      <div class="field">
+        <label>Benutzername</label>
+        <input type="text" name="new_username" required placeholder="z.B. m.mustermann">
+      </div>
+      <div class="field">
+        <label>Anzeigename</label>
+        <input type="text" name="new_display_name" placeholder="z.B. Max Mustermann">
+      </div>
+      <div class="field">
+        <label>E-Mail</label>
+        <input type="email" name="new_email" placeholder="für Passwort-Reset">
+      </div>
+      <div class="field">
+        <label>Kontorolle</label>
+        <select name="new_role">
+          {{range $roles}}
+            <option value="{{.Key}}">{{.Label}}</option>
+          {{end}}
+        </select>
+      </div>
+      {{if .Global}}
+      <div class="field">
+        <label>Organisation</label>
+        <select name="new_org_id">
+          <option value="">– keine –</option>
+          {{range $orgs}}<option value="{{.ID}}">{{.Name}}</option>{{end}}
+        </select>
+      </div>
+      {{end}}
+      <button type="submit">Anlegen</button>
+    </form>
+
+    <table>
+      <thead><tr>
+        <th>ID</th><th>Benutzer</th><th>Anzeigename</th><th>Kontorolle</th>{{if .Global}}<th>Organisation</th>{{end}}<th>Org-Admin</th>{{if not .Global}}<th>Divera</th>{{end}}<th>E-Mail</th><th>2FA</th><th>Angelegt</th><th>Aktionen</th>
+      </tr></thead>
+      <tbody>
+      {{range .Users}}
+        <tr>
+          <td>{{.ID}}</td>
+          <td>
+            <form method="post" class="inline">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="set_username">
+              <input type="hidden" name="uid" value="{{.ID}}">
+              <input type="text" name="username" value="{{.Username}}" style="font-weight:bold;width:150px;" onchange="this.form.submit()">
+            </form>
+            {{if .MustChange}}<span class="badge tfa-off" title="Initialpasswort noch nicht geändert">PW-Wechsel offen</span>{{end}}
+          </td>
+          <td>
+            <form method="post" class="inline">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="set_display_name">
+              <input type="hidden" name="uid" value="{{.ID}}">
+              <input type="text" name="display_name" value="{{.DisplayName}}" placeholder="Anzeigename" style="width:150px;" onchange="this.form.submit()">
+            </form>
+          </td>
+          <td style="white-space:nowrap;">
+            <form method="post" class="inline">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="set_role">
+              <input type="hidden" name="uid" value="{{.ID}}">
+              {{$role := .Role}}
+              {{if and .IsSelf $global}}
+              <select name="role" onchange="this.form.submit()" disabled title="Eigene Rolle kann nicht geändert werden">
+              {{else}}
+              <select name="role" onchange="this.form.submit()">
+              {{end}}
+                {{range $roles}}
+                  <option value="{{.Key}}" {{if eq $role .Key}}selected{{end}}>{{.Label}}</option>
+                {{end}}
+              </select>
+            </form>
+            <span class="badge {{if .IsAdmin}}admin{{else}}user{{end}}">{{.RoleLabel}}</span>
+          </td>
+          {{if $global}}
+          <td style="white-space:nowrap;">
+            {{if .IsAdmin}}<span class="badge admin" title="Admin-Konten gehören zu keiner Organisation">–</span>{{else}}
+            <form method="post" class="inline">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="set_org">
+              <input type="hidden" name="uid" value="{{.ID}}">
+              {{$oid := .OrgID}}
+              <select name="org_id" onchange="this.form.submit()">
+                <option value="" {{if eq $oid 0}}selected{{end}}>– keine –</option>
+                {{range $orgs}}<option value="{{.ID}}" {{if eq $oid .ID}}selected{{end}}>{{.Name}}</option>{{end}}
+              </select>
+            </form>
+            {{end}}
+          </td>
+          {{end}}
+          <td style="white-space:nowrap;">
+            {{if or .IsAdmin (eq .OrgID 0)}}–{{else}}
+            <form method="post" class="inline">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="set_org_admin">
+              <input type="hidden" name="uid" value="{{.ID}}">
+              <input type="hidden" name="org_admin" value="{{if .OrgAdmin}}0{{else}}1{{end}}">
+              <label style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><input type="checkbox" {{if .OrgAdmin}}checked{{end}} onchange="this.form.submit()"> {{if .OrgAdmin}}<span class="badge tfa-on">Org-Admin</span>{{else}}<span style="font-size:12px;color:#666;">nein</span>{{end}}</label>
+            </form>
+            {{end}}
+          </td>
+          {{if not $global}}
+          <td style="white-space:nowrap;">
+            <form method="post" class="inline">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="set_divera">
+              <input type="hidden" name="uid" value="{{.ID}}">
+              {{$dv := .Divera}}
+              <select name="divera" onchange="this.form.submit()">
+                {{range $divera}}<option value="{{.Key}}" {{if eq $dv .Key}}selected{{end}}>{{.Label}}</option>{{end}}
+              </select>
+            </form>
+            {{if and (ne .Divera "off") (not $diveraKey)}}<span class="badge tfa-off" title="Unter Zugänge fehlt der Divera-Zugangsschlüssel der Organisation">ohne Wirkung: kein Schlüssel</span>{{end}}
+          </td>
+          {{end}}
+          <td>
+            <form method="post" class="inline">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="set_email">
+              <input type="hidden" name="uid" value="{{.ID}}">
+              <input type="email" name="email" value="{{.Email}}" size="20">
+              <button type="submit" class="secondary">OK</button>
+            </form>
+          </td>
+          <td>
+            {{if .TwoFactor}}<span class="badge tfa-on">aktiv</span>{{else}}<span class="badge tfa-off">aus</span>{{end}}
+          </td>
+          <td style="font-size:12px;color:#666;white-space:nowrap;">{{.CreatedAt}}</td>
+          <td style="white-space:nowrap;">
+            <form method="post" class="inline" onsubmit="return confirm('Passwort zurücksetzen und neues Initialpasswort setzen?')">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="reset_password">
+              <input type="hidden" name="uid" value="{{.ID}}">
+              <button type="submit">PW rücksetzen</button>
+            </form>
+            {{if .TwoFactor}}
+              <form method="post" class="inline" onsubmit="return confirm('2FA für diesen Nutzer deaktivieren?')">
+                <input type="hidden" name="csrf" value="{{$csrf}}">
+                <input type="hidden" name="action" value="disable_2fa">
+                <input type="hidden" name="uid" value="{{.ID}}">
+                <button type="submit" class="danger">2FA aus</button>
+              </form>
+            {{end}}
+            {{if not .IsSelf}}
+              <form method="post" class="inline" onsubmit="return confirm('Nutzer „{{.Username}}“ endgültig löschen?')">
+                <input type="hidden" name="csrf" value="{{$csrf}}">
+                <input type="hidden" name="action" value="delete_user">
+                <input type="hidden" name="uid" value="{{.ID}}">
+                <button type="submit" class="danger">Löschen</button>
+              </form>
+            {{end}}
+          </td>
+        </tr>
+      {{end}}
+      </tbody>
+    </table>
+    {{end}}
+
+    {{if eq .Tab "orgs"}}
+    <p class="admin-hint">
+      Jede Organisation (Ortsverband, Regionalstelle, Landesverband, Leitung) hat eigene Zugänge zu STEIN und Divera.
+      Diese hinterlegen die <em>Org-Admins</em> der Organisation selbst unter „Organisation verwalten"; hier ist nur sichtbar, wie viele Zugänge hinterlegt sind.
+      Konten ordnest du im Reiter „Nutzer" zu. Einsätze gehören zur Organisation ihres Erstellers.
+    </p>
+
+    {{if .StammGroups}}
+    <details class="stamm-picker" {{if eq .OrgCount 0}}open{{end}}>
+      <summary><h2 style="display:inline;">Aus den Stammdaten übernehmen</h2> <span class="admin-tab-count" title="noch nicht angelegt">{{.StammMissing}} fehlen</span></summary>
+      <p class="admin-hint">Landesverband, Regionalstellen und Ortsverbände stehen in den Stammdaten (stammdaten.json dieser Installation). Wähle aus, was als Organisation gebraucht wird, oder lege alles an. Vorhandene Einträge bleiben unverändert; Nachbar-Ortsverbände anderer Landesverbände sind nicht enthalten.</p>
+      <form method="post" autocomplete="off" id="stamm-form">
+        <input type="hidden" name="csrf" value="{{$csrf}}">
+        <input type="hidden" name="action" value="seed_orgs">
+        <input type="hidden" name="tab" value="orgs">
+        <input type="hidden" name="all" value="0" id="stamm-all">
+        <div class="stamm-groups">
+          {{if .StammLV}}
+          <div class="stamm-group">
+            <label class="stamm-head"><input type="checkbox" name="keys" value="{{.StammLV.Key}}" {{if .StammLV.Exists}}checked disabled{{end}}> <strong>{{.StammLV.Name}}</strong> <span class="stamm-ebene">Landesverband</span>{{if .StammLV.Exists}} <span class="badge tfa-on">vorhanden</span>{{end}}</label>
+          </div>
+          {{end}}
+          {{range .StammGroups}}
+          <div class="stamm-group">
+            <label class="stamm-head"><input type="checkbox" name="keys" value="{{.Key}}" {{if .Exists}}checked disabled{{end}}> <strong>{{.Name}}</strong> <span class="stamm-ebene">Regionalstelle</span>{{if .Exists}} <span class="badge tfa-on">vorhanden</span>{{end}}</label>
+            <button type="button" class="secondary stamm-toggle" data-group="{{.Key}}">alle OV dieser RSt</button>
+            <div class="stamm-ovs" data-group="{{.Key}}">
+              {{range .OVs}}
+              <label><input type="checkbox" name="keys" value="{{.Key}}" {{if .Exists}}checked disabled{{end}}> {{.Name}}{{if .Exists}} <span class="badge tfa-on">vorhanden</span>{{end}}</label>
+              {{end}}
+            </div>
+          </div>
+          {{end}}
+        </div>
+        <div class="stamm-actions">
+          <button type="submit">Ausgewählte anlegen</button>
+          <button type="submit" class="secondary" onclick="document.getElementById('stamm-all').value='1'; return confirm('Alle fehlenden Einträge (Landesverband, Regionalstellen, Ortsverbände) als Organisationen anlegen?')">Alle anlegen</button>
+        </div>
+      </form>
+    </details>
+    <script>
+      document.querySelectorAll('.stamm-toggle').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var boxes = document.querySelectorAll('.stamm-ovs[data-group="' + b.dataset.group + '"] input:not(:disabled)');
+          var allOn = Array.prototype.every.call(boxes, function (cb) { return cb.checked; });
+          boxes.forEach(function (cb) { cb.checked = !allOn; });
+        });
+      });
+    </script>
+    {{end}}
+
+    <h2>Neue Organisation anlegen</h2>
+    <form method="post" class="new-user-form" autocomplete="off">
+      <input type="hidden" name="csrf" value="{{$csrf}}">
+      <input type="hidden" name="action" value="create_org">
+      <input type="hidden" name="tab" value="orgs">
+      <div class="field">
+        <label>Name</label>
+        <input type="text" name="name" required placeholder="z.B. THW OV Musterstadt" style="width:260px;">
+      </div>
+      <div class="field">
+        <label>Kurzname</label>
+        <input type="text" name="kurz" placeholder="z.B. OV Musterstadt">
+      </div>
+      <div class="field">
+        <label>Ebene</label>
+        <select name="ebene">
+          {{range $ebenen}}<option value="{{.Key}}">{{.Label}}</option>{{end}}
+        </select>
+      </div>
+      <button type="submit">Anlegen</button>
+    </form>
+
+    <table>
+      <thead><tr>
+        <th>ID</th><th>Name</th><th>Kurzname</th><th>Ebene</th><th>Konten</th><th>Org-Admins</th><th>Einsätze</th><th>Zugänge</th><th>Aktionen</th>
+      </tr></thead>
+      <tbody>
+      {{range .Orgs}}
+        <tr>
+          <td>{{.ID}}</td>
+          <td colspan="3">
+            <form method="post" class="inline">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="update_org">
+              <input type="hidden" name="tab" value="orgs">
+              <input type="hidden" name="org_id" value="{{.ID}}">
+              <input type="text" name="name" value="{{.Name}}" style="font-weight:bold;width:240px;">
+              <input type="text" name="kurz" value="{{.Kurz}}" placeholder="Kurzname" style="width:150px;">
+              {{$eb := .Ebene}}
+              <select name="ebene">
+                {{range $ebenen}}<option value="{{.Key}}" {{if eq $eb .Key}}selected{{end}}>{{.Label}}</option>{{end}}
+              </select>
+              <button type="submit" class="secondary">Speichern</button>
+              {{if .StammKey}}<span class="badge user" title="aus den Stammdaten ({{.StammKey}})">Stammdaten</span>{{end}}
+            </form>
+          </td>
+          <td>{{.Users}}</td>
+          <td>{{.Admins}}{{if eq .Admins 0}} <span class="badge tfa-off" title="Ohne Org-Admin kann niemand Zugänge hinterlegen">keiner</span>{{end}}</td>
+          <td>{{.Einsaetze}}</td>
+          <td>{{.Creds}} / 3</td>
+          <td style="white-space:nowrap;">
+            {{if and (eq .Users 0) (eq .Einsaetze 0)}}
+            <form method="post" class="inline" onsubmit="return confirm('Organisation „{{.Name}}“ löschen? Hinterlegte Zugänge werden mit gelöscht.')">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="delete_org">
+              <input type="hidden" name="tab" value="orgs">
+              <input type="hidden" name="org_id" value="{{.ID}}">
+              <button type="submit" class="danger">Löschen</button>
+            </form>
+            {{else}}<span style="font-size:12px;color:#666;">in Nutzung</span>{{end}}
+          </td>
+        </tr>
+      {{end}}
+      </tbody>
+    </table>
+    {{end}}
+
+    {{if eq .Tab "server"}}
+    <h2>Kacheln der Karten</h2>
+    <p class="admin-hint">
+      Alle Karten laden ihre OpenStreetMap-Kacheln über diese Installation (<code>/tiles/…</code>), die sie 30 Tage zwischenspeichert.
+      Die Einstellungen hier gelten sofort und gehen der Umgebungskonfiguration (<code>TILE_SOURCE</code>, <code>TILE_PUBLIC</code>, <code>TILE_TOKEN</code>) vor.
+    </p>
+    <form method="post" autocomplete="off" id="tiles-form">
+      <input type="hidden" name="csrf" value="{{$csrf}}">
+      <input type="hidden" name="action" value="set_tiles" id="tiles-action">
+      <input type="hidden" name="tab" value="server">
+      <div class="srv-cards">
+        <section class="srv-card">
+          <h3>Quelle für fehlende Kacheln</h3>
+          <p>Leer lassen heißt: direkt von OpenStreetMap (Standard). Laufen am Standort mehrere Installationen hinter derselben öffentlichen Adresse, trage die Kachel-URL einer anderen Installation oder eines zentralen Kachel-Dienstes ein, damit nach außen nur eine Stelle bei OpenStreetMap anfragt.</p>
+          <label for="tile_source">Externe Kachelquelle</label>
+          <input type="text" id="tile_source" name="tile_source" value="{{.TileSource}}" placeholder="https://luk-lv.example/tiles/{z}/{x}/{y}.png?key=TOKEN">
+          <div class="srv-actions">
+            <button type="submit">Speichern</button>
+            <button type="submit" class="secondary" onclick="document.getElementById('tiles-action').value='test_tiles'">Testabruf</button>
+            <span class="srv-muted">Testabruf holt eine Probekachel von der eingetragenen Quelle, ohne zu speichern.</span>
+          </div>
+          <div class="srv-status">Wirksame Quelle: <code>{{.TileEffective}}</code></div>
+        </section>
+        <section class="srv-card">
+          <h3>Eigenen Kachel-Endpunkt freigeben</h3>
+          <p>Andere Installationen können diesen Server als Quelle nutzen. Angemeldete Nutzer dieser Installation brauchen nie einen Token.</p>
+          <label class="srv-check"><input type="checkbox" name="tile_public" value="1" {{if .TilePublic}}checked{{end}}> ohne Anmeldung erreichbar (CORS *)</label>
+          <label for="tile_token">Token für Zugriffe ohne Anmeldung (optional)</label>
+          <input type="text" id="tile_token" name="tile_token" value="{{.TileToken}}" placeholder="leer = ohne Token">
+          <div class="srv-status">
+            Eigene Kachel-URL, dort als Quelle eintragen{{if .TileToken}} (Token als <code>?key=…</code> anhängen){{end}}:<br>
+            <code class="srv-url">{{.TileEndpoint}}{{if .TileToken}}?key={{.TileToken}}{{end}}</code>
+          </div>
+        </section>
+      </div>
+    </form>
+
+    <h2>E-Mail-Versand</h2>
+    <p class="admin-hint">
+      Systemmails (Passwort vergessen) gehen über diesen Zugang. Leere Felder übernehmen den Wert aus der Umgebungskonfiguration
+      (<code>MAIL_FROM</code>, <code>SMTP_*</code>), der als Platzhalter angezeigt wird; eingetragene Werte gelten sofort.
+    </p>
+    <form method="post" autocomplete="off" id="mail-form">
+      <input type="hidden" name="csrf" value="{{$csrf}}">
+      <input type="hidden" name="action" value="set_mail" id="mail-action">
+      <input type="hidden" name="tab" value="server">
+      <div class="srv-cards">
+        <section class="srv-card srv-card-wide">
+          <h3>Absender und SMTP-Server</h3>
+          <div class="srv-grid">
+            <div class="srv-field">
+              <label for="mail_from">Absenderadresse</label>
+              <input type="text" id="mail_from" name="mail_from" value="{{.Mail.From}}" placeholder="{{.MailEnv.From}}">
+            </div>
+            <div class="srv-field">
+              <label for="mail_from_name">Absendername</label>
+              <input type="text" id="mail_from_name" name="mail_from_name" value="{{.Mail.FromName}}" placeholder="{{.MailEnv.FromName}}">
+            </div>
+            <div class="srv-field">
+              <label for="smtp_host">SMTP-Server</label>
+              <input type="text" id="smtp_host" name="smtp_host" value="{{.Mail.Host}}" placeholder="{{if .MailEnv.Host}}{{.MailEnv.Host}}{{else}}leer = lokales sendmail{{end}}">
+            </div>
+            <div class="srv-field srv-field-narrow">
+              <label for="smtp_port">Port</label>
+              <input type="text" id="smtp_port" name="smtp_port" value="{{.Mail.Port}}" placeholder="{{.MailEnv.Port}}" inputmode="numeric">
+            </div>
+            <div class="srv-field srv-field-narrow">
+              <label for="smtp_security">Verschlüsselung</label>
+              <select id="smtp_security" name="smtp_security">
+                <option value="" {{if eq .Mail.Security ""}}selected{{end}}>aus Umgebung ({{.MailEnv.Security}})</option>
+                <option value="tls" {{if eq .Mail.Security "tls"}}selected{{end}}>STARTTLS (Port 587)</option>
+                <option value="ssl" {{if eq .Mail.Security "ssl"}}selected{{end}}>TLS ab Verbindung (Port 465)</option>
+                <option value="none" {{if eq .Mail.Security "none"}}selected{{end}}>unverschlüsselt</option>
+              </select>
+            </div>
+            <div class="srv-field">
+              <label for="smtp_user">Benutzername</label>
+              <input type="text" id="smtp_user" name="smtp_user" value="{{.Mail.User}}" placeholder="{{if .MailEnv.User}}{{.MailEnv.User}}{{else}}leer = ohne Anmeldung{{end}}">
+            </div>
+            <div class="srv-field">
+              <label for="smtp_pass">Passwort</label>
+              <input type="password" id="smtp_pass" name="smtp_pass" value="" autocomplete="new-password" placeholder="{{if .Mail.PassSet}}gespeichert, leer lassen zum Behalten{{else if .MailEnv.PassSet}}aus Umgebung{{else}}kein Passwort{{end}}">
+              {{if .Mail.PassSet}}<label class="srv-check"><input type="checkbox" name="smtp_pass_clear" value="1"> gespeichertes Passwort entfernen</label>{{end}}
+            </div>
+          </div>
+          <div class="srv-actions">
+            <button type="submit">Speichern</button>
+            <button type="submit" class="secondary" onclick="document.getElementById('mail-action').value='test_mail'">Testmail senden an</button>
+            <input type="text" name="mail_test_to" value="{{.MailTestTo}}" placeholder="empfaenger@example.org" class="srv-inline">
+            <span class="srv-muted">Die Testmail nutzt die Eingaben oben, ohne zu speichern. Das Passwort wird verschlüsselt abgelegt und nie angezeigt.</span>
+          </div>
+          <div class="srv-status">Wirksam: {{.MailTransport}}<br>Absender: <code>{{.MailSender}}</code></div>
+        </section>
+      </div>
+    </form>
+    {{end}}
+
+    {{if eq .Tab "einstellungen"}}
+    <h2>Kartenmittelpunkt</h2>
+    <p class="admin-hint">
+      Mittelpunkt der Dashboard-Karten und neuer Lagekarten für alle Konten der Organisation <strong>{{.OrgName}}</strong>.
+      Standard ist der Standort aus den Stammdaten, sonst die Einstellung des Servers. Ein eigener Mittelpunkt überschreibt das; Marker auf der Karte ziehen oder Koordinaten eintragen.
+    </p>
+    <form method="post" autocomplete="off" id="map-form">
+      <input type="hidden" name="csrf" value="{{$csrf}}">
+      <input type="hidden" name="action" value="set_map">
+      <input type="hidden" name="tab" value="einstellungen">
+      <div class="srv-cards">
+        <section class="srv-card">
+          <h3>Eigener Mittelpunkt</h3>
+          <div class="srv-grid">
+            <div class="srv-field">
+              <label for="map_lat">Breite (Lat)</label>
+              <input type="text" id="map_lat" name="map_lat" value="{{.MapLat}}" placeholder="{{printf "%.5f" .MapDefLat}}" inputmode="decimal">
+            </div>
+            <div class="srv-field">
+              <label for="map_lng">Länge (Lng)</label>
+              <input type="text" id="map_lng" name="map_lng" value="{{.MapLng}}" placeholder="{{printf "%.5f" .MapDefLng}}" inputmode="decimal">
+            </div>
+          </div>
+          <label for="map_name">Bezeichnung des Standorts (optional)</label>
+          <input type="text" id="map_name" name="map_name" value="{{.MapName}}" placeholder="{{.MapDefName}}">
+          <div class="srv-actions">
+            <button type="submit">Speichern</button>
+            <button type="button" class="secondary" id="map-reset">Standard verwenden</button>
+            <span class="srv-muted">„Standard verwenden“ leert die Koordinaten; speichern nicht vergessen.</span>
+          </div>
+          <div class="srv-status">
+            Standard: <code>{{printf "%.5f" .MapDefLat}}, {{printf "%.5f" .MapDefLng}}</code> {{.MapDefName}} – {{.MapDefSource}}<br>
+            Wirksam: <code>{{printf "%.5f" .MapEffLat}}, {{printf "%.5f" .MapEffLng}}</code>{{if .MapOwn}} (eigener Mittelpunkt){{else}} (Standard){{end}}
+          </div>
+        </section>
+        <section class="srv-card">
+          <h3>Vorschau</h3>
+          <div id="map-preview" class="srv-map" data-lat="{{printf "%.6f" .MapEffLat}}" data-lng="{{printf "%.6f" .MapEffLng}}" data-def-lat="{{printf "%.6f" .MapDefLat}}" data-def-lng="{{printf "%.6f" .MapDefLng}}" data-tiles="{{.TileURL}}"></div>
+          <span class="srv-muted">Marker ziehen oder in die Karte klicken, um den Mittelpunkt zu setzen.</span>
+        </section>
+      </div>
+    </form>
+    <script>
+    (function () {
+      var el = document.getElementById('map-preview');
+      if (!el || typeof L === 'undefined') return;
+      var lat = parseFloat(el.dataset.lat), lng = parseFloat(el.dataset.lng);
+      var fLat = document.getElementById('map_lat'), fLng = document.getElementById('map_lng');
+      var map = L.map(el).setView([lat, lng], 10);
+      L.tileLayer(el.dataset.tiles || '/tiles/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap-Mitwirkende', maxZoom: 19 }).addTo(map);
+      var marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+      function setFields(ll) {
+        fLat.value = ll.lat.toFixed(5);
+        fLng.value = ll.lng.toFixed(5);
+      }
+      marker.on('dragend', function () { setFields(marker.getLatLng()); });
+      map.on('click', function (e) { marker.setLatLng(e.latlng); setFields(e.latlng); });
+      function fromFields() {
+        var a = parseFloat(String(fLat.value).replace(',', '.')), b = parseFloat(String(fLng.value).replace(',', '.'));
+        if (isFinite(a) && isFinite(b)) { marker.setLatLng([a, b]); map.panTo([a, b]); }
+      }
+      fLat.addEventListener('change', fromFields);
+      fLng.addEventListener('change', fromFields);
+      document.getElementById('map-reset').addEventListener('click', function () {
+        fLat.value = ''; fLng.value = '';
+        var d = [parseFloat(el.dataset.defLat), parseFloat(el.dataset.defLng)];
+        marker.setLatLng(d); map.panTo(d);
+      });
+      setTimeout(function () { map.invalidateSize(); }, 50);
+    })();
+    </script>
+
+    <h2>Nachrichten-Feeds</h2>
+    <p class="admin-hint">
+      Die vier Nachrichten-Kacheln des Dashboards (zwei Reiter oben rechts, zwei unten rechts). Standard sind die eingebauten Feeds; eigene Adressen (RSS/Atom, eine je Zeile) ersetzen sie je Kachel, ein eigener Titel beschriftet den Reiter.
+      Leere Felder bedeuten Standard. Hosts eigener Feeds sind für den Abruf automatisch freigegeben.
+    </p>
+    <form method="post" autocomplete="off" id="feeds-form">
+      <input type="hidden" name="csrf" value="{{$csrf}}">
+      <input type="hidden" name="action" value="set_feeds" id="feeds-action">
+      <input type="hidden" name="tab" value="einstellungen">
+      <div class="srv-cards">
+        {{range .Feeds}}
+        <section class="srv-card">
+          <h3>Kachel {{.Slot}} – Standard: {{.DefTitle}}{{if .Own}} <span class="badge tfa-on">eigene Werte</span>{{end}}</h3>
+          <label for="feed_title_{{.Slot}}">Titel des Reiters</label>
+          <input type="text" id="feed_title_{{.Slot}}" name="feed_title_{{.Slot}}" value="{{.Title}}" placeholder="{{.DefTitle}}">
+          <label for="feed_urls_{{.Slot}}">Feed-Adressen (eine je Zeile)</label>
+          <textarea id="feed_urls_{{.Slot}}" name="feed_urls_{{.Slot}}" rows="3" placeholder="{{.DefURLs}}">{{.URLs}}</textarea>
+        </section>
+        {{end}}
+      </div>
+      <div class="srv-actions" style="margin-top:12px;">
+        <button type="submit">Speichern</button>
+        <button type="submit" class="secondary" onclick="document.getElementById('feeds-action').value='reset_feeds'">Alle auf Standard zurücksetzen</button>
+      </div>
+    </form>
+    {{end}}
+
+    {{if eq .Tab "zugaenge"}}
+    <p class="admin-hint">
+      Zugänge gelten für alle Konten der Organisation <strong>{{.OrgName}}</strong>. Die Schlüssel werden verschlüsselt gespeichert, nie angezeigt und nie an den Browser ausgeliefert;
+      sichtbar bleiben nur die letzten Zeichen. Ein neuer Wert ersetzt den alten. Der globale Admin sieht die Schlüssel nicht.
+      „Verbindung prüfen" ruft den Dienst einmal mit dem hinterlegten Schlüssel auf. Ohne Schlüssel findet kein Abruf statt; lehnt ein Dienst den Schlüssel ab, pausieren weitere Abrufe 30 Minuten, damit die Adresse des Servers nicht gesperrt wird.
+    </p>
+
+    <table>
+      <thead><tr><th>Zugang</th><th>Stand</th><th>Neuer Wert</th><th></th></tr></thead>
+      <tbody>
+      {{range .Creds}}
+        <tr>
+          <td style="min-width:260px;">
+            <strong>{{.Label}}</strong><br>
+            <span style="font-size:12px;color:#666;">{{.Help}}</span>
+          </td>
+          <td style="white-space:nowrap;">
+            {{if .Set}}
+              <span class="badge tfa-on">hinterlegt</span> <span class="pw" title="letzte Zeichen">{{.Hint}}</span><br>
+              <span style="font-size:12px;color:#666;">{{.SetAt}}{{if .SetByLabel}} von {{.SetByLabel}}{{end}}</span>
+            {{else}}
+              <span class="badge tfa-off">nicht hinterlegt</span>
+            {{end}}
+          </td>
+          <td>
+            <form method="post" class="inline" autocomplete="off">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="set_credential">
+              <input type="hidden" name="tab" value="zugaenge">
+              <input type="hidden" name="kind" value="{{.Kind}}">
+              <input type="password" name="value" placeholder="{{if .Set}}neuen Schlüssel einfügen{{else}}Schlüssel einfügen{{end}}" style="width:320px;" autocomplete="new-password" required minlength="8">
+              <button type="submit">{{if .Set}}Ersetzen{{else}}Hinterlegen{{end}}</button>
+            </form>
+          </td>
+          <td style="white-space:nowrap;">
+            {{if .Set}}
+            <form method="post" class="inline">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="check_credential">
+              <input type="hidden" name="tab" value="zugaenge">
+              <input type="hidden" name="kind" value="{{.Kind}}">
+              <button type="submit" class="secondary" title="Einmal live gegen den Dienst prüfen">Verbindung prüfen</button>
+            </form>
+            <form method="post" class="inline" onsubmit="return confirm('{{.Label}} entfernen? Die Funktion steht der Organisation dann nicht mehr zur Verfügung.')">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="delete_credential">
+              <input type="hidden" name="tab" value="zugaenge">
+              <input type="hidden" name="kind" value="{{.Kind}}">
+              <button type="submit" class="danger">Entfernen</button>
+            </form>
+            {{end}}
+          </td>
+        </tr>
+      {{end}}
+      </tbody>
+    </table>
+
+    {{if .DiveraKeySet}}
+    <h2>Divera: Gruppen im Dashboard</h2>
+    <p class="admin-hint">Die Kachel „Divera" im Dashboard zählt Personen je Gruppe. Sammelgruppen, in denen dieselben Personen noch einmal enthalten sind, würden die Zahlen verfälschen; sie lassen sich hier abwählen. Die Gruppen kommen live aus Divera, im Standard sind alle angezeigt.</p>
+    {{if .DiveraGroupsErr}}
+      <div class="error">Gruppen konnten nicht aus Divera gelesen werden: {{.DiveraGroupsErr}}</div>
+    {{else}}
+    <form method="post" autocomplete="off" class="divera-groups">
+      <input type="hidden" name="csrf" value="{{$csrf}}">
+      <input type="hidden" name="action" value="set_divera_groups">
+      <input type="hidden" name="tab" value="zugaenge">
+      <input type="hidden" name="all_ids" value="{{range $i, $g := .DiveraGroups}}{{if $i}},{{end}}{{$g.ID}}{{end}}">
+      <div class="stamm-ovs" style="max-height:none;">
+        {{range .DiveraGroups}}
+        <label><input type="checkbox" name="show" value="{{.ID}}" {{if not .Hidden}}checked{{end}}> {{.Name}}{{if .Hidden}} <span class="badge tfa-off">ausgeblendet</span>{{end}}</label>
+        {{else}}
+        <span style="color:#666;">Divera meldet keine Gruppen.</span>
+        {{end}}
+      </div>
+      {{if .DiveraGroups}}<div style="margin-top:8px;"><button type="submit">Auswahl speichern</button></div>{{end}}
+    </form>
+    {{end}}
+    {{end}}
+
+    <h2>STEIN-Abruf</h2>
+    <form method="post" class="new-user-form" autocomplete="off">
+      <input type="hidden" name="csrf" value="{{$csrf}}">
+      <input type="hidden" name="action" value="set_stein_mode">
+      <input type="hidden" name="tab" value="zugaenge">
+      <div class="field">
+        <label>Modus</label>
+        <select name="stein_mode">
+          <option value="poll" {{if ne .SteinMode "webhook"}}selected{{end}}>Abruf alle 2 Minuten (Standard)</option>
+          <option value="webhook" {{if eq .SteinMode "webhook"}}selected{{end}}>Webhook: STEIN meldet Änderungen, voller Abruf nur alle 30 Minuten</option>
+        </select>
+      </div>
+      <button type="submit">Speichern</button>
+    </form>
+    <p class="admin-hint">
+      STEIN erlaubt 20 Anfragen pro Minute und IP und sperrt die Adresse bei Überschreitung eine Stunde. Im Modus „Abruf" holt der Server alle zwei Minuten den Stand aller Live-Einheiten in einer Anfrage.
+      Im Modus „Webhook" meldet STEIN jede Änderung sofort; der Server holt dann nur die betroffenen Ortsverbände gebündelt nach und fragt die ganze Menge nur noch alle 30 Minuten ab. Der STEIN API-Schlüssel bleibt in beiden Modi nötig, weil die Webhook-Nachricht nur Verweise enthält.
+    </p>
+
+    {{if eq .SteinMode "webhook"}}
+    <h2>Webhook einrichten</h2>
+    <p class="admin-hint">
+      1. In STEIN unter den Einstellungen <strong>jedes Ortsverbands</strong> der Organisation diese Webhook-URL eintragen:<br>
+      <span class="pw" style="user-select:all;">{{.WebhookURL}}</span><br>
+      2. Das dort angezeigte Webhook-Secret des Ortsverbands hier mit einer Bezeichnung hinterlegen. Jeder Ortsverband hat sein eigenes Secret; der Server prüft den Header <code>X-Secret</code> jeder Nachricht dagegen.<br>
+      3. Unten erscheinen die eingegangenen Ereignisse. Bleiben sie aus, läuft weiterhin der volle Abruf alle 30 Minuten; zum Testen in STEIN einen Status ändern.
+    </p>
+    <form method="post" class="new-user-form" autocomplete="off">
+      <input type="hidden" name="csrf" value="{{$csrf}}">
+      <input type="hidden" name="action" value="add_webhook_secret">
+      <input type="hidden" name="tab" value="zugaenge">
+      <div class="field">
+        <label>Ortsverband (Bezeichnung)</label>
+        <input type="text" name="label" required placeholder="z.B. OV Musterstadt" style="width:220px;">
+      </div>
+      <div class="field">
+        <label>Webhook-Secret aus STEIN</label>
+        <input type="password" name="value" required minlength="8" autocomplete="new-password" style="width:320px;">
+      </div>
+      <button type="submit">Hinterlegen</button>
+    </form>
+    <table>
+      <thead><tr><th>Ortsverband</th><th>Secret</th><th>Hinterlegt</th><th></th></tr></thead>
+      <tbody>
+      {{range .WebhookSecrets}}
+        <tr>
+          <td><strong>{{.Label}}</strong></td>
+          <td><span class="pw">{{.Hint}}</span></td>
+          <td style="font-size:12px;color:#666;white-space:nowrap;">{{.SetAt}}{{if .SetByLabel}} von {{.SetByLabel}}{{end}}</td>
+          <td>
+            <form method="post" class="inline" onsubmit="return confirm('Webhook-Secret „{{.Label}}“ entfernen?')">
+              <input type="hidden" name="csrf" value="{{$csrf}}">
+              <input type="hidden" name="action" value="delete_webhook_secret">
+              <input type="hidden" name="tab" value="zugaenge">
+              <input type="hidden" name="label" value="{{.Label}}">
+              <button type="submit" class="danger">Entfernen</button>
+            </form>
+          </td>
+        </tr>
+      {{else}}
+        <tr><td colspan="4" style="color:#666;">Noch kein Webhook-Secret hinterlegt. Ohne Secret werden eingehende Nachrichten abgewiesen.</td></tr>
+      {{end}}
+      </tbody>
+    </table>
+
+    <h2>Eingegangene Ereignisse</h2>
+    <p class="admin-hint">Letzte Stunde: <strong>{{.WebhookLastHour}}</strong> · zuletzt: <strong>{{if .WebhookLast}}{{.WebhookLast}}{{else}}noch nie{{end}}</strong> (Zeiten in UTC, Ereignisse werden 7 Tage aufbewahrt)</p>
+    <table>
+      <thead><tr><th>Empfangen</th><th>Ereignis</th><th>Umgebung</th><th>Typ</th><th>Aktion</th><th>ID</th><th>Ortsverband (BU)</th><th>Secret</th></tr></thead>
+      <tbody>
+      {{range .WebhookEvents}}
+        <tr>
+          <td style="white-space:nowrap;">{{.ReceivedAt}}</td><td style="font-size:12px;">{{.EventID}}</td><td>{{.Environment}}</td><td>{{.ItemType}}</td><td>{{.Action}}</td><td>{{.ItemID}}</td><td>{{.ParentID}}</td><td>{{.SecretLabel}}</td>
+        </tr>
+      {{else}}
+        <tr><td colspan="8" style="color:#666;">Noch keine Ereignisse eingegangen.</td></tr>
+      {{end}}
+      </tbody>
+    </table>
+    {{end}}
+    {{end}}
+  </div>
+  </div>
+  </div><!-- /admin-scroll -->
+
+  {{.Footer}}
+</body>
+</html>

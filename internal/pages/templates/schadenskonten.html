@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="referrer" content="origin">
+    <title>Schadenskonten – {{.Title}}</title>
+    <link rel="icon" type="image/png" href="/images/favicon_steinmap.png">
+    {{.PwaHead}}
+    <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/schadenskonten.css?v={{.AssetVersion}}" />
+    {{.StabScript}}
+    <script>
+      // Katalog-Pfade der taktischen Zeichen + Fokus-Konto aus der URL.
+      window.SK_CONFIG = {{.Config}};
+    </script>
+    <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+    <script src="/js/luk_core.js?v={{.AssetVersion}}"></script>
+  </head>
+  <body class="sk-body luk-page">
+    {{.Header}}
+    <div id="luk-readonly-banner" class="luk-readonly-banner" hidden></div>
+
+    <div class="container sk-container">
+      <div class="row">
+        <!-- Linke Seite: Anlegen, Ansicht, Sprung-Liste, Tree-Source -->
+        <aside class="sk-box sk-side-box luk-no-print" aria-label="Übersicht und Steuerung">
+          <div class="sk-section">
+            <div class="sk-section-title">Schadenskonten</div>
+            <div id="sk-create-section">
+              <div class="sk-row">
+                <input type="text" id="sk-new-title" placeholder="Titel des neuen Schadenskontos" maxlength="200" autocomplete="off" />
+              </div>
+              <div class="sk-row">
+                <button type="button" id="sk-new-btn" class="sk-btn">+ Neues Schadenskonto</button>
+              </div>
+            </div>
+            <div class="sk-row sk-row-split">
+              <button type="button" id="sk-overview-btn" class="sk-btn-secondary" title="Kompakte Übersicht aller Schadenskonten">Übersicht</button>
+              <button type="button" id="sk-print-btn" class="sk-btn-secondary" title="Alle Schadenskonten drucken oder als PDF speichern">Drucken / PDF</button>
+            </div>
+            <p class="sk-hint">Klick auf einen Eintrag scrollt zur Karte. Einheiten können auch hier abgelegt werden.</p>
+            <div id="sk-list" class="sk-list"></div>
+          </div>
+
+          <div class="sk-section">
+            <div class="sk-section-title">Einheiten aus der Führungsharke</div>
+            <p class="sk-hint" id="sk-tree-hint">Einheiten auf ein Schadenskonto ziehen, um sie zuzuordnen. Stärke und Status kommen live aus Führungsharke und Kräfteplanung.</p>
+            <div id="sk-tree-source" class="sk-tree-source"></div>
+          </div>
+        </aside>
+
+        <!-- Rechte Seite: alle Schadenskonten als horizontal scrollbare Karten
+             ODER als kompakte Uebersicht (Mode-Switch ueber Sidebar). -->
+        <main class="sk-box sk-main-box">
+          <div id="sk-empty" class="sk-empty" hidden>
+            <h2>Noch keine Schadenskonten</h2>
+            <p id="sk-empty-text">Links über „+ Neues Schadenskonto" das erste anlegen.</p>
+          </div>
+          <div id="sk-cards-scroll" class="sk-cards-scroll">
+            <div id="sk-cards" class="sk-cards"></div>
+          </div>
+          <div id="sk-overview-view" class="sk-overview-view" hidden>
+            <div id="sk-overview-grid" class="sk-overview-grid"></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Dialog: Taktische Zeichen auswaehlen.
+         Oben: Suche + Symbol-Grid. Unten: Freitext-Eingabe + Aa+ Button. -->
+    <dialog id="sk-tz-dialog" class="luk-dialog luk-dialog-wide sk-dialog">
+      <h2 id="sk-tz-dialog-title">Taktische Zeichen auswählen</h2>
+      <form method="dialog">
+        <input type="text" id="sk-tz-search" placeholder="Suche…" autocomplete="off" aria-label="Zeichen suchen" />
+        <div id="sk-tz-grid" class="sk-tz-picker-grid"></div>
+        <div class="sk-tz-custom-row">
+          <input type="text" id="sk-tz-custom-input" maxlength="160" placeholder="Eigener Text als Eintrag…" autocomplete="off" />
+          <button type="button" id="sk-tz-custom-add" class="sk-btn" title="Freien Text als Eintrag hinzufügen">Aa+</button>
+        </div>
+        <div class="luk-dialog-actions">
+          <button type="button" id="sk-tz-close" class="luk-btn">Schließen</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Dialog: Fremdeinheit anlegen / bearbeiten -->
+    <dialog id="sk-fremd-dialog" class="luk-dialog sk-dialog">
+      <h2 id="sk-fd-title">Fremdeinheit bearbeiten</h2>
+      <form method="dialog">
+        <label>Art
+          <select id="sk-fd-kind">
+            <option value="fw">Feuerwehr</option>
+            <option value="polizei">Polizei</option>
+            <option value="rd">Rettungsdienst</option>
+            <option value="sanitaet">Sanitätsdienst</option>
+            <option value="bw">Bundeswehr</option>
+            <option value="sonstige">Sonstige</option>
+          </select>
+        </label>
+        <label>Bezeichnung
+          <input type="text" id="sk-fd-bezeichnung" maxlength="160" autocomplete="off" placeholder="z.B. LF 20 Musterstadt" />
+        </label>
+        <div class="luk-field-row">
+          <label>Funkrufname
+            <input type="text" id="sk-fd-funkruf" maxlength="120" autocomplete="off" />
+          </label>
+          <label>Dienststelle / Wache
+            <input type="text" id="sk-fd-ov" maxlength="120" autocomplete="off" />
+          </label>
+        </div>
+        <label>Stärke (z.B. 1/3/8)
+          <input type="text" id="sk-fd-staerke" maxlength="40" autocomplete="off" placeholder="Führer/Unterführer/Mannschaft" />
+        </label>
+        <label>Bemerkung
+          <textarea id="sk-fd-note" rows="2" maxlength="500"></textarea>
+        </label>
+        <div class="luk-dialog-actions">
+          <button type="button" id="sk-fd-cancel" class="luk-btn">Abbrechen</button>
+          <button type="button" id="sk-fd-save" class="luk-btn luk-btn-primary">Übernehmen</button>
+        </div>
+      </form>
+    </dialog>
+
+    {{.Footer}}
+    <script src="/js/schadenskonten.js?v={{.AssetVersion}}"></script>
+  </body>
+</html>

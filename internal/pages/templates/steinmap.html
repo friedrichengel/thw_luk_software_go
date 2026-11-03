@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="referrer" content="origin">
+    <title>STEINmap</title>
+
+    <link rel="icon" type="image/png" href="/images/favicon_steinmap.png">
+    {{.PwaHead}}
+
+    <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/leaflet.css" />
+    <link rel="stylesheet" href="/css/steinmap.css?v={{.AssetVersion}}" />
+
+    <!-- Eingeloggter OV -->
+    {{.MapCenter}}
+
+    <!-- Taktische Zeit -->
+    <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+
+    <script src="/js/leaflet.js"></script>
+    <script src="/js/leaflet.pattern.js"></script>
+    <script src="/js/html2canvas.min.js"></script>
+    <script src="/js/jspdf.umd.min.js"></script>
+    <script src="/js/dom-to-image-more.min.js"></script>
+  </head>
+  <body class="{{if .Embed}}embed-mode{{end}}">
+    {{if not .Embed}}
+    <!-- Header -->
+    <div class="header" id="header">
+      <div id="tacticalClock" class="title"></div>
+      <div class="header-right">
+        <img src="/images/image.png" alt="THW" />
+      </div>
+    </div>
+    {{end}}
+
+    <!-- Hauptcontainer: Karte + Fahrzeugliste -->
+    <div class="container">
+      <div class="row">
+        <!-- Karte -->
+        <div class="map-box">
+          <div class="search-bar">
+            <select id="search-mode">
+              <option value="address">Adresse</option>
+              <option value="stein">Stein</option>
+            </select>
+            <input type="text" id="geocode-input" placeholder="Adresse eingeben…" autocomplete="off" data-lpignore="true" />
+            <button id="geocode-btn">Suchen</button>
+          </div>
+          <div id="map"></div>
+        </div>
+
+        <!-- Fahrzeugliste (anfangs leer, behält Breite/Höhe) -->
+        <div class="list-box">
+          <div class="list-content">
+            <!-- Filter-Controls -->
+            <div id="filterControls">
+              <label><input type="checkbox" id="filter_all" value="all" checked> Alles</label>
+              <label><input type="checkbox" class="filter-checkbox" id="filter_1" value="1"> Fahrzeuge</label>
+              <label><input type="checkbox" class="filter-checkbox" id="filter_2" value="2"> Gerät</label>
+              <label><input type="checkbox" class="filter-checkbox" id="filter_3" value="3"> Person</label>
+              <label><input type="checkbox" class="filter-checkbox" id="filter_4" value="4"> Einheit</label>
+              <label><input type="checkbox" class="filter-checkbox" id="filter_5" value="5"> Anhänger</label>
+            </div>
+
+            <div id="vehicleList">
+              <!-- Hier erscheinen später die Fahrzeuge -->
+            </div>
+          </div>
+
+            <!-- Neuer Drucken-Button (außerhalb von .list-content) -->
+            <button id="printBtn">Drucken</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tooltip-Container -->
+    <div id="tooltip"></div>
+
+    {{if not .Embed}}
+    <!-- Footer -->
+    {{.Footer}}
+    {{else}}
+    <span id="dataStand" hidden></span>
+    {{end}}
+
+    <!-- Druck-Dialog (natives HTML dialog-Element) -->
+    <dialog id="printDialog" style="border:none;border-radius:12px;padding:24px;width:90%;max-width:480px;box-shadow:0 8px 30px rgba(0,0,0,0.3);">
+      <h2 style="margin:0 0 16px;font-size:18px;color:#003399;">Karte drucken</h2>
+      <label for="printTitle" style="display:block;font-weight:600;margin:12px 0 6px;font-size:14px;">Ueberschrift (erscheint ueber dem Kartenbild)</label>
+      <input type="text" id="printTitle" placeholder="z.B. Lage XY" autocomplete="off" data-lpignore="true" style="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:4px;font-size:14px;box-sizing:border-box;" />
+      <label for="printFilename" style="display:block;font-weight:600;margin:12px 0 6px;font-size:14px;">Dateiname</label>
+      <input type="text" id="printFilename" placeholder="Dateiname" autocomplete="off" data-lpignore="true" style="width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:4px;font-size:14px;box-sizing:border-box;" />
+      <label style="display:flex;align-items:center;gap:6px;margin:14px 0 4px;font-size:14px;cursor:pointer;"><input type="checkbox" id="printShowStand" checked /> Stand (taktische Zeit) anzeigen</label>
+      <label style="display:flex;align-items:center;gap:6px;margin:4px 0 6px;font-size:14px;cursor:pointer;"><input type="checkbox" id="printShowMarkerInfo" checked /> Weitere Daten ausgeben</label>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button id="confirmPrintBtn" type="button" style="flex:1;padding:10px;font-size:14px;border:1px solid #007bff;border-radius:4px;cursor:pointer;background:#007bff;color:#fff;">PDF erstellen</button>
+        <button id="cancelPrintBtn" type="button" style="flex:1;padding:10px;font-size:14px;border:1px solid #ccc;border-radius:4px;cursor:pointer;background:#fff;color:#333;">Abbrechen</button>
+      </div>
+    </dialog>
+
+    <script src="/js/kraefte_typ.js?v={{.AssetVersion}}"></script>
+    <script src="/js/steinmap.js?v={{.AssetVersion}}"></script>
+  </body>
+</html>

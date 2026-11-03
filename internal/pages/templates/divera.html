@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="referrer" content="origin">
+    <title>DiveraMap – {{.AppName}}</title>
+
+    <link rel="icon" type="image/png" href="/images/favicon_diveramap.png">
+    {{.PwaHead}}
+
+    <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/leaflet.css" />
+    <link rel="stylesheet" href="/css/divera.css?v={{.AssetVersion}}" />
+
+    <script src="/js/leaflet.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+
+    <!-- Kartenzentrum und Kacheln (Konfiguration), Rechte (window.STAB.divera) -->
+    {{.MapCenter}}
+    {{.StabScript}}
+
+    <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+    <script src="/js/html2canvas.min.js"></script>
+    <script src="/js/jspdf.umd.min.js"></script>
+    <script src="/js/pdf-lib.min.js"></script>
+  </head>
+  <body>
+    <div class="header" id="header">
+      <div id="tacticalClock" class="title"></div>
+      <div id="mid-alert">
+        <img src="/images/Blaulicht_slower.gif" alt="Blaulicht" style="height:84px;"/>
+      </div>
+      <div class="header-right">
+        <img src="/images/image.png" alt="THW" />
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="map-box">
+          <div id="map"></div>
+        </div>
+
+        <div class="list-box">
+          <div class="list-content">
+            <div id="vehicleList"></div>
+          </div>
+          <div class="print-buttons">
+            <button id="printMapBtn" type="button">Karte drucken</button>
+            <button id="printOpsBtn" type="button">Einsatzliste drucken</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{.Footer}}
+
+    <script src="/js/divera.js?v={{.AssetVersion}}"></script>
+  </body>
+</html>

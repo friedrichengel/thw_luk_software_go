@@ -1,0 +1,81 @@
+# THW LuK Stabsansicht (Go) - Docker Compose (Produktion)
+#
+# docker/setup.sh kopiert diese Datei nach <INSTALL_DIR>/docker-compose.yml und
+# schreibt die Werte nach <INSTALL_DIR>/.env. Bei jedem Update holt der
+# Host-Dienst luk-updater die zum Image passende Fassung neu aus dem Image.
+# Eigene Anpassungen deshalb NICHT hier, sondern in docker-compose.override.yml
+# (Compose mischt sie automatisch dazu).
+#
+# Profile:
+#   COMPOSE_PROFILES=cloudflare  startet zusaetzlich den cloudflared-Tunnel;
+#   im Cloudflare-Dashboard zeigt der Public Hostname dann auf http://app:80.
+name: luk
+
+services:
+  app:
+    image: ${IMAGE:?IMAGE in .env setzen}
+    container_name: luk-app
+    restart: unless-stopped
+    ports:
+      # Nur lokal binden - davor Reverse-Proxy oder Tunnel. Fuer direkten
+      # Zugriff im LAN z.B. HTTP_BIND=0.0.0.0:8080 setzen.
+      - "${HTTP_BIND:-127.0.0.1:8080}:80"
+    environment:
+      APP_SECRET: ${APP_SECRET:-}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8080}
+      APP_NAME: ${APP_NAME:-THW LuK}
+      APP_IMAGE: ${IMAGE}
+      MAIL_FROM: ${MAIL_FROM:-}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-THW LuK Stabsansicht}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURITY: ${SMTP_SECURITY:-tls}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      # Externe Dienste (NINA, LHP, RSS, STEIN, Divera) ruft das Programm direkt
+      # ab; STEIN-/Divera-Schluessel hinterlegen die Org-Admins in der Anwendung.
+      # Kacheln: eingebauter Cache (data/tiles im Volume); Quelle und Freigabe siehe .env.sample
+      TILE_URL: ${TILE_URL:-/tiles/{z}/{x}/{y}.png}
+      TILE_SOURCE: ${TILE_SOURCE:-https://tile.openstreetmap.org/{z}/{x}/{y}.png}
+      TILE_PUBLIC: ${TILE_PUBLIC:-0}
+      TILE_TOKEN: ${TILE_TOKEN:-}
+      TILE_CACHE_MAX_MB: ${TILE_CACHE_MAX_MB:-2000}
+      RSS_ALLOWED_HOSTS: ${RSS_ALLOWED_HOSTS:-}
+
+      # Kartenzentrum: leer = Abschnitt "karte" der eingebetteten Stammdaten
+      MAP_CENTER_LAT: ${MAP_CENTER_LAT:-}
+      MAP_CENTER_LNG: ${MAP_CENTER_LNG:-}
+      MAP_CENTER_NAME: ${MAP_CENTER_NAME:-}
+      # Stammdaten-Datei auf dem Host statt der eingebetteten (optional, dann einhaengen)
+      STAMM_FILE: ${STAMM_FILE:-}
+      SYNC_INTERVAL_MS: ${SYNC_INTERVAL_MS:-7000}
+      SESSION_IDLE_MIN: ${SESSION_IDLE_MIN:-720}
+      # Vertraute Proxys fuer X-Forwarded-For/-Proto (Standard im Image: private Netze).
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,fc00::/7}
+      UPDATE_MAX_MB: ${UPDATE_MAX_MB:-500}
+      UPDATE_PUBKEY: ${UPDATE_PUBKEY:-}
+    volumes:
+      - ./data:/app/data
+      - ./updates:/app/updates
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: luk-cloudflared
+    profiles: ["cloudflare"]
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:-}
+    depends_on:
+      - app
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"

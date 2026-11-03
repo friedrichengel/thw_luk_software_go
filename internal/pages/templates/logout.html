@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Abmelden</title>
+<meta http-equiv="refresh" content="0; url=/login">
+</head>
+<body>
+<script>
+  // Browser-Speicher (Einsatz-Auswahl, Footer-State, Editor-Zoom) raeumen,
+  // damit auf Shared-Geraeten der naechste Nutzer nicht den Stand des
+  // Vorgaengers sieht.
+  try {
+    ['luk_harke_zoom','luk_harke_hide_inactive','luk_harke_hide_abg'].forEach(k => localStorage.removeItem(k));
+  } catch (e) {}
+  location.replace('/login');
+</script>
+<noscript>Du wurdest abgemeldet. <a href="/login">Weiter zum Login</a>.</noscript>
+</body>
+</html>

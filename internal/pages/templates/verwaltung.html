@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="referrer" content="origin">
+    <title>Verwaltung – {{.Title}}</title>
+    <link rel="icon" type="image/png" href="/images/favicon_steinmap.png">
+    {{.PwaHead}}
+    <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/leaflet.css" />
+    <link rel="stylesheet" href="/css/einsatz.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/verwaltung.css?v={{.AssetVersion}}" />
+    {{.StabScript}}
+    <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+    <script src="/js/leaflet.js"></script>
+    <script src="/js/luk_core.js?v={{.AssetVersion}}"></script>
+  </head>
+  <body class="luk-page vw-body">
+    {{.Header}}
+
+    <div class="container vw-container">
+      <div class="row vw-row">
+        <section class="luk-box vw-box">
+          <h2>Einsatzdaten</h2>
+          {{if .Neu}}
+            <div class="ez-status ez-status-ok">Einsatz angelegt. Lege jetzt die Mitglieder des Stabes und ihre Rollen fest.</div>
+          {{end}}
+          <form id="vw-meta-form" onsubmit="return false;">
+            <label>Titel
+              <input type="text" id="vw-title" maxlength="200" autocomplete="off" />
+            </label>
+            <div class="luk-field-row">
+              <label>Stabsebene
+                <select id="vw-ebene">
+                  {{range .Ebenen}}
+                    <option value="{{.Key}}">{{.Label}}</option>
+                  {{end}}
+                </select>
+              </label>
+              <label>Bezeichnung des Stabes
+                <input type="text" id="vw-stab" maxlength="160" autocomplete="off" />
+              </label>
+            </div>
+            <label>Bemerkung
+              <textarea id="vw-note" rows="2" maxlength="2000"></textarea>
+            </label>
+            <label>Vorwarnzeit für Schichten (Stunden)
+              <input type="number" id="vw-vorwarn" min="0" max="168" step="0.5" value="3" style="max-width:120px" />
+            </label>
+            <p class="luk-hint">Schichten, die innerhalb dieser Zeit beginnen und noch „geplant" sind, erscheinen in der Kräfteübersicht als fällig. Standard 3 Stunden.</p>
+            <div class="vw-actions">
+              <button type="button" class="luk-btn luk-btn-primary" id="vw-meta-save">Speichern</button>
+            </div>
+          </form>
+
+          <h3>Status</h3>
+          <p id="vw-status-text" class="luk-muted"></p>
+          <div class="vw-actions">
+            <button type="button" class="luk-btn" id="vw-close-btn" hidden>Einsatz abschließen</button>
+            <button type="button" class="luk-btn" id="vw-reopen-btn" hidden>Einsatz wieder öffnen</button>
+            <button type="button" class="luk-btn luk-btn-danger" id="vw-delete-btn">Einsatz löschen</button>
+          </div>
+          <p class="luk-hint">Abschließen setzt den gesamten Einsatz schreibgeschützt und legt einen Snapshot ab. Löschen ist ein Soft-Delete: Das Log bleibt für Exporte erhalten, der Einsatz verschwindet aus allen Ansichten.</p>
+
+          <h3>Export</h3>
+          <div class="vw-actions">
+            <a class="luk-btn" id="vw-export-btn" href="/api/einsatz?action=export&einsatz={{.UUID}}">Gesamten Einsatz als JSON exportieren</a>
+            <button type="button" class="luk-btn" id="vw-snapshot-btn">Snapshot jetzt erstellen</button>
+          </div>
+          <div id="vw-snapshots" class="vw-snapshots"></div>
+        </section>
+
+        <section class="luk-box vw-box">
+          <h2>Kräftekatalog</h2>
+          <form id="vw-katalog-form" onsubmit="return false;">
+            <label>Eigener Bereich
+              <select id="vw-bereich"></select>
+            </label>
+            <p class="luk-hint">Einheiten dieses Bereichs werden in Führungsharke, Kräfteplanung und Lagekarte zuerst vorgeschlagen, danach angrenzende Regionalstellen, der übrige Landesverband und zuletzt Nachbar-Landesverbände. Ohne Auswahl gilt der ganze Landesverband als eigen.</p>
+
+            <h3>Einsatzort</h3>
+            <label>Bezeichnung
+              <input type="text" id="vw-ort-name" maxlength="160" autocomplete="off" placeholder="z.B. Deich Elbe km 12" />
+            </label>
+            <label>Adresse suchen
+              <div class="vw-add-row vw-geo-row">
+                <input type="search" id="vw-ort-such" maxlength="200" autocomplete="off" placeholder="Straße, Ort oder Objekt, z.B. „Elbstraße 12, Wittenberge“" />
+                <button type="button" class="luk-btn" id="vw-ort-such-btn">Suchen</button>
+                <button type="button" class="luk-btn" id="vw-ort-karte-btn" title="Punkt auf der Karte setzen oder verschieben">Karte…</button>
+              </div>
+            </label>
+            <div id="vw-ort-treffer" class="vw-geo-treffer" hidden></div>
+            <div class="luk-field-row">
+              <label>Breite (lat)
+                <input type="text" id="vw-ort-lat" maxlength="20" autocomplete="off" placeholder="52.52" inputmode="decimal" />
+              </label>
+              <label>Länge (lng)
+                <input type="text" id="vw-ort-lng" maxlength="20" autocomplete="off" placeholder="13.40" inputmode="decimal" />
+              </label>
+              <div class="vw-field-btn">
+                <button type="button" class="luk-btn" id="vw-ort-clear" title="Koordinaten löschen (dann gilt das Kartenzentrum)">Leeren</button>
+              </div>
+            </div>
+            <p class="luk-hint">Mit Koordinaten werden Entfernung und grobe Fahrzeit vom Heimatstandort der Einheiten berechnet (Kräfteübersicht, Vorschlagsreihenfolge). Adresse suchen, Punkt auf der Karte setzen oder Koordinaten direkt eintragen. Leer = Kartenzentrum.</p>
+
+            <h3>STEIN</h3>
+            <label class="vw-check"><input type="checkbox" id="vw-stein-aktiv" checked /> STEIN-Live-Daten für diesen Einsatz verwenden</label>
+            <p class="luk-hint">Für Übungen abschalten: Dann zählt nur die Bindung in eigenen Einsätzen, STEIN-Status wird nicht angezeigt.</p>
+            <div class="vw-actions">
+              <button type="button" class="luk-btn luk-btn-primary" id="vw-katalog-save">Speichern</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="luk-box vw-box">
+          <h2>Mitglieder und Stabsrollen</h2>
+          <p class="luk-hint">Ein Nutzer kann mehrere Rollen haben. Die Schreibrechte ergeben sich aus den Rollen (Leiter Stab: alles; S1: Harke + Kräfte; S2: Harke, Lagekarte, Schadenskonten; S3: Harke, Schadenskonten; Lagekarte: Harke, Lagekarte, Schadenskonten; Unterstützung wie die jeweilige S-Funktion; S4–S6, ETB, Sichter: nur lesen).</p>
+          <div class="vw-add-row">
+            <select id="vw-user-select"></select>
+            <button type="button" class="luk-btn luk-btn-primary" id="vw-user-add">Hinzufügen</button>
+          </div>
+          <div id="vw-members"></div>
+          <h3 class="vw-subhead">Freigabe an Organisationen</h3>
+          <p class="luk-hint">Alle Einsatz-Konten der gewählten Organisation (auch anderer Ortsverbände oder Regionalstellen) erhalten die eingetragenen Stabsrollen in diesem Einsatz, zusätzlich zu persönlich vergebenen Rollen. Hilfsmittel wie Divera werden dadurch nicht freigegeben; sie bleiben an das eigene Konto und dessen Organisation gebunden.</p>
+          <div class="vw-add-row">
+            <select id="vw-org-select"></select>
+            <button type="button" class="luk-btn luk-btn-primary" id="vw-org-add">Organisation freigeben</button>
+          </div>
+          <div id="vw-org-members"></div>
+        </section>
+
+        <section class="luk-box vw-box">
+          <h2>Freigabelinks</h2>
+          <p class="luk-hint">Ein Freigabelink erlaubt anderen Stäben den <strong>lesenden</strong> Zugriff auf den gesamten Einsatz. Der Link allein öffnet nichts und lässt sich nicht erraten: Der Eigentümer des anderen Einsatzes trägt ihn in seiner Verwaltung ein, danach sehen dessen Mitglieder diesen Einsatz, nur mit eigenem Konto. Unten siehst du, welche Einsätze den Link nutzen und wie oft zugegriffen wurde. Du kannst einzelnen Einsätzen den Zugriff entziehen oder den Link ganz widerrufen, beides wirkt sofort.</p>
+          <div class="vw-add-row">
+            <input type="text" id="vw-share-label" maxlength="120" placeholder="Bezeichnung, z.B. Stab OV Musterstadt" autocomplete="off" />
+            <input type="datetime-local" id="vw-share-expires" title="optional: gültig bis" />
+            <button type="button" class="luk-btn luk-btn-primary" id="vw-share-create">Link erstellen</button>
+          </div>
+          <div id="vw-share-new" class="ez-status ez-status-ok" hidden></div>
+          <div id="vw-shares"></div>
+        </section>
+
+        <section class="luk-box vw-box">
+          <h2>Verknüpfte Einsätze</h2>
+          <p class="luk-hint">Freigabelink eines anderen Stabes hier eintragen. Danach können alle Mitglieder dieses Einsatzes den anderen Einsatz <strong>lesend</strong> öffnen (Abschnitt „Freigegeben von anderen Stäben" in der Einsatzliste). Der Ersteller des anderen Einsatzes kann den Zugriff jederzeit entziehen.</p>
+          <div class="vw-add-row">
+            <input type="text" id="vw-link-token" placeholder="Freigabelink oder Code einfügen" autocomplete="off" style="min-width:320px" />
+            <input type="text" id="vw-link-label" maxlength="120" placeholder="Bezeichnung (optional)" autocomplete="off" />
+            <button type="button" class="luk-btn luk-btn-primary" id="vw-link-add">Verknüpfen</button>
+          </div>
+          <div id="vw-links"></div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Einsatzort auf der Karte -->
+    <dialog id="vw-map-dialog" class="luk-dialog luk-dialog-wide">
+      <h2>Einsatzort auf der Karte</h2>
+      <p class="luk-hint">In die Karte klicken oder den Punkt ziehen. „Übernehmen“ schreibt die Koordinaten in das Formular, gespeichert wird erst mit „Speichern“ in der Kachel.</p>
+      <div id="vw-map" class="vw-map"></div>
+      <div id="vw-map-coords" class="luk-muted" style="margin-top:6px;"></div>
+      <div class="luk-dialog-actions">
+        <button type="button" class="luk-btn" id="vw-map-cancel">Abbrechen</button>
+        <button type="button" class="luk-btn luk-btn-primary" id="vw-map-ok">Übernehmen</button>
+      </div>
+    </dialog>
+
+    <!-- Rollen-Dialog -->
+    <dialog id="vw-roles-dialog" class="luk-dialog">
+      <h2 id="vw-roles-title">Rollen</h2>
+      <div id="vw-roles-list" class="vw-roles-list"></div>
+      <div class="luk-dialog-actions">
+        <button type="button" class="luk-btn luk-btn-danger" id="vw-roles-remove">Aus Einsatz entfernen</button>
+        <button type="button" class="luk-btn" id="vw-roles-cancel">Abbrechen</button>
+        <button type="button" class="luk-btn luk-btn-primary" id="vw-roles-save">Speichern</button>
+      </div>
+    </dialog>
+
+    {{.Footer}}
+    <script src="/js/verwaltung.js?v={{.AssetVersion}}"></script>
+  </body>
+</html>

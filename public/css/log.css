@@ -1,0 +1,33 @@
+/* log.css - Aenderungs- und Zugriffslog */
+/* Ganze Bildschirmhoehe nutzen: Header, Inhalt (fuellt), Footer unten. Keine
+   feste Hoehe fuer Kopf/Fuss annehmen - die Fussleiste bricht auf schmalen
+   Bildschirmen (Notebook) auf zwei Zeilen um. */
+body.lg-body { display: flex; flex-direction: column; height: 100vh; margin: 0; }
+.lg-container { flex: 1 1 auto; min-height: 0; display: flex; align-items: stretch; justify-content: center; padding: 12px; overflow: hidden; }
+.lg-row { flex: 1 1 auto; min-height: 0; }
+.lg-box { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.lg-toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+.lg-toolbar input[type="search"] { flex: 1; min-width: 200px; padding: 6px 9px; border: 1px solid #ccc; border-radius: 4px; }
+.lg-toolbar select { padding: 6px 9px; border: 1px solid #ccc; border-radius: 4px; }
+.lg-check { display: inline-flex; gap: 4px; align-items: center; font-size: 0.9em; }
+.lg-tabs { display: flex; gap: 2px; }
+.lg-tab { padding: 6px 12px; background: #eee; border: 1px solid #ccc; cursor: pointer; border-radius: 4px 4px 0 0; }
+.lg-tab.active { background: rgb(0,51,153); color: #fff; border-color: rgb(0,51,153); }
+.lg-count { opacity: 0.8; font-size: 0.85em; }
+.lg-pane { flex: 1; overflow: auto; min-height: 0; }
+.lg-pane[hidden] { display: none; }
+.lg-ts { white-space: nowrap; font-family: ui-monospace, Consolas, monospace; font-size: 0.85em; }
+.lg-entity { white-space: nowrap; }
+.lg-badge { display: inline-block; padding: 1px 6px; border-radius: 8px; font-size: 0.78em; background: #e2e3e5; color: #383d41; }
+.lg-badge-insert { background: #d1e7dd; color: #0f5132; }
+.lg-badge-update, .lg-badge-move, .lg-badge-reorder { background: #cfe2ff; color: #084298; }
+.lg-badge-delete, .lg-badge-close { background: #fde2e1; color: #842029; }
+.lg-badge-status { background: #fff3cd; color: #664d03; }
+.lg-badge-import, .lg-badge-export, .lg-badge-reopen { background: #e7e0ff; color: #4a2a9a; }
+.lg-imported { opacity: 0.75; font-style: italic; }
+.lg-details { margin-top: 4px; font-family: ui-monospace, Consolas, monospace; font-size: 0.78em; white-space: pre-wrap; background: #f6f7fa; border: 1px solid #e3e6ee; border-radius: 4px; padding: 4px 6px; max-height: 240px; overflow: auto; }
+.lg-details b { color: rgb(0,51,153); }
+@media print {
+  body.luk-printing .lg-pane { overflow: visible !important; max-height: none !important; }
+  body.luk-printing .lg-details { max-height: none; }
+}

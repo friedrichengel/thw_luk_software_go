@@ -1,0 +1,25 @@
+/* settings.css – Einstellungsseite */
+
+/* Gesamtseite: Header + Content + Footer = 100vh, kein Body-Scroll */
+body { display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+.header { flex:none; }
+.footer { flex:none; }
+.settings-scroll { flex:1; overflow-y:auto; min-height:0; }
+.settings-wrapper { max-width: 720px; margin: 0 auto; padding: 16px; }
+.section { background:#fff; border-radius: 12px; padding: 20px 24px; margin-bottom: 18px; box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+.section h2 { margin: 0 0 12px; font-size: 18px; color: #0a3d91; }
+.section label { display: block; text-align:left; font-weight:600; margin: 10px 0 6px; color: #222; }
+.section input[type=text], .section input[type=password], .section input[type=email] {
+  width:100%; padding:10px 12px; border:1px solid #cfd6e6; border-radius:8px; font-size:15px; box-sizing: border-box;
+}
+.section button { margin-top: 12px; padding: 10px 16px; border:0; border-radius:8px; background:#0a3d91; color:#fff; font-weight:600; cursor:pointer; font-size: 15px; }
+.section button.secondary { background: transparent; border:1px solid #cfd6e6; color:#222; }
+.section button.danger { background:#b23a48; }
+.section .row { display:flex; gap:8px; flex-wrap:wrap; }
+.notice { background:#e7f7ec; border:1px solid #a3d9b1; padding:10px 12px; border-radius:8px; margin-bottom:12px; }
+.error { background:#ffe6e6; border:1px solid #ffb3b3; color:#b00000; padding:10px 12px; border-radius:8px; margin-bottom:12px; }
+.readonly { color:#444; background:#f5f7fc; padding:8px 10px; border-radius:6px; font-family: monospace; }
+.qr { display:flex; flex-direction: column; align-items:center; gap:6px; margin:14px 0; }
+.qr img { background:#fff; border:1px solid #cfd6e6; border-radius:8px; padding:8px; }
+.secret { font-family: monospace; letter-spacing:2px; background:#f5f7fc; padding:6px 10px; border-radius:6px; }
+.section p { color: #333; }

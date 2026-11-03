@@ -1,0 +1,528 @@
+/* kraefteplanung.css - Kraefteplanung als Sicht auf den Einsatz-Tree
+   (Stabsansicht). Gemeinsame Stile (Buttons, Dialoge, Badges, Druck-Basis)
+   kommen aus luk.css. */
+
+body.kp-body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+}
+
+.kp-container {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 0;
+  padding: 12px;
+  overflow: hidden;
+}
+.kp-container .row {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  min-height: 0;
+}
+
+/* Weisse Box analog zu Harke/Dashboard. */
+.kp-box {
+  background: white;
+  color: #222;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.kp-perspective-box {
+  flex: 0 0 320px;
+  max-width: 360px;
+  min-width: 260px;
+  overflow-y: auto;
+}
+.kp-main-box {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.kp-section { margin-bottom: 16px; }
+.kp-section:last-child { margin-bottom: 0; }
+.kp-section-title {
+  font-weight: bold;
+  font-size: 0.95em;
+  margin-bottom: 6px;
+  color: rgb(0, 51, 153);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.kp-row { margin-bottom: 8px; }
+.kp-row:last-child { margin-bottom: 0; }
+.kp-hint {
+  font-size: 0.85em;
+  color: #555;
+  margin-bottom: 8px;
+  font-style: italic;
+}
+.kp-hint a { color: rgb(0, 51, 153); }
+
+.kp-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: normal;
+}
+#kp-custom-time-row { margin-bottom: 8px; }
+#kp-custom-time-row input { width: 100%; padding: 4px 6px; border: 1px solid #ccc; border-radius: 3px; }
+
+/* Perspektive-Liste */
+.kp-perspective-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.kp-perspective-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: transparent;
+  border: 1px solid transparent;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  color: #222;
+}
+.kp-perspective-item:hover { background: #eef1f7; }
+.kp-perspective-item.active {
+  background: rgb(0, 51, 153);
+  color: white;
+  border-color: rgb(0, 38, 115);
+}
+.kp-perspective-item.kp-perspective-abgerueckt .kp-perspective-name { text-decoration: line-through; opacity: 0.7; }
+.kp-perspective-name { flex: 1; min-width: 0; word-break: break-word; }
+.kp-perspective-sum {
+  font-size: 0.8em;
+  font-family: ui-monospace, Consolas, monospace;
+  white-space: nowrap;
+}
+
+/* Staerke-Kaesten in der Sidebar */
+.kp-staerke-overview {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.95em;
+  background: #f5f7fb;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #d8dde6;
+}
+.kp-staerke-label {
+  font-family: Arial, sans-serif;
+  font-size: 0.8em;
+  color: #555;
+  margin-bottom: 2px;
+  word-break: break-word;
+}
+.kp-staerke-sub { font-size: 0.85em; color: #444; }
+.kp-staerke-row { font-weight: bold; }
+
+/* Hauptbereich */
+.kp-main-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  border-bottom: 2px solid rgb(0, 51, 153);
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+.kp-main-title { flex: 1; min-width: 0; }
+.kp-main-head h2 {
+  font-size: 1.2em;
+  color: rgb(0, 51, 153);
+  margin: 0;
+}
+.kp-path { font-size: 0.82em; margin-top: 2px; word-break: break-word; }
+.kp-main-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.kp-content {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-right: 4px;
+}
+
+.kp-empty {
+  padding: 20px;
+  background: #f5f5f5;
+  border: 1px dashed #bbb;
+  border-radius: 5px;
+  font-style: italic;
+  color: #555;
+  text-align: center;
+}
+.kp-empty a { color: rgb(0, 51, 153); }
+
+/* Einsatzabschnitt - einklappbar via <details>/<summary> */
+.kp-abschnitt {
+  border: 1px solid #d8dde6;
+  border-radius: 6px;
+  background: #f8f9fb;
+  padding: 10px 12px;
+}
+.kp-abschnitt-head {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  margin-bottom: 6px;
+}
+.kp-abschnitt-head::-webkit-details-marker { display: none; }
+.kp-abschnitt-head h3 {
+  font-size: 1.05em;
+  margin: 0;
+  color: rgb(0, 51, 153);
+  flex: 1 1 auto;
+}
+.kp-abschnitt-sum {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.9em;
+  color: #555;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* Chevron-Marker fuer einklappbare Bloecke */
+.kp-collapse-marker {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #555;
+  margin-right: 6px;
+  transition: transform 0.15s ease;
+  flex: 0 0 auto;
+}
+details:not([open]) > summary .kp-collapse-marker {
+  transform: rotate(-90deg);
+}
+
+/* Einheit / Fuehrungsstelle (Knoten-Box) */
+.kp-einheit {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 8px 10px;
+  margin: 8px 0;
+}
+.kp-einheit-readonly { background: #fafafa; }
+.kp-einheit-head {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+.kp-einheit-head::-webkit-details-marker { display: none; }
+.kp-einheit-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: bold;
+  color: #222;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+.kp-einheit-sum {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.85em;
+  color: #555;
+  white-space: nowrap;
+}
+.kp-einheit-empty {
+  padding: 6px 0;
+  font-style: italic;
+  color: #888;
+  font-size: 0.9em;
+}
+.kp-einheit-empty a { color: rgb(0, 51, 153); }
+
+/* Inaktive / abgerueckte Knoten und Mitglieder - ausgegraut */
+.kp-einheit-inactive > .kp-einheit-head,
+.kp-member-inactive > .kp-member-head { opacity: 0.65; }
+.kp-einheit-abgerueckt > .kp-einheit-head .kp-einheit-title,
+.kp-member-abgerueckt > .kp-member-head .kp-member-title { text-decoration: line-through; color: #777; }
+
+/* Knoten-Typ-Badge */
+.kp-type-badge {
+  display: inline-block;
+  font-size: 0.72em;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: #ddd;
+  color: #333;
+  margin-right: 4px;
+  vertical-align: middle;
+  font-weight: normal;
+}
+.kp-einheit-fuehrung > .kp-einheit-head .kp-type-badge {
+  background: rgb(0, 51, 153);
+  color: white;
+}
+
+/* Stammdaten-Zeile */
+.kp-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: 0.85em;
+  color: #555;
+  margin: 4px 0 6px 0;
+  align-items: baseline;
+}
+.kp-meta-key { font-weight: 600; color: #333; }
+.kp-meta-note { font-style: italic; color: #777; }
+.kp-meta-edit { margin-left: auto; }
+.kp-meta-row:empty { display: none; }
+
+/* Status-Zeile (seit ... + Schnellaktion) */
+.kp-status-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 0 6px 0;
+}
+.kp-status-since { font-size: 10px; }
+.kp-status-btn {
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid #0a3d91;
+  background: #fff;
+  color: #0a3d91;
+  font-size: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.kp-status-btn:hover { background: #e3ecff; }
+.kp-status-btn.kp-status-btn-ok { border-color: #1f7a3a; color: #1f7a3a; }
+.kp-status-btn.kp-status-btn-ok:hover { background: #d1e7dd; }
+
+/* Mitglieder-Boxen innerhalb von Fuehrungsknoten */
+.kp-member {
+  background: #f6f9ff;
+  border: 1px solid #cfd6e6;
+  border-radius: 4px;
+  padding: 6px 8px;
+  margin: 6px 0;
+}
+.kp-member-fachberater {
+  background: #fff8e1;
+  border-color: #f0dca8;
+}
+.kp-member-readonly { opacity: 0.9; }
+.kp-member-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  margin-bottom: 4px;
+}
+.kp-member-head::-webkit-details-marker { display: none; }
+.kp-member-badge {
+  display: inline-block;
+  font-size: 0.7em;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: rgb(0, 51, 153);
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.kp-member-badge-fachberater { background: #b26a00; }
+.kp-member-title { flex: 1; min-width: 0; font-weight: 600; color: #222; }
+.kp-member-sum {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.85em;
+  color: #555;
+  white-space: nowrap;
+}
+
+/* Schichten-Tabelle */
+.kp-schichten-section { margin-top: 4px; }
+.kp-schichten-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  margin: 4px 0;
+}
+.kp-schichten-table th,
+.kp-schichten-table td {
+  text-align: left;
+  padding: 4px 6px;
+  border-bottom: 1px solid #e3e6ee;
+  vertical-align: top;
+}
+.kp-schichten-table th {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #555;
+  background: #f3f5fa;
+  font-weight: 600;
+}
+.kp-schichten-table td.kp-col-actions { text-align: right; white-space: nowrap; }
+.kp-schicht-time { white-space: nowrap; color: #444; }
+.kp-schicht-row-display.kp-schicht-active td { background: #e7f3ff; }
+.kp-schicht-row-display.kp-schicht-disabled td { opacity: 0.55; background: #f5f5f5; }
+.kp-schicht-row-display.kp-schicht-past td { color: #888; }
+.kp-schicht-row-display.kp-schicht-past .kp-schicht-staerke { color: #6b7fa8; }
+.kp-schicht-staerke {
+  display: inline-block;
+  font-family: ui-monospace, Consolas, monospace;
+  font-weight: bold;
+  color: rgb(0, 51, 153);
+}
+.kp-schicht-personal { color: #444; }
+.kp-schicht-note { color: #777; font-style: italic; }
+.kp-schicht-active-badge,
+.kp-schicht-inactive-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 8px;
+  font-size: 0.78em;
+  font-weight: bold;
+  vertical-align: middle;
+}
+.kp-schicht-active-badge { background: #cfe2ff; color: #084298; }
+.kp-schicht-inactive-badge { background: #d0d0d0; color: #555; }
+.kp-schicht-actions {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.kp-add-shift { margin-top: 6px; }
+
+/* Kleine Buttons in den Boxen */
+.kp-btn { white-space: nowrap; }
+
+/* Dialoge: Ergaenzungen zu .luk-dialog */
+.kp-fieldset {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin: 10px 0;
+}
+.kp-fieldset legend { padding: 0 6px; font-weight: bold; font-size: 0.9em; }
+.luk-dialog label.kp-checkbox-label,
+.luk-dialog label.kp-radio {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: normal;
+  margin: 6px 0 4px;
+}
+.luk-dialog .kp-checkbox-label input[type="checkbox"],
+.luk-dialog .kp-radio input[type="radio"] { width: auto; margin: 0; }
+.kp-duration-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+.kp-duration-row input { flex: 1; }
+.luk-dialog input:disabled { background: #f1f1f1; color: #777; }
+#kp-si-target { margin-top: -6px; }
+
+/* Leseansicht */
+body.kp-readonly .kp-einheit-head,
+body.kp-readonly .kp-member-head { cursor: pointer; }
+
+/* ============================================================
+   Druck: Sidebar + Steuerung weg, Inhalt in voller Breite,
+   alle Bloecke aufgeklappt, keine Seitenumbrueche in Einheiten.
+   ============================================================ */
+@media print {
+  body.kp-body.luk-printing { height: auto !important; overflow: visible !important; display: block !important; }
+  body.luk-printing .kp-container,
+  body.luk-printing .kp-container .row,
+  body.luk-printing .kp-box,
+  body.luk-printing .kp-content {
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    flex: none !important;
+  }
+  body.luk-printing .kp-perspective-box,
+  body.luk-printing .kp-main-actions,
+  body.luk-printing .kp-meta-edit,
+  body.luk-printing .kp-add-shift,
+  body.luk-printing .kp-status-btn,
+  body.luk-printing .kp-schicht-actions,
+  body.luk-printing .kp-col-actions,
+  body.luk-printing .kp-collapse-marker { display: none !important; }
+  body.luk-printing .kp-main-head { border-bottom: 2px solid #000; margin-bottom: 8px; }
+  body.luk-printing .kp-main-head h2, body.luk-printing .kp-abschnitt-head h3 { color: #000 !important; }
+  body.luk-printing .kp-abschnitt { background: #fff !important; border: 1px solid #000; margin: 8px 0; break-inside: auto; }
+  body.luk-printing .kp-einheit,
+  body.luk-printing .kp-member { break-inside: avoid; page-break-inside: avoid; background: #fff !important; border: 1px solid #333; }
+  body.luk-printing .kp-einheit-inactive > .kp-einheit-head,
+  body.luk-printing .kp-member-inactive > .kp-member-head { opacity: 1; }
+  body.luk-printing .kp-schichten-table th,
+  body.luk-printing .kp-schichten-table td { border: 1px solid #999; color: #000; background: #fff !important; opacity: 1 !important; }
+  body.luk-printing .kp-schichten-table th { background: #eee !important; }
+  body.luk-printing .kp-schicht-row-display.kp-schicht-active td { background: #e7f3ff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body.luk-printing .kp-schicht-row-display.kp-schicht-disabled td { color: #777; text-decoration: line-through; }
+  body.luk-printing .kp-schicht-staerke { color: #000; }
+  body.luk-printing tr { break-inside: avoid; }
+  body.luk-printing .kp-type-badge, body.luk-printing .kp-member-badge, body.luk-printing .luk-status {
+    border: 1px solid #333; background: #fff !important; color: #000 !important;
+  }
+}
+
+/* Kraeftekatalog: Verfuegbare Kraefte (linke Spalte) und Katalog-Hinweise */
+.kp-avail-filter { display: flex; gap: 6px; }
+.kp-avail-filter select { flex: 0 0 42%; min-width: 0; }
+.kp-avail-filter input { flex: 1 1 auto; min-width: 0; }
+.kp-avail-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; font-size: 0.82em; margin: 6px 0 4px; }
+.kp-avail-summary .luk-kp-dot { width: 8px; height: 8px; }
+.kp-avail-list { max-height: 320px; overflow: auto; border: 1px solid #e3e6ee; border-radius: 4px; background: #fff; font-size: 0.85em; }
+.kp-avail-sec { position: sticky; top: 0; }
+.kp-avail-row { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-top: 1px solid #f0f2f6; }
+.kp-avail-click { cursor: pointer; }
+.kp-avail-click:hover { background: #e7f1ff; }
+.kp-avail-main { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kp-avail-meta { flex: 0 0 auto; font-size: 0.85em; white-space: nowrap; }
+.kp-avail-harke { flex: 0 0 auto; font-size: 0.85em; color: rgb(0,51,153); text-decoration: none; }
+.kp-avail-harke:hover { text-decoration: underline; }
+.kp-meta-kraft { display: inline-flex; align-items: center; gap: 4px; }
+.kp-schicht-kraft { display: flex; align-items: center; gap: 4px; font-size: 0.9em; color: #1b2d5b; margin-top: 2px; }

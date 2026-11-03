@@ -1,0 +1,12 @@
+# THW LuK - startet luk-updater.service, sobald in updates/inbox/ etwas liegt.
+# docker/setup.sh ersetzt @INSTALL_DIR@ und aktiviert die Unit.
+[Unit]
+Description=THW LuK Updater - wartet auf @INSTALL_DIR@/updates/inbox
+
+[Path]
+DirectoryNotEmpty=@INSTALL_DIR@/updates/inbox
+Unit=luk-updater.service
+MakeDirectory=true
+
+[Install]
+WantedBy=multi-user.target

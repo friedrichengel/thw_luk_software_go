@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{.AppName}} – Zwei-Faktor</title>
+<link rel="icon" type="image/png" href="/images/favicon_dashboard.png">
+{{.PwaHead}}
+<link rel="stylesheet" href="/css/auth.css?v={{.AssetVersion}}">
+</head>
+<body class="auth-page twofactor-page">
+<div class="card">
+  <div class="logo"><img src="/images/THW.svg" alt="THW-Logo" class="logo-img"></div>
+  <h1>Zwei-Faktor-Code</h1>
+  <p class="info">Bitte geben Sie den aktuellen Code fuer <strong>{{.PendingUser}}</strong> ein.</p>
+  {{if .Error}}<div class="error">{{.Error}}</div>{{end}}
+  <form method="post" action="/twofactor" autocomplete="one-time-code">
+    <input type="hidden" name="csrf" value="{{.CSRF}}">
+    <input type="hidden" name="redirect" value="{{.Redirect}}">
+    <label for="code">Code</label>
+    <input id="code" name="code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required autofocus>
+    <button type="submit">Bestaetigen</button>
+  </form>
+  <form method="post" action="/twofactor">
+    <input type="hidden" name="csrf" value="{{.CSRF}}">
+    <input type="hidden" name="cancel" value="1">
+    <button type="submit" class="secondary">Abbrechen</button>
+  </form>
+</div>
+</body>
+</html>

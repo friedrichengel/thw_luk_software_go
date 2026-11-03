@@ -1,0 +1,317 @@
+/* steinmap.html & steinmap.js */
+
+/* Body-Layout */
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Container für Karte und Liste */
+.container {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 0;
+}
+
+/* Linke Box: Karte */
+.map-box {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Kartenbereich */
+#map {
+  flex: 1;
+  /*width: 100%;*/
+  position: relative;
+  border-radius: 4px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;  
+}
+
+/* Rechte Box: Fahrzeugliste */
+.list-box {
+  flex: 1;
+  max-width: 400px;
+  background-color: rgb(0, 51, 153);;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.list-content {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+/* Drucken-Button immer unten */
+#printBtn {
+  flex: none;
+  width: 91%;       /* gesamte Breite der Seitenleiste */
+  padding: 6px 12px; /* identisch zu anderen Buttons */
+  font-size: 1em;
+  line-height: 1.2;
+
+  background-color: #007bff;
+  color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#printBtn:hover {
+  background-color: #0069d9;
+}
+
+/* Gruppen-Überschrift */
+.group-header {
+  width: 95%;
+  grid-column: 1 / -1;
+  background-color: #ddd;
+  font-weight: bold;
+  padding: 8px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: black;
+  border-radius: 4px;
+}
+
+/* Asset-Box: einheitliche Größe und abgerundete Ecken */
+.asset-box {
+  width: 95%;
+  border-radius: 8px;
+  padding: 8px;
+  border: 2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.1s ease-in;
+}
+.asset-box:hover {
+  transform: translateY(-2px);
+}
+.asset-box:hover {
+  transform: translateY(-2px);
+}
+
+/* Tooltip */
+#tooltip {
+  position: absolute;
+  z-index: 1000;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 6px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  display: none;
+  pointer-events: none;
+  font-size: 0.9em;
+  line-height: 1.2;
+}
+
+/* Suchleiste über Karte & Liste */
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  margin: 10px;
+  z-index: 100;
+}
+.search-bar select,
+.search-bar input {
+  height: 36px;
+  box-sizing: border-box;
+}
+.search-bar select {
+  min-width: 120px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  font-size: 1em;
+  padding: 6px 10px;
+}
+.search-bar input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-left: none;
+  border-radius: 0;
+  font-size: 1em;
+}
+.search-bar button {
+  height: 36px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-left: none;
+  background: #007bff;
+  color: white;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  font-size: 1em;
+}
+.search-bar button:hover {
+  background: #0069d9;
+}
+
+/* Filter-Container in Sidebar oberhalb von #vehicleList */
+#filterControls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background-color: #ddd;
+  font-weight: bold;
+  padding: 8px;
+  margin-bottom: 10px;
+  color: black;
+  border-radius: 4px;  
+  width: 95%;
+}
+
+#filterControls label {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+#filterControls input[type="checkbox"] {
+  margin-right: 4px;
+}
+
+/* Messwerkzeug-Styles */
+.measure-tools a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+}
+.measure-tools a.active {
+  background-color: #0b5ed7;
+  color: #fff;
+}
+.measure-point-marker {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 4px rgba(0,0,0,0.4);
+}
+.measure-point-marker.distance {
+  background-color: #0b5ed7;
+}
+.measure-point-marker.area {
+  background-color: #198754;
+}
+
+/* Druck-Modal Overlay */
+#printOverlay {
+  position: fixed !important;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+#printOverlay.active {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+#printModal {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+#printModal h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  color: #003399;
+}
+#printModal label {
+  display: block;
+  font-weight: 600;
+  margin: 12px 0 6px;
+  font-size: 14px;
+}
+#printModal input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+#printFooter {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+#printFooter button {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#confirmPrintBtn {
+  background: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+#confirmPrintBtn:hover {
+  background: #0069d9;
+}
+#cancelPrintBtn {
+  background: #fff;
+  color: #333;
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  .map-box {
+    flex: none;
+    height: calc(100% - 200px);
+  }
+}
+
+/* Kraeftekatalog: Band "im Einsatz" und Uebernahme-Link in Asset-Boxen */
+.asset-bind { margin-top: 4px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.9); color: #003399; font-size: 11px; font-weight: 600; }
+.asset-bind-link, .asset-take-link { color: #003399; text-decoration: underline; font-size: 11px; }
+.asset-take-link { display: inline-block; margin-top: 3px; background: rgba(255,255,255,0.9); padding: 1px 6px; border-radius: 4px; font-weight: 600; }

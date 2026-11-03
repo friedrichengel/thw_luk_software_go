@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{.AppName}} – System-Update</title>
+<link rel="icon" type="image/png" href="/images/favicon_dashboard.png">
+{{.PwaHead}}
+<link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}">
+<script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+<link rel="stylesheet" href="/css/admin.css?v={{.AssetVersion}}">
+<link rel="stylesheet" href="/css/admin_update.css?v={{.AssetVersion}}">
+<script>window.LUK_UPDATE = {{.Config}};</script>
+</head>
+<body>
+  {{.Header}}
+
+  <div class="admin-scroll">
+  <div class="admin-wrapper">
+
+  {{if not .Enabled}}
+    <div class="section">
+      <h1>System-Update</h1>
+      <p class="admin-hint">Auf diesem Server ist kein Update-Kanal konfiguriert. Im Docker-Betrieb muss
+        <code>UPDATE_DIR</code> auf ein beschreibbares Verzeichnis zeigen (Host-Dienst luk-updater), beim Betrieb
+        als einzelnes Programm <code>UPDATE_MODE=binary</code> gesetzt sein. Updates laufen hier klassisch durch
+        Austausch des Programms bzw. Images auf dem Server.</p>
+    </div>
+  {{else}}
+
+    <div id="upd-flash" class="hidden"></div>
+
+    <div class="section">
+      <div class="upd-head">
+        <h1>System-Update</h1>
+        <span id="upd-state" class="upd-state upd-state-unknown">–</span>
+      </div>
+      <table class="upd-facts">
+        <tr><th>Laufende Version</th><td><strong>v{{.Version}}</strong>
+          {{if .Deployed}}<span class="upd-muted">(Build {{.Deployed}})</span>{{end}}</td></tr>
+        {{if .Binary}}
+        <tr><th>Betriebsart</th><td>Einzelnes Programm (Binary), Update durch Austausch der Programmdatei</td></tr>
+        {{else}}
+        <tr><th>Image</th><td><code>{{if .Image}}{{.Image}}{{else}}–{{end}}</code></td></tr>
+        {{end}}
+        <tr><th>{{if .Binary}}Updater{{else}}Host-Dienst{{end}}</th><td id="upd-status-line">–</td></tr>
+      </table>
+      <p class="admin-hint">
+        {{if .Binary}}
+        Ein Update ersetzt die laufende Programmdatei und startet den Dienst neu. Alle angemeldeten Nutzer erleben dabei
+        eine Unterbrechung von wenigen Sekunden; Daten und Sitzungen gehen nicht verloren. Vor einem Update möglichst
+        keine laufende Stabsarbeit stören.
+        {{else}}
+        Ein Update ersetzt den laufenden Container. Alle angemeldeten Nutzer erleben dabei eine Unterbrechung von
+        etwa einer halben Minute; Daten gehen nicht verloren. Vor einem Update möglichst keine laufende Stabsarbeit
+        stören.
+        {{end}}
+      </p>
+    </div>
+
+    <div class="section upd-section">
+      {{if .Binary}}
+      <h2>Neues Programm (Binary) hochladen</h2>
+      <p class="admin-hint">Programmdatei aus dem Build für dieses System (<code>luk-&lt;version&gt;-&lt;os&gt;-&lt;arch&gt;</code>).
+        Die Datei wird in Teilen übertragen, die Prüfsumme wird im Browser berechnet und vom Server gegengeprüft. Ist ein
+        Signaturschlüssel hinterlegt, muss zusätzlich die zugehörige <code>.minisig</code>-Datei mitgegeben werden.</p>
+      {{else}}
+      <h2>Archiv hochladen</h2>
+      <p class="admin-hint">Image-Archiv aus dem Build (<code>luk-image-&lt;version&gt;.tar.gz</code>). Die Datei wird in
+        Teilen übertragen, die Prüfsumme wird im Browser berechnet und vom Server gegengeprüft. Ist auf dem Host ein
+        Signaturschlüssel hinterlegt, muss zusätzlich die zugehörige <code>.minisig</code>-Datei mitgegeben werden.</p>
+      {{end}}
+      <form id="upd-form" class="upd-form" autocomplete="off">
+        <div class="upd-files">
+          <label class="upd-file" for="upd-file">
+            <span class="upd-file-step">1</span>
+            {{if .Binary}}
+            <span class="upd-file-title">Programmdatei</span>
+            <span class="upd-file-hint">Build für dieses System aus <code>dist/</code>, z.&nbsp;B. <code>luk-3.2.0-linux-amd64</code></span>
+            <input type="file" id="upd-file" required>
+            {{else}}
+            <span class="upd-file-title">Image-Archiv (.tar.gz)</span>
+            <span class="upd-file-hint">Archiv aus dem Build, z.&nbsp;B. <code>luk-image-3.2.0.tar.gz</code></span>
+            <input type="file" id="upd-file" accept=".gz,.tar,.tgz,application/gzip,application/x-tar" required>
+            {{end}}
+          </label>
+          <label class="upd-file" for="upd-sig">
+            <span class="upd-file-step">2</span>
+            <span class="upd-file-title">Signatur (.minisig)</span>
+            <span class="upd-file-hint">Nur nötig, wenn ein Signaturschlüssel hinterlegt ist; sonst leer lassen.</span>
+            <input type="file" id="upd-sig" accept=".minisig,text/plain">
+          </label>
+        </div>
+        <div class="upd-submit">
+          <span class="upd-file-step">3</span>
+          <button type="submit" id="upd-upload-btn">Hochladen und einspielen</button>
+          <button type="button" id="upd-abort-btn" class="secondary hidden">Abbrechen</button>
+          <span class="upd-muted">Die laufende Version wird ersetzt, der Dienst startet neu.</span>
+        </div>
+      </form>
+      <div id="upd-progress" class="upd-progress hidden">
+        <div class="upd-bar"><div id="upd-bar-fill" class="upd-bar-fill"></div></div>
+        <div id="upd-progress-text" class="upd-muted"></div>
+      </div>
+    </div>
+
+    <div class="section upd-section">
+      <h2>Weitere Aktionen</h2>
+      <div class="upd-actions">
+        {{if not .Binary}}
+        <button type="button" id="upd-pull-btn">Aktuelles Image aus der Registry ziehen</button>
+        {{end}}
+        <button type="button" id="upd-rollback-btn" class="secondary">Vorherigen Stand wiederherstellen</button>
+        <button type="button" id="upd-discard-btn" class="danger hidden">Wartende Aufträge verwerfen</button>
+      </div>
+      <div id="upd-pending" class="upd-pending hidden"></div>
+    </div>
+
+    <div class="section upd-section">
+      <h2>Protokoll {{if .Binary}}des Updaters{{else}}des Host-Dienstes{{end}}</h2>
+      <pre id="upd-log" class="upd-log">–</pre>
+    </div>
+
+  {{end}}
+
+  </div>
+  </div><!-- /admin-scroll -->
+
+  {{.Footer}}
+  {{if .Enabled}}<script src="/js/admin_update.js?v={{.AssetVersion}}"></script>{{end}}
+</body>
+</html>

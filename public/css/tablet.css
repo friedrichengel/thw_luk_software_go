@@ -1,0 +1,215 @@
+/* tablet.css - Tablet- und Touch-Optimierungen
+ *
+ * Wird von allen Seiten geladen (siehe PageHelper::printPwaHead).
+ * Greift erst, wenn die jeweiligen Media-Queries passen - das Aussehen
+ * auf dem Desktop bleibt unveraendert.
+ */
+
+/* ----------------------------------------------------------------------
+ * 1. Allgemeine Touch-Hygiene (gilt auf allen Geraeten, schadet auf
+ *    Desktops nicht).
+ * ---------------------------------------------------------------------- */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+html, body {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@supports (overscroll-behavior: none) {
+  html, body {
+    overscroll-behavior: none;
+  }
+}
+
+/* iOS: Doppeltipp-Zoom auf interaktiven Elementen unterdruecken,
+   Pinch-Zoom (Karten, Tabellen) bleibt aber moeglich. */
+button,
+.tab-btn,
+.dropbtn,
+.footer-pop-btn,
+.footer-pop-item,
+input[type="button"],
+input[type="submit"],
+input[type="checkbox"] + label,
+label {
+  touch-action: manipulation;
+}
+
+/* ----------------------------------------------------------------------
+ * 2. Bequemere Touch-Trefferflaechen auf Tablets/Touch-Geraeten.
+ * ---------------------------------------------------------------------- */
+@media (pointer: coarse) {
+  .tab-btn {
+    min-height: 44px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  /* Klappmenues der Fussleiste: groessere Trefferflaechen */
+  .footer-pop-btn {
+    padding: 5px 12px 6px;
+  }
+  .footer-pop-item {
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+
+  button {
+    min-height: 36px;
+  }
+
+  /* Checkbox-Labels groesser, damit Finger sie zuverlaessig treffen. */
+  #filterControls label,
+  .divera_dropdown,
+  .filter-container label {
+    min-height: 32px;
+  }
+}
+
+/* ----------------------------------------------------------------------
+ * 3. "Bitte Geraet drehen"-Overlay.
+ *    Auf Tablets im Hochformat blenden wir den Inhalt aus und zeigen
+ *    eine grosse, zentrale Aufforderung. Im PWA-Standalone-Modus dreht
+ *    die manifest.webmanifest-Eigenschaft "orientation: landscape" das
+ *    Bild bereits selbststaendig - der Overlay greift dann nicht.
+ * ---------------------------------------------------------------------- */
+.rotate-prompt {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgb(0, 51, 153);
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  z-index: 100000;
+  text-align: center;
+  padding: 24px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.rotate-prompt-icon {
+  font-size: 96px;
+  line-height: 1;
+  animation: rotate-hint 2.5s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+.rotate-prompt-text {
+  font-size: 22px;
+  font-weight: bold;
+  max-width: 420px;
+  line-height: 1.3;
+}
+
+@keyframes rotate-hint {
+  0%, 35%   { transform: rotate(0deg); }
+  55%, 100% { transform: rotate(-90deg); }
+}
+
+@media (orientation: portrait) and (pointer: coarse) {
+  .rotate-prompt { display: flex; }
+  body > .header,
+  body > .container,
+  body > .footer,
+  body > .admin-scroll,
+  body > .settings-scroll {
+    visibility: hidden;
+  }
+  /* Auth-Seiten (Login, 2FA, Passwort vergessen/zuruecksetzen) haben ihren
+     Inhalt in einer .card direkt im Body - sie wird mit ausgeblendet und der
+     Drehen-Hinweis erscheint wie auf jeder anderen Seite. Frueher war der
+     Hinweis dort abgeschaltet, die .card aber trotzdem unsichtbar: am
+     Smartphone im Hochformat blieb nur eine leere blaue Seite. */
+  body > .card { visibility: hidden; }
+  /* Nur die erzwungene Erst-Passwortaenderung (settings.php?forced=1,
+     Body-Klasse no-rotate-prompt) bleibt im Hochformat bedienbar. */
+  body.no-rotate-prompt .rotate-prompt { display: none; }
+  body.no-rotate-prompt > .header,
+  body.no-rotate-prompt > .container,
+  body.no-rotate-prompt > .footer,
+  body.no-rotate-prompt > .settings-scroll { visibility: visible; }
+
+  /* Embed-Modus: kein Drehen-Hinweis innerhalb von iframes - das uebernimmt
+     die einbettende Seite. Sonst stapelt sich der Hinweis. */
+  body.embed-mode .rotate-prompt { display: none; }
+}
+
+/* ----------------------------------------------------------------------
+ * 4. Dashboard-spezifische Skalierung.
+ *    Das Standard-Layout (3 x 600 px Boxen + Luecken + Padding) passt
+ *    nicht auf typische iPad-Aufloesungen im Querformat. Die index.css-
+ *    Anpassung macht .box bereits flex-fluessig - wir reduzieren den
+ *    Mindestabstand und schalten bei sehr knappen Hoehen zusaetzlich auf
+ *    Browser-Zoom um. Andere Seiten werden nicht skaliert.
+ * ---------------------------------------------------------------------- */
+@media (max-width: 1280px) {
+  body.is-dashboard .container {
+    padding-left: 10px;
+    padding-right: 10px;
+    gap: 8px;
+  }
+  body.is-dashboard .row {
+    gap: 8px;
+  }
+}
+
+/* Wenn vertikal eng: den Kachelbereich verkleinern - nicht den ganzen Body.
+   Der Zoom soll mehr Inhalt in die Kacheln bringen, nicht Kopfzeile und
+   Fussleiste schrumpfen: die muessen auf jeder Seite gleich gross sein. */
+@media (max-height: 820px) and (min-width: 1000px) {
+  body.is-dashboard .container {
+    zoom: 0.92;
+  }
+}
+@media (max-height: 760px) and (min-width: 1000px) {
+  body.is-dashboard .container {
+    zoom: 0.85;
+  }
+}
+
+/* Sehr enge Tablets (z.B. iPad mini im Querformat) bekommen einen
+   staerkeren Zoom, damit alle 6 Boxen vollstaendig sichtbar bleiben. */
+@media (max-width: 1100px) and (orientation: landscape) {
+  body.is-dashboard .container {
+    zoom: 0.85;
+  }
+}
+@media (max-width: 1000px) and (orientation: landscape) {
+  body.is-dashboard .container {
+    zoom: 0.78;
+  }
+}
+
+/* Safari < 17 unterstuetzt zoom auf <body> nicht zuverlaessig. Fallback
+   ueber transform-scale. Greift nur, wenn zoom nicht erkannt wird. */
+@supports not (zoom: 1) {
+  @media (max-height: 820px) and (min-width: 1000px) {
+    body.is-dashboard .container {
+      transform: scale(0.92);
+      transform-origin: top center;
+    }
+  }
+  @media (max-width: 1100px) and (orientation: landscape) {
+    body.is-dashboard .container {
+      transform: scale(0.85);
+      transform-origin: top center;
+    }
+  }
+}
+
+/* ----------------------------------------------------------------------
+ * 5. iPad Safe Area (Notch / Statusbar im Standalone-Modus).
+ * ---------------------------------------------------------------------- */
+@supports (padding: max(0px)) {
+  .header {
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
+  }
+  .footer {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

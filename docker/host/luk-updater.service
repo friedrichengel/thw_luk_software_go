@@ -1,0 +1,12 @@
+# THW LuK - Host-Dienst, der updates/inbox/ abarbeitet (docker load/pull, compose up).
+# Wird von luk-updater.path gestartet; docker/setup.sh ersetzt @INSTALL_DIR@.
+[Unit]
+Description=THW LuK Updater (verarbeitet @INSTALL_DIR@/updates/inbox)
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+Environment=LUK_INSTALL_DIR=@INSTALL_DIR@
+ExecStart=/usr/local/bin/luk-updater run
+TimeoutStartSec=20min

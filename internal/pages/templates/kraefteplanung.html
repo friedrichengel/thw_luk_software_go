@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="referrer" content="origin">
+    <title>Kräfteplanung – {{.Title}}</title>
+    <link rel="icon" type="image/png" href="/images/favicon_steinmap.png">
+    {{.PwaHead}}
+    <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/kraefteplanung.css?v={{.AssetVersion}}" />
+    {{.StabScript}}
+    <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+    <script src="/js/luk_core.js?v={{.AssetVersion}}"></script>
+  </head>
+  <body class="einsatz-body luk-page kp-body">
+    {{.Header}}
+    <div id="luk-readonly-banner" class="luk-readonly-banner" hidden></div>
+
+    <div class="container kp-container">
+      <div class="row">
+        <!-- Linke Seite: Perspektivwahl + Staerke -->
+        <aside class="kp-box kp-perspective-box luk-no-print" aria-label="Perspektive">
+          <div class="kp-section">
+            <div class="kp-section-title">Perspektive</div>
+            <p class="kp-hint">Sie sehen die gewählte Ebene und alle darunter liegenden Einheiten. Strukturen werden in der <a href="/harke?einsatz={{.UUID}}">Führungsharke</a> gepflegt.</p>
+            <div id="kp-perspective-list" class="kp-perspective-list"></div>
+          </div>
+
+          <div class="kp-section">
+            <div class="kp-section-title">Σ Stärke jetzt</div>
+            <div id="kp-einsatz-staerke" class="kp-staerke-overview" title="Gesamtstärke aller Einheiten des Einsatzes zum aktuellen Zeitpunkt"></div>
+          </div>
+
+          <div class="kp-section">
+            <div class="kp-section-title">Bewertungszeitpunkt</div>
+            <label class="kp-checkbox-label"><input type="checkbox" id="kp-use-custom-time" /> Eigenen Zeitpunkt verwenden</label>
+            <div id="kp-custom-time-row" hidden>
+              <input type="datetime-local" id="kp-custom-time" />
+            </div>
+            <div id="kp-staerke-overview" class="kp-staerke-overview" title="Stärke der gewählten Perspektive zum Bewertungszeitpunkt"></div>
+          </div>
+
+          <div class="kp-section" id="verfuegbar">
+            <div class="kp-section-title">Verfügbare Kräfte</div>
+            <p class="kp-hint">Kräftekatalog zum Bewertungszeitpunkt: eigener Bereich zuerst, dann angrenzend. Bereits eingeplante Einheiten stehen unten. Klick legt eine Schicht bei der gewählten Einheit an.</p>
+            <div class="kp-row kp-avail-filter">
+              <select id="kp-avail-typ" aria-label="Typ"></select>
+              <input type="search" id="kp-avail-q" placeholder="Suche (OV, Typ)" autocomplete="off" />
+            </div>
+            <div id="kp-avail-summary" class="kp-avail-summary luk-muted"></div>
+            <div id="kp-avail-list" class="kp-avail-list"></div>
+            <div id="kp-avail-stand" class="luk-kp-stand"></div>
+          </div>
+
+          <div class="kp-section">
+            <div class="kp-section-title">Drucken</div>
+            <div class="kp-row">
+              <button type="button" id="kp-print-btn" class="luk-btn">Drucken / PDF</button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Rechte Seite: Perspektive, Abschnitte, Einheiten, Mitglieder, Schichten -->
+        <main class="kp-box kp-main-box">
+          <div class="kp-main-head">
+            <div class="kp-main-title">
+              <h2 id="kp-current-perspective">Lade…</h2>
+              <div id="kp-current-path" class="kp-path luk-muted"></div>
+            </div>
+            <div class="kp-main-actions luk-no-print">
+              <button type="button" id="kp-refresh-btn" class="luk-btn luk-btn-small" title="Daten neu vom Server laden">Aktualisieren</button>
+            </div>
+          </div>
+          <div id="kp-content" class="kp-content"></div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Schicht-Dialog -->
+    <dialog id="kp-shift-dialog" class="luk-dialog luk-dialog-wide">
+      <h2 id="kp-si-title">Schicht bearbeiten</h2>
+      <div id="kp-si-target" class="luk-hint"></div>
+      <form method="dialog">
+        <label>Von
+          <input type="datetime-local" id="kp-si-von" />
+        </label>
+        <fieldset class="kp-fieldset kp-end-fieldset">
+          <legend>Schichtende</legend>
+          <label class="kp-radio">
+            <input type="radio" name="kp-end-mode" value="bis" id="kp-si-end-bis" checked />
+            Endzeit
+          </label>
+          <input type="datetime-local" id="kp-si-bis" />
+          <label class="kp-radio">
+            <input type="radio" name="kp-end-mode" value="dauer" id="kp-si-end-dauer" />
+            Schichtdauer ab Beginn
+          </label>
+          <div class="kp-duration-row">
+            <input type="number" id="kp-si-dauer-h" min="0" step="1" placeholder="Std." aria-label="Stunden" />
+            <input type="number" id="kp-si-dauer-m" min="0" step="5" max="59" placeholder="Min." aria-label="Minuten" />
+          </div>
+        </fieldset>
+        <label>Stärke (Führer/Unterführer/Mannschaft, z.B. 1/3/8)
+          <input type="text" id="kp-si-staerke" maxlength="40" autocomplete="off" placeholder="1/3/8" />
+        </label>
+        <fieldset class="kp-fieldset">
+          <legend>Einheit, die diese Schicht stellt</legend>
+          <label>Aus dem Kräftekatalog wählen (z.B. Ablösung durch eine andere Einheit)
+            <input type="text" id="kp-si-kraft-such" maxlength="120" autocomplete="off" placeholder="Suche: Typ oder Ortsverband – passende und freie Einheiten zuerst" />
+          </label>
+          <div id="kp-si-kraft" class="luk-kp-line"></div>
+          <p class="luk-hint">Ohne Auswahl gilt die Einheit selbst. Name, Funkruf und Ortsverband können immer auch von Hand eingetragen werden.</p>
+        </fieldset>
+        <fieldset class="kp-fieldset">
+          <legend>Personal in dieser Schicht</legend>
+          <div class="luk-field-row">
+            <label>Name
+              <input type="text" id="kp-si-name" maxlength="160" autocomplete="off" />
+            </label>
+            <label>Rufnummer
+              <input type="text" id="kp-si-telefon" maxlength="60" autocomplete="off" />
+            </label>
+          </div>
+          <div class="luk-field-row">
+            <label>Funkrufname
+              <input type="text" id="kp-si-funkruf" maxlength="120" autocomplete="off" />
+            </label>
+            <label>Ortsverband
+              <input type="text" id="kp-si-ov" maxlength="120" autocomplete="off" />
+            </label>
+          </div>
+        </fieldset>
+        <label>Bemerkung
+          <input type="text" id="kp-si-note" maxlength="500" autocomplete="off" />
+        </label>
+        <label class="kp-checkbox-label">
+          <input type="checkbox" id="kp-si-aktiv" checked />
+          Aktiv (zählt zur Stärke und ist in der Führungsharke sichtbar)
+        </label>
+        <div class="luk-dialog-actions">
+          <button type="button" class="luk-btn" id="kp-si-cancel">Abbrechen</button>
+          <button type="button" class="luk-btn luk-btn-primary" id="kp-si-save">Übernehmen</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Stammdaten-Dialog (Funkruf, OV, Telefon, Funktion, Name, Bemerkung) -->
+    <dialog id="kp-meta-dialog" class="luk-dialog">
+      <h2 id="kp-mi-title">Stammdaten bearbeiten</h2>
+      <form method="dialog">
+        <label id="kp-mi-bez-label">Bezeichnung
+          <input type="text" id="kp-mi-bezeichnung" maxlength="160" autocomplete="off" disabled title="Die Bezeichnung wird in der Führungsharke gepflegt." />
+        </label>
+        <div class="luk-field-row">
+          <label id="kp-mi-funktion-label" hidden>Funktion
+            <input type="text" id="kp-mi-funktion" maxlength="120" autocomplete="off" placeholder="z.B. FB Stromversorgung" />
+          </label>
+          <label id="kp-mi-name-label" hidden>Name
+            <input type="text" id="kp-mi-name" maxlength="160" autocomplete="off" />
+          </label>
+        </div>
+        <div class="luk-field-row">
+          <label id="kp-mi-funkruf-label">Funkrufname
+            <input type="text" id="kp-mi-funkruf" maxlength="120" autocomplete="off" />
+          </label>
+          <label id="kp-mi-telefon-label" hidden>Rufnummer
+            <input type="text" id="kp-mi-telefon" maxlength="60" autocomplete="off" />
+          </label>
+        </div>
+        <label>Ortsverband / Herkunft
+          <input type="text" id="kp-mi-ov" maxlength="120" autocomplete="off" placeholder="Freitext oder aus dem Kräftekatalog wählen" />
+        </label>
+        <div id="kp-mi-kraft" class="luk-kp-line"></div>
+        <label>Bemerkung
+          <textarea id="kp-mi-note" rows="2" maxlength="500"></textarea>
+        </label>
+        <p class="luk-hint">Bezeichnung, Typ und Struktur werden in der <a href="/harke?einsatz={{.UUID}}">Führungsharke</a> geändert.</p>
+        <div class="luk-dialog-actions">
+          <button type="button" class="luk-btn" id="kp-mi-cancel">Abbrechen</button>
+          <button type="button" class="luk-btn luk-btn-primary" id="kp-mi-save">Übernehmen</button>
+        </div>
+      </form>
+    </dialog>
+
+    {{.Footer}}
+    <script src="/js/kraefteplanung.js?v={{.AssetVersion}}"></script>
+  </body>
+</html>

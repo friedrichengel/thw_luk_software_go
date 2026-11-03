@@ -1,0 +1,228 @@
+/* pagelayout.css – Gemeinsame CSS-Regeln*/
+
+/* Basis CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Dialoge zentriert der Browser ueber sein eigenes "margin: auto" - das
+     loescht der Stern-Reset oben, wodurch jeder Dialog in der linken oberen
+     Ecke klebt. Hier zurueckholen. Bewusst anders positionierte Dialoge
+     (z.B. .lk-dialog-anchored auf der Lagekarte) ueberschreiben das mit
+     hoeherer Spezifitaet und bleiben, wo sie sind. */
+  dialog {
+    margin: auto;
+  }
+  
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    background-color: rgb(0, 51, 153);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Header */
+  .header {
+    width: 100%;
+    background-color: rgb(0, 51, 153);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+  }
+  
+  .title {
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+    margin-left: 30px;
+  }
+  
+  .header-right {
+    margin-right: 30px;
+  }
+  
+  .header-right img {
+    height: 80px;
+    max-width: 100%;
+  }
+  
+  /* Row (gemeinsame Eigenschaften). Bewusst ohne max-width: beim
+     Herauszoomen waechst der Viewport in CSS-Pixeln, eine Deckelung haette
+     ab etwa 58 % Zoom nur noch blauen Rand erzeugt statt mehr Inhalt. */
+  .row {
+    width: 100%;
+    display: flex;
+  }
+  
+  .footer a,
+  .footer a:visited,
+  .footer a:hover,
+  .footer a:active,
+  .footer a:focus {
+    color: white;
+    text-decoration: none;
+  }
+
+/* ------------------------------------------------------------------
+   Fussleiste - auf jeder Seite identisch aufgebaut (lib/PageHelper.php).
+   Links zwei Bereiche in fester Reihenfolge, "Einsatz" und "Hilfsmittel",
+   jeweils "Bereichsname: Punkt · Punkt". Aufgeklappt ist der Bereich, in
+   dem die Seite liegt. Rechts die Konto-Angaben. Alle Trenner, Abstaende
+   und Groessen stehen hier - Seiten-CSS fasst die Leiste nicht an.
+   ------------------------------------------------------------------ */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 18px;
+  color: #fff;
+  background-color: transparent;
+  font-size: 15px;
+  line-height: 1.45;
+  padding: 5px 24px;
+}
+/* Normaler Textfluss statt Flex: die Leiste bricht dann wie Text um und
+   bleibt bei schmalen Fenstern flach, statt jedes Element auf eine eigene
+   Zeile zu stellen. */
+.footer-left, .footer-right {
+  margin: 0;              /* Abstand kommt aus dem Padding der Leiste */
+}
+.footer-left  { flex: 1 1 auto; min-width: 0; }
+.footer-right { flex: 0 1 auto; text-align: right; }
+
+/* ---- Klappmenues: Bereiche links und Konto rechts, gleiche Bauart ----
+   Markup ist <details>/<summary>, damit es ohne JavaScript funktioniert;
+   public/js/footer_menu.js ergaenzt nur Schliessen bei Klick daneben, mit
+   Escape und beim Oeffnen eines anderen Menues. */
+.footer-pop { position: relative; display: inline-block; }
+/* Trennstrich zwischen zwei Bereichen */
+.footer-pop + .footer-pop {
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid rgba(255, 255, 255, 0.4);
+}
+.footer-pop-btn {
+  list-style: none;                   /* eigenes Dreieck statt des Browser-Markers */
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  padding: 1px 10px 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  line-height: 1.4;
+  color: #fff;
+  text-decoration: none;
+}
+.footer-pop-btn::-webkit-details-marker { display: none; }
+.footer-pop-btn::marker { content: ''; }
+.footer-pop-btn:hover,
+.footer-pop[open] > .footer-pop-btn { background: rgba(255, 255, 255, 0.22); }
+/* Bereichsname zurueckhaltend, die aktuelle Seite davor hervorgehoben */
+.footer-pop-label { opacity: 0.78; }
+.footer-pop-current { font-weight: 700; }
+.footer-pop-current::before { content: ':'; font-weight: normal; opacity: 0.78; margin-right: 6px; }
+.footer-pop-role { font-weight: normal; opacity: 0.8; }
+.footer-pop-role::before { content: ''; margin: 0 0 0 6px; }
+/* Einzelner Link ohne Menue (Admin: nur Serververwaltung) */
+.footer-pop-solo { color: #fff !important; }
+.footer-pop-btn-active { font-weight: 700; }
+
+.footer-pop-caret {
+  display: inline-block;
+  margin-left: 7px;
+  border: 4px solid transparent;
+  border-bottom-color: currentColor;   /* Dreieck nach oben: Menue klappt hoch */
+  vertical-align: 2px;
+}
+.footer-pop[open] > .footer-pop-btn .footer-pop-caret {
+  border-bottom-color: transparent;
+  border-top-color: currentColor;
+  vertical-align: -2px;
+}
+
+.footer-pop-menu {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  z-index: 5000;
+  min-width: 190px;
+  background: #fff;
+  color: #222;
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  padding: 6px 0;
+  text-align: left;
+  font-size: 15px;
+  /* Auf sehr flachen Fenstern nicht ueber den oberen Rand hinauslaufen */
+  max-height: calc(100vh - 70px);
+  overflow-y: auto;
+}
+/* Das Konto sitzt am rechten Rand - sein Menue klappt nach links auf */
+.footer-pop-right > .footer-pop-menu { left: auto; right: 0; }
+.footer-pop-item {
+  display: block;
+  box-sizing: border-box;
+  padding: 7px 14px 7px 24px;
+  color: #222 !important;              /* .footer a faerbt sonst alles weiss */
+  text-decoration: none !important;
+  white-space: nowrap;
+}
+.footer-pop-item:hover { background: #e7f1ff; }
+/* Aktueller Punkt: fett und mit Haken, damit man ihn auch im Menue findet */
+.footer-pop-item-active { font-weight: 700; color: rgb(0, 51, 153) !important; }
+.footer-pop-item-active::before {
+  content: '\2713';
+  margin-left: -14px;
+  margin-right: 4px;
+}
+.footer-pop-logout {
+  border-top: 1px solid #e3e6ee;
+  margin-top: 4px;
+  padding-top: 9px;
+  color: #842029 !important;
+  font-weight: 600;
+}
+.footer-pop-logout:hover { background: #fde2e1; }
+
+/* Rechte Seite: optionaler Datenstand, Versionsstempel */
+.footer-stand::before,
+.footer-stamp::before {
+  content: '|';
+  opacity: 0.45;
+  margin: 0 6px;
+  font-weight: normal;
+}
+/* Versionsstempel nie mitten im Wort umbrechen */
+.footer-stamp { white-space: nowrap; }
+
+  /* Embed-Modus: wenn die Seite als iframe in /steinapp.php geladen wird,
+     soll Header/Footer ausgeblendet sein und der Inhalt den ganzen Frame
+     fuellen. Body bekommt die Klasse "embed-mode". */
+  body.embed-mode {
+    background-color: transparent;
+  }
+  body.embed-mode .header,
+  body.embed-mode .footer {
+    display: none !important;
+  }
+  body.embed-mode .container {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+  }
+
+  /* Sonstige Elemente */
+  #tacticalClock {
+    font-size: 70px;
+    font-weight: bold;
+  }
+  

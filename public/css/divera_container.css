@@ -1,0 +1,139 @@
+/* divera_container.css - Divera-Personaluebersicht als Tab in Box 1 des Dashboards. */
+
+.divera_filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.divera_dropdown {
+  flex: 1;
+  position: relative;
+}
+
+.divera_dropdown-label {
+  padding: 8px 10px;
+  background-color: rgb(200, 200, 200);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+}
+
+.divera_dropdown-options {
+  display: none;  /* Dropdown-Optionen sind initial verborgen */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.divera_dropdown-options label {
+  display: block;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.divera_dropdown-options label:hover {
+  background-color: #e6e6e6;
+}
+
+/* --- Divera Gruppen & Listeneinträge --- */
+.divera_group-container {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 8px;
+  transition: background-color 0.3s;
+}
+
+.divera_group-container:hover {
+  background-color: #e6e6e6;
+}
+
+.divera_group-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+  font-size: 16px;
+  color: #003399;
+}
+
+.divera_group-row:last-child {
+  border-bottom: none;
+}
+
+.divera_details {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 8px;
+  padding: 8px;
+}
+
+.divera_detail-table {
+  display: table;
+  width: 100%;
+}
+
+.divera_detail-row {
+  display: table-row;
+}
+
+/* Die Namenszelle: Die Breite wird in JavaScript dynamisch auf den längsten Namen in der Gruppe gesetzt */
+.divera_person-name {
+  display: table-cell;
+  vertical-align: middle;
+  white-space: nowrap;
+  font-size: 14px;
+  color: #333333;
+}
+
+/* Die Symbolzelle: Sie beginnt immer 10px rechts vom Ende der Namenszelle.
+   Die feste Breite wird in JS anhand des längsten Icon-Texts in der Gruppe festgelegt. */
+.divera_person-symbol-cell {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: left;
+  padding-left: 10px;
+  white-space: nowrap;
+}
+
+/* Tooltip – schon in bestehendem Stil, hier noch etwas angepasst */
+.divera_tooltip {
+  position: fixed;          /* Fixiert relativ zum Viewport */
+  display: none;            /* Startet unsichtbar */
+  background: #333333;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 0.9em;
+  z-index: 1000;
+  pointer-events: none;     /* Damit der Tooltip Mausereignisse ignoriert */
+  white-space: nowrap;
+}
+
+/* Fehlerhinweis in der Personaluebersicht (Server-/Divera-Fehler) */
+.divera_error {
+  background: #ffe6e6;
+  border: 1px solid #ffb3b3;
+  color: #b00000;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>STEINboard</title>
+
+    <link rel="icon" type="image/png" href="/images/favicon_steinboard.png">
+    {{.PwaHead}}
+
+    <!-- Externe CSS-Dateien der zweiten Seite -->
+    <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/leaflet.css" />
+    <link rel="stylesheet" href="/css/stein.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/stein_export.css?v={{.AssetVersion}}" />
+
+    <!-- Eingeloggter OV -->
+    {{.MapCenter}}
+
+    <!-- Taktische Zeit -->
+    <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+
+    <!-- Export -->
+    <script src="/js/exceljs.min.js?v={{.AssetVersion}}"></script>
+  </head>
+
+  <body class="{{if .Embed}}embed-mode{{end}}">
+    {{if not .Embed}}
+    <!-- Header -->
+    <div class="header">
+      <div id="tacticalClock" class="title"></div>
+      <div class="header-right">
+        <img src="/images/image.png" alt="THW" />
+      </div>
+    </div>
+    {{end}}
+
+    <!-- Container mit einer Box -->
+    <div class="container">
+      <div class="row">
+        <div class="box">
+          <!-- Filter- und Sortier-Dropdowns in einem Container -->
+          <div class="filter-container">
+            <!-- BU-Dropdown: Organisationseinheiten -->
+            <div class="dropdown" id="buname-dropdown">
+              <button class="dropbtn">Organisationseinheiten</button>
+              <div class="dropdown-content">
+                <!-- Inhalte werden per JavaScript dynamisch befüllt -->
+              </div>
+            </div>
+
+            <!-- Dropdown: Typen -->
+            <div class="dropdown" id="group-dropdown">
+              <button class="dropbtn">Typen</button>
+              <div class="dropdown-content">
+                <label>
+                  <input type="checkbox" class="group-filter" value="all" checked /> Alle anzeigen
+                </label>
+                <label>
+                  <input type="checkbox" class="group-filter" value="1" checked /> Fahrzeug
+                </label>
+                <label>
+                  <input type="checkbox" class="group-filter" value="2" checked /> Gerät
+                </label>
+                <label>
+                  <input type="checkbox" class="group-filter" value="3" checked /> Person
+                </label>
+                <label>
+                  <input type="checkbox" class="group-filter" value="4" checked /> Einheit
+                </label>
+                <label>
+                  <input type="checkbox" class="group-filter" value="5" checked /> Anhänger
+                </label>
+              </div>
+            </div>
+
+            <!-- Dropdown: Zustände -->
+            <div class="dropdown" id="state-dropdown">
+              <button class="dropbtn">Zustand</button>
+              <div class="dropdown-content">
+                <label>
+                  <input type="checkbox" class="state-filter" value="all" checked /> Alle anzeigen
+                </label>
+                <label>
+                  <input type="checkbox" class="state-filter" value="ready" checked /> Einsatzbereit
+                </label>
+                <label>
+                  <input type="checkbox" class="state-filter" value="notready" checked /> Nicht einsatzbereit
+                </label>
+                <label>
+                  <input type="checkbox" class="state-filter" value="semiready" checked /> Bedingt einsatzbereit
+                </label>
+                <label>
+                  <input type="checkbox" class="state-filter" value="inuse" checked /> Im Einsatz
+                </label>
+                <label>
+                  <input type="checkbox" class="state-filter" value="maint" checked /> In der Werkstatt
+                </label>
+                <label>
+                  <input type="checkbox" class="state-filter" value="ev" checked /> Einsatzvorbehalt
+                </label>
+                <label>
+                  <input type="checkbox" class="state-filter" value="dummy" checked /> Dummy
+                </label>
+              </div>
+            </div>
+
+            <!-- Dropdown: Kategorien -->
+            <div class="dropdown" id="category-dropdown">
+              <button class="dropbtn">Gruppen</button>
+              <div class="dropdown-content">
+                <label>
+                  <input type="checkbox" class="category-filter" value="all" checked /> Alle anzeigen
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="-" checked /> -
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="B" checked /> B
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="B1" checked /> B1
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="B ASH" checked /> B ASH
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="B EGS" checked /> B EGS
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="B1 ASH" checked /> B1 ASH
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Bel" checked /> Bel
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="BrB" checked /> BrB
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="BT" checked /> BT
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="E" checked /> E
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="ENT" checked /> ENT
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="F" checked /> F
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="FK" checked /> FK
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="FK (F)" checked /> FK (F)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="FK (FK)" checked /> FK (FK)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="FK (FM)" checked /> FK (FM)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Gesamter OV" checked /> Gesamter OV
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="HCP" checked /> HCP
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="HV" checked /> HV
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="I" checked /> I
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="K (A)" checked /> K (A)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="K (B)" checked /> K (B)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Lkr" checked /> Lkr
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Log-MW" checked /> Log-MW
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Log-V" checked /> Log-V
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="MT" checked /> MT
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="N" checked /> N
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="O (A)" checked /> O (A)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="O (B)" checked /> O (B)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="O (C)" checked /> O (C)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="ÖGA" checked /> ÖGA
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Öl (A)" checked /> Öl (A)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Öl (B)" checked /> Öl (B)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Öl (C)" checked /> Öl (C)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="OV-Stab" checked /> OV-Stab
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Prüfteam" checked /> Prüfteam
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="rescEU CBRN" checked /> rescEU CBRN
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="R (A)" checked /> R (A)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="R (B)" checked /> R (B)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="R (C)" checked /> R (C)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="SB (A)" checked /> SB (A)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="SB (B)" checked /> SB (B)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="SEEBA" checked /> SEEBA
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="SEELift" checked /> SEELift
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="SEEWA" checked /> SEEWA
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Sp" checked /> Sp
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Stab" checked /> Stab
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Sys BR500" checked /> Sys BR500
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Tr ErLo" checked /> Tr ErLo
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Tr ESS" checked /> Tr ESS
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Tr Log-M" checked /> Tr Log-M
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Tr Log-VG" checked /> Tr Log-VG
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Tr MHP" checked /> Tr MHP
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Tr TS" checked /> Tr TS
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="Tr UL" checked /> Tr UL
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="TW" checked /> TW
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="VOST" checked /> VOST
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="W" checked /> W
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="W (A)" checked /> W (A)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="W (B)" checked /> W (B)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="WP (A)" checked /> WP (A)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="WP (B)" checked /> WP (B)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="WP (C)" checked /> WP (C)
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="ZTr" checked /> ZTr
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="ZTr TZ" checked /> ZTr TZ
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="ZTr FZ-FK" checked /> ZTr FZ-FK
+                </label>
+                <label>
+                  <input type="checkbox" class="category-filter" value="ZTr FZ-Log" checked /> ZTr FZ-Log
+                </label>
+              </div>
+            </div>
+
+            <!-- Dropdown: Sortierung (als 5. Dropdown im Filtercontainer) -->
+            <div class="dropdown" id="sort-dropdown">
+              <button class="dropbtn">Sortierung</button>
+              <div class="dropdown-content">
+                <label>
+                  <input type="checkbox" class="sort-checkbox" name="sort-option" data-sort="organisationseinheit">
+                  Organisationseinheit
+                </label>
+                <label>
+                  <input type="checkbox" class="sort-checkbox" data-sort="regionalstelle" checked>
+                  Regionalstelle (alphabetisch)
+                </label>
+                <label>
+                  <input type="checkbox" class="sort-checkbox" name="sort-option" data-sort="zustand">
+                  Zustand (absteigend)
+                </label>
+                <label>
+                  <input type="checkbox" class="sort-checkbox" name="sort-option" data-sort="tage">
+                  Tage seit Änderung (absteigend)
+                </label>
+              </div>
+            </div>
+
+            <!-- Suchfeld -->
+            <div class="search-container">
+              <input type="text" id="search-input" placeholder="Suchbegriff eingeben…" autocomplete="off" data-lpignore="true">
+            </div>
+
+            <!-- Download -->
+            <div class="export-container">
+              <button id="exportBtn" type="button">Export</button>
+            </div>
+          </div>
+
+          <!-- Anzeige der Assets -->
+          <div id="asset-container"></div>
+          <div id="tooltip" class="tooltip"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay und Modal strukturiert im HTML -->
+    <div id="exportOverlay">
+      <div id="exportModal">
+        <h2>Export konfigurieren</h2><br>
+        <div id="exportCategories"></div>
+        <div id="exportFooter">
+          <input type="text" id="exportFilename" placeholder="Dateiname" autocomplete="off" data-lpignore="true" />
+          <button id="confirmExportBtn"  type="button">Exportieren</button>
+          <button id="cancelExportBtn"  type="button">Abbrechen</button>
+        </div>
+      </div>
+    </div>
+
+    {{if not .Embed}}
+    <!-- Footer -->
+    {{.Footer}}
+    {{else}}
+    <!-- Embed-Modus: Header und Footer ausgeblendet, Stand-Anzeige bleibt im DOM -->
+    <span id="dataStand" hidden></span>
+    {{end}}
+
+    <!-- Stein -->
+    <script src="/js/kraefte_typ.js?v={{.AssetVersion}}"></script>
+    <script src="/js/stein.js?v={{.AssetVersion}}"></script>
+    <script src="/js/stein_export.js?v={{.AssetVersion}}"></script>
+
+  </body>
+</html>

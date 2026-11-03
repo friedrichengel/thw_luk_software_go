@@ -1,0 +1,862 @@
+/* lagekarte.php & lagekarte.js */
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+}
+
+.header-center {
+  flex: 1;
+  text-align: center;
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 0;
+}
+
+.row {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  width: 100%;
+}
+
+/* Karte links */
+.map-box {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  margin: 10px 0 10px 10px;
+}
+
+#map {
+  flex: 1;
+  position: relative;
+  border-radius: 4px;
+}
+
+/* Sidebar rechts - reiner Flex-Container, Sections sind die weißen Cards.
+   margin/padding so gesetzt, dass die erste Box auf gleicher Höhe startet
+   wie die Karte links. */
+.side-box {
+  flex: 1;
+  max-width: 400px;
+  min-width: 320px;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-y: auto;
+  margin: 10px 10px 10px 10px;
+}
+
+.lk-section {
+  background: #fff;
+  border: 1px solid #e4e8f1;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 0;        /* gap auf .side-box regelt den Abstand */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  flex: none;              /* keine Section soll sich strecken */
+}
+
+.lk-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #0a3d91;
+}
+
+.lk-row { margin-bottom: 10px; }
+.lk-row:last-child { margin-bottom: 0; }
+
+.lk-row-split {
+  display: flex;
+  gap: 6px;
+}
+
+.lk-row-split > * { flex: 1; }
+
+/* Kartenauswahl mit Umbenennen-Knopf daneben */
+.lk-row-select {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+}
+.lk-row-select > select { flex: 1; min-width: 0; }
+.side-box button.lk-icon-btn {
+  flex: 0 0 auto;
+  padding: 7px 10px;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.lk-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #222;
+}
+
+.lk-hint {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.35;
+}
+
+/* Adresssuche: Trefferliste als schlichte Zeilen, nicht als blaue Knoepfe */
+.lk-geo-hits {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.side-box button.lk-geo-hit {
+  text-align: left;
+  white-space: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.3;
+  color: #222;
+  background: #f3f5fa;
+  border: 1px solid #d8dde6;
+  padding: 6px 8px;
+}
+.side-box button.lk-geo-hit:hover:not(:disabled) { background: #e7f1ff; border-color: #9ec5fe; }
+.lk-geo-hits .lk-geo-none { font-size: 12px; color: #666; padding: 2px 0; }
+
+.side-box input[type="text"],
+.side-box input[type="search"],
+.side-box select,
+.side-box textarea {
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 14px;
+  border: 1px solid #cfd6e6;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background: #fff;
+  color: #222;
+}
+.side-box input[type="text"]:focus,
+.side-box input[type="search"]:focus,
+.side-box select:focus,
+.side-box textarea:focus {
+  outline: none;
+  border-color: #0a3d91;
+  box-shadow: 0 0 0 2px rgba(10, 61, 145, 0.15);
+}
+
+.side-box input[type="range"] {
+  width: 100%;
+  accent-color: #0a3d91;
+}
+
+.side-box label {
+  font-size: 13px;
+  color: #333;
+}
+
+.side-box button {
+  padding: 7px 12px;
+  font-size: 14px;
+  background-color: #0a3d91;
+  color: #fff;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.side-box button:hover:not(:disabled) { background-color: #0d4bb0; }
+.side-box button:disabled { background-color: #9aa6c4; cursor: not-allowed; opacity: 0.75; }
+
+#printBtn {
+  width: 100%;
+  background-color: #d94b2b;
+}
+#printBtn:hover { background-color: #bc3d21; }
+
+/* Zeichen-Grid: hellblauer Hintergrund, Tiles auf weiß */
+.lk-symbol-grid {
+  display: grid;
+  /* minmax(0, 1fr) statt 1fr: Spalten duerfen schmaler als der Inhalt werden
+     und das Bild verkleinert sich mit. Ohne das bricht das Grid bei schmaler
+     Sidebar aus und erzeugt einen horizontalen Scrollbar. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  max-height: 260px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 6px;
+  background: #e3ecff;
+  border: 1px solid #cfd6e6;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.lk-symbol-tile {
+  background: #fff;
+  border: 2px solid #cfd6e6;
+  border-radius: 4px;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  transition: border-color .1s, box-shadow .1s;
+  position: relative;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.lk-symbol-tile:hover { border-color: #0a3d91; }
+.lk-symbol-tile.active { border-color: #0a3d91; box-shadow: 0 0 0 2px rgba(10, 61, 145, 0.25); }
+.lk-symbol-tile img {
+  max-width: 100%;
+  max-height: 100%;
+  pointer-events: none;
+}
+.lk-symbol-tile .lk-tile-label {
+  display: none;
+}
+
+/* Map marker icons */
+.lk-marker-icon {
+  background: transparent;
+  border: none;
+}
+.lk-marker-icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.lk-marker-selected {
+  outline: 2px dashed #ff9800;
+  outline-offset: 2px;
+}
+
+/* Dialog */
+.lk-dialog {
+  border: none;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 520px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.lk-dialog::backdrop {
+  background: rgba(0,0,0,0.35);
+}
+
+/* Nicht-modaler Marker-Dialog: wird per JS neben dem Marker positioniert. */
+.lk-dialog.lk-dialog-anchored {
+  position: fixed;
+  margin: 0;
+  width: 360px;
+  max-width: 360px;
+  padding: 16px 18px;
+  border: 1px solid #cfd6e6;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.25);
+  z-index: 2000;
+}
+.lk-dialog.lk-dialog-anchored h2 {
+  font-size: 15px;
+  margin: 0 0 10px;
+}
+.lk-dialog.lk-dialog-anchored label {
+  margin: 8px 0 3px;
+  font-size: 13px;
+}
+.lk-dialog.lk-dialog-anchored .lk-dialog-actions {
+  margin-top: 12px;
+}
+.lk-dialog h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  color: #0a3d91;
+}
+.lk-dialog label {
+  display: block;
+  font-weight: 600;
+  margin: 10px 0 4px;
+  font-size: 14px;
+  color: #333;
+}
+.lk-dialog input[type="text"],
+.lk-dialog textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+.lk-checkbox-label {
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+  font-weight: 400 !important;
+  margin-top: 12px !important;
+  cursor: pointer;
+}
+.lk-dialog-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+.lk-dialog-actions button {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #fff;
+  color: #333;
+}
+.lk-dialog-actions button:first-child {
+  background: #0a3d91;
+  color: #fff;
+  border-color: #0a3d91;
+  font-weight: 600;
+}
+.lk-dialog-actions button:first-child:hover { background: #0d4bb0; }
+
+/* Zeichnen-Stil: Farbpicker + Slider */
+.lk-draw-row {
+  align-items: flex-end;
+}
+.lk-draw-color-label {
+  flex: 0 0 auto;
+  display: flex !important;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  color: #333;
+}
+.lk-draw-color-label input[type="color"] {
+  width: 44px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #cfd6e6;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #fff;
+}
+.lk-draw-weight-label {
+  flex: 1 1 auto;
+  display: flex !important;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  color: #333;
+}
+
+/* Shape-Dialog: Stil-Felder nebeneinander */
+.lk-shape-style-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  margin-top: 10px;
+}
+.lk-shape-style-row > label {
+  display: flex !important;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0 !important;
+  font-size: 13px;
+  color: #333;
+}
+.lk-shape-style-row > label:first-child { flex: 0 0 auto; }
+.lk-shape-style-row > label:last-child { flex: 1 1 auto; }
+.lk-shape-style-row input[type="color"] {
+  width: 44px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #cfd6e6;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #fff;
+}
+.lk-dialog .lk-btn-danger {
+  background: #b23a48 !important;
+  color: #fff !important;
+  border-color: #b23a48 !important;
+}
+.lk-dialog .lk-btn-danger:hover { background: #8f2d38 !important; }
+
+/* Werkzeug-Buttons (Pfeil/Text) im Zeichnen-Bereich: hervorheben, wenn aktiv */
+.side-box button.lk-tool-active {
+  background-color: #d94b2b;
+}
+.side-box button.lk-tool-active:hover:not(:disabled) {
+  background-color: #bc3d21;
+}
+
+/* Text-Dialog: Format-Toggle-Buttons (Fett / Kursiv / Unterstrichen) */
+.lk-text-format-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+.lk-text-fmt-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 40px;
+  padding: 6px 10px;
+  border: 1px solid #cfd6e6;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 400 !important;
+  margin: 0 !important;
+  background: #fff;
+  color: #333;
+  user-select: none;
+  font-size: 14px;
+}
+.lk-text-fmt-btn input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+.lk-text-fmt-btn:has(input:checked) {
+  background: #0a3d91;
+  color: #fff;
+  border-color: #0a3d91;
+}
+
+/* Text-Marker (Freitext auf der Karte) */
+.lk-text-marker {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+.lk-text-marker-content {
+  font-family: Arial, Helvetica, sans-serif;
+  white-space: pre-wrap;
+  pointer-events: auto;
+  cursor: pointer;
+  line-height: 1.1;
+  text-shadow:
+    -1px -1px 0 #fff,
+     1px -1px 0 #fff,
+    -1px  1px 0 #fff,
+     1px  1px 0 #fff,
+     0   -1px 0 #fff,
+     0    1px 0 #fff,
+    -1px  0   0 #fff,
+     1px  0   0 #fff;
+  display: inline-block;
+  padding: 1px 2px;
+  /* Text mittig auf der Koordinate verankern (wie die taktischen Zeichen).
+     Ohne das sitzt die linke obere Ecke am Punkt und die Textmitte wandert
+     beim Zoomen relativ zu den Zeichen. */
+  transform: translate(-50%, -50%);
+  transform-origin: 50% 50%;
+}
+.lk-text-marker-empty .lk-text-marker-content {
+  color: #999 !important;
+  font-style: italic !important;
+}
+
+/* Einsatzabschnitte: Liste in der Sidebar (helle Cards) */
+.lk-abschnitt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #e3ecff;
+  border: 1px solid #cfd6e6;
+  border-radius: 6px;
+  padding: 6px;
+  margin-top: 4px;
+}
+.lk-abschnitt-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #cfd6e6;
+  border-radius: 4px;
+  padding: 4px 6px;
+}
+.lk-abschnitt-vis {
+  flex: 0 0 auto;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #0a3d91;
+}
+.lk-abschnitt-num {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: #0a3d91;
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+}
+.lk-abschnitt-name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.side-box input.lk-abschnitt-name {
+  padding: 4px 8px;
+  font-size: 13px;
+}
+span.lk-abschnitt-name {
+  color: #222;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lk-abschnitt-staerke {
+  flex: 0 0 auto;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 11px;
+  color: #0a3d91;
+  background: #e3ecff;
+  border: 1px solid #cfd6e6;
+  border-radius: 3px;
+  padding: 1px 6px;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+.lk-abschnitt-row.lk-abschnitt-pinned .lk-abschnitt-staerke {
+  background: #fff;
+}
+
+.lk-abschnitt-del {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  padding: 0 !important;
+  line-height: 1;
+  font-size: 16px;
+  font-weight: 700;
+  background: #b23a48 !important;
+  color: #fff !important;
+  border-radius: 50% !important;
+}
+.lk-abschnitt-del:hover { background: #8f2d38 !important; }
+
+/* Grundkarte (ID 0): pinned - immer sichtbar, nicht loesch-/umbenennbar */
+.lk-abschnitt-row.lk-abschnitt-pinned {
+  background: #f5f7fc;
+  border-color: #cfd6e6;
+}
+.lk-abschnitt-row.lk-abschnitt-pinned .lk-abschnitt-num {
+  background: #2c7a7b;
+  color: #fff;
+}
+.lk-abschnitt-row.lk-abschnitt-pinned .lk-abschnitt-vis {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.lk-mi-abschnitt-item.lk-mi-abschnitt-pinned {
+  background: rgba(10, 61, 145, 0.06);
+  border-radius: 3px;
+  padding: 2px 4px;
+}
+.lk-mi-abschnitt-item.lk-mi-abschnitt-pinned input[type="checkbox"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Einsatzabschnitte: Picker im Marker-Dialog (Checkboxen) */
+.lk-mi-abschnitte {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 140px;
+  overflow-y: auto;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fafafa;
+}
+.lk-mi-abschnitt-item {
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+  font-weight: 400 !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  color: #222 !important;
+  cursor: pointer;
+}
+.lk-mi-abschnitt-item input[type="checkbox"] {
+  margin: 0;
+  accent-color: #0a3d91;
+}
+
+/* Lade-Liste */
+.lk-load-list {
+  max-height: 360px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  background: #fafafa;
+}
+.lk-load-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+}
+.lk-load-item:last-child { border-bottom: none; }
+.lk-load-item-title {
+  flex: 1;
+  font-weight: 600;
+  color: #222;
+  cursor: pointer;
+}
+.lk-load-item-meta {
+  font-size: 11px;
+  color: #777;
+}
+.lk-load-item button {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+/* Status-Banner auf der Karte */
+.lk-status {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  transform: translateX(-50%);
+  background: #ffd54d;
+  color: #3b2b00;
+  padding: 8px 14px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 1000;
+  max-width: 80%;
+  pointer-events: none;
+}
+.lk-status.lk-status-error {
+  background: #e74c3c;
+  color: #fff;
+}
+.lk-status.lk-status-ok {
+  background: #4caf50;
+  color: #fff;
+}
+
+/* Readonly-Markierung */
+body.lk-readonly .leaflet-draw,
+body.lk-readonly .lk-section-title {
+  /* nichts zu tun, Sidebar liefert nur Print */
+}
+
+/* ======================================================================
+   Stabsansicht: Kartenwahl, Verknuepfung mit Fuehrungsharke, Leerzustand
+   ====================================================================== */
+
+/* Sync-Indikator in der Sektionsueberschrift */
+.lk-section-title .luk-sync { margin-right: 8px; vertical-align: 1px; }
+
+/* Kartenwahl */
+.side-box select#lk-map-select { font-weight: 600; color: #0a3d91; }
+#lk-map-meta { margin-top: 8px; }
+
+/* Buttons mit Danger-Outline (Karte loeschen) */
+.side-box button.lk-btn-danger-outline {
+  background: #fff;
+  color: #b23a48;
+  border: 1px solid #b23a48;
+}
+.side-box button.lk-btn-danger-outline:hover:not(:disabled) { background: #fde2e1; }
+
+/* Leerzustand (keine Lagekarte) ueber der Karte */
+.lk-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 900;
+  pointer-events: none;
+  background: rgba(255,255,255,0.35);
+}
+.lk-empty[hidden] { display: none; }
+.lk-empty-inner {
+  pointer-events: auto;
+  background: #fff;
+  border: 1px solid #cfd6e6;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  padding: 22px 28px;
+  max-width: 420px;
+  text-align: center;
+  color: #222;
+}
+.lk-empty-inner h2 { color: #0a3d91; margin: 0 0 8px; font-size: 18px; }
+.lk-empty-inner p { font-size: 14px; color: #444; margin: 0 0 14px; line-height: 1.4; }
+
+/* Verknuepfte Zeichen: Badge am Marker */
+.lk-marker-icon { overflow: visible; }
+.lk-link-badge {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  border-radius: 9px;
+  background: #0a3d91;
+  color: #fff;
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  pointer-events: none;
+}
+.lk-link-badge-orphan {
+  background: #b23a48;
+  font-weight: 700;
+  font-size: 12px;
+}
+/* Verwaiste Verknuepfung: rot gestrichelter Rahmen */
+.lk-marker-orphan {
+  outline: 2px dashed #b23a48;
+  outline-offset: 1px;
+  border-radius: 3px;
+}
+.lk-marker-selected.lk-marker-orphan { outline-color: #ff9800; }
+
+/* Fokus (von der Fuehrungsharke aus angesprungen) */
+.lk-marker-focus {
+  animation: lk-focus-pulse 1.2s ease-in-out infinite;
+  border-radius: 50%;
+}
+@keyframes lk-focus-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,152,0,0.75); }
+  70%  { box-shadow: 0 0 0 18px rgba(255,152,0,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,152,0,0); }
+}
+
+/* Tooltip-Zusaetze */
+.lk-tt-muted { color: #666; font-size: 11px; }
+.lk-tt-orphan { color: #b23a48; font-weight: 600; }
+
+/* Marker-Dialog: Symbolvorschau */
+.lk-mi-symbol {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #333;
+}
+.lk-mi-symbol img { width: 36px; height: 36px; }
+.lk-mi-symbol:empty { display: none; }
+
+/* Read-only-Block fuer verknuepfte Objekte */
+.lk-linked-box {
+  background: #eef3ff;
+  border: 1px solid #c9d6f2;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 8px 0;
+}
+.lk-linked-box-orphan {
+  background: #fff4f4;
+  border-color: #f1aeb5;
+}
+.lk-linked-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-weight: 700;
+  color: #0a3d91;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.lk-linked-box-orphan .lk-linked-head { color: #842029; }
+.lk-linked-dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 3px 10px;
+  margin: 0;
+  font-size: 13px;
+}
+.lk-linked-dl dt { color: #555; font-weight: 600; }
+.lk-linked-dl dd { margin: 0; color: #222; overflow-wrap: anywhere; }
+.lk-linked-box .lk-row { margin-top: 10px; }
+.lk-linked-box .luk-btn { width: 100%; }
+
+/* Selects in Dialogen (Verknuepfung) */
+.lk-dialog select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  font-family: inherit;
+  background: #fff;
+  color: #222;
+}
+.lk-dialog input:disabled, .lk-dialog textarea:disabled, .lk-dialog select:disabled {
+  background: #f3f3f3;
+  color: #555;
+}
+
+/* Lese-Modus: Cursor auf Markern nicht als "greifbar" */
+body.lk-readonly .leaflet-marker-icon { cursor: pointer; }
+
+/* Lesebanner auf dieser Seite buendig zur Karte */
+.lk-body .luk-readonly-banner { margin: 10px 10px 0 10px; }
+
+/* Druck ueber den Browser (Fallback): Sidebar ausblenden */
+@media print {
+  .lk-body .side-box { display: none !important; }
+  .lk-body .lk-status, .lk-body .lk-empty { display: none !important; }
+}
+
+/* Kraeftekatalog: Heimatstandorte-Popup */
+.lk-heimat-pop { font-size: 12px; line-height: 1.4; }
+.lk-heimat-list { list-style: none; margin: 6px 0 0; padding: 0; max-height: 220px; overflow: auto; }
+.lk-heimat-list li { display: flex; align-items: center; gap: 5px; padding: 1px 0; white-space: nowrap; }
+.lk-heimat-list a { color: rgb(0,51,153); text-decoration: none; font-size: 11px; }
+.lk-heimat-list a:hover { text-decoration: underline; }
+.lk-heimat-list .luk-kp-dot { width: 8px; height: 8px; }

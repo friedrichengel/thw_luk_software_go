@@ -1,0 +1,39 @@
+# THW LuK Stabsansicht - systemd-Unit fuer den Betrieb als einzelnes Binary
+# (ohne Docker). Ziel: /etc/systemd/system/luk.service
+#
+#   sudo useradd -r -s /usr/sbin/nologin -d /opt/luk luk
+#   sudo mkdir -p /opt/luk/config /opt/luk/data && sudo chown -R luk:luk /opt/luk
+#   sudo cp luk-linux-amd64 /opt/luk/luk && sudo chmod 755 /opt/luk/luk
+#   sudo cp config/.env.sample /opt/luk/config/.env   # anpassen, chmod 600
+#   sudo systemctl enable --now luk
+#
+# Restart=always ist Pflicht fuer Updates: nach dem Austausch des Binaries
+# beendet sich der Dienst und wird hier neu gestartet (Linux startet das
+# neue Programm ohnehin per exec; die Unit faengt den Fehlerfall ab).
+[Unit]
+Description=THW LuK Stabsansicht
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=luk
+Group=luk
+WorkingDirectory=/opt/luk
+ExecStart=/opt/luk/luk serve
+Restart=always
+RestartSec=3
+Environment=UPDATE_MODE=binary
+# Alternativ zu config/.env: Variablen hier setzen, z.B.
+#Environment=LISTEN_ADDR=127.0.0.1:8080
+#Environment=APP_BASE_URL=https://luk.example.org
+# Haertung
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/luk
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

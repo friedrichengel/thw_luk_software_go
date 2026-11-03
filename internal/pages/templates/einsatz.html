@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="referrer" content="origin">
+    <title>Einsätze – {{.AppName}}</title>
+    <link rel="icon" type="image/png" href="/images/favicon_steinmap.png">
+    {{.PwaHead}}
+    <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/einsatz.css?v={{.AssetVersion}}" />
+    {{.StabScript}}
+    <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+    <script src="/js/luk_core.js?v={{.AssetVersion}}"></script>
+  </head>
+  <body class="einsatz-body einsatz-mode-hub luk-page">
+    {{.Header}}
+
+    <div class="container">
+      <div class="row">
+        <main class="ez-hub">
+          <div class="ez-hub-head">
+            <h2>Einsätze</h2>
+            <div class="ez-hub-actions">
+              {{if .IsLeiter}}
+                <button type="button" id="ez-new-btn">+ Neuer Einsatz</button>
+                <button type="button" id="ez-import-btn" class="ez-secondary" title="Einsatz aus JSON-Export importieren">Import…</button>
+                <input type="file" id="ez-import-file" accept="application/json,.json" hidden />
+              {{end}}
+            </div>
+          </div>
+          {{if .Denied}}
+            <div class="ez-status ez-status-warn">Für diesen Einsatz bist du nicht freigeschaltet. Bitte den Ersteller des Einsatzes um eine Rolle bitten.</div>
+          {{end}}
+          {{if not .IsLeiter}}
+            <p class="luk-hint">Du siehst alle Einsätze, für die dir eine Stabsrolle zugewiesen wurde. Neue Einsätze können nur Konten mit der Rolle „Leiter" anlegen.</p>
+          {{end}}
+          <div class="ez-hub-filters">
+            <label><input type="radio" name="ez-status-filter" value="open" checked /> Offen</label>
+            <label><input type="radio" name="ez-status-filter" value="closed" /> Abgeschlossen</label>
+            <label><input type="radio" name="ez-status-filter" value="" /> Alle</label>
+          </div>
+          <div id="ez-hub-status" class="ez-status" hidden></div>
+          <div id="ez-hub-list" class="ez-hub-list"></div>
+          <section id="ez-hub-shared" class="ez-hub-shared" hidden>
+            <h3>Freigegeben von anderen Stäben</h3>
+            <p class="luk-hint">Einsätze anderer Stäbe, deren Freigabelink in einem deiner Einsätze eingetragen ist. Nur lesend.</p>
+            <div id="ez-hub-shared-list" class="ez-hub-list"></div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    {{if .IsLeiter}}
+    <dialog id="ez-new-dialog" class="luk-dialog">
+      <h2>Neuen Einsatz anlegen</h2>
+      <form method="dialog">
+        <label>Titel
+          <input type="text" id="ez-new-title" maxlength="200" autocomplete="off" placeholder="z.B. Hochwasser Elbe 2026" />
+        </label>
+        <div class="luk-field-row">
+          <label>Stabsebene
+            <select id="ez-new-ebene">
+              {{range .Ebenen}}
+                <option value="{{.Key}}">{{.Label}}</option>
+              {{end}}
+            </select>
+          </label>
+          <label>Bezeichnung des Stabes
+            <input type="text" id="ez-new-stab" maxlength="160" autocomplete="off" placeholder="z.B. Stab LV Musterland" />
+          </label>
+        </div>
+        <label>Bemerkung
+          <textarea id="ez-new-note" rows="2" maxlength="2000"></textarea>
+        </label>
+        <p class="luk-hint">Du wirst Ersteller dieses Einsatzes und erhältst zunächst die Rolle „Leiter Stab". Weitere Mitglieder und Rollen vergibst du anschließend unter „Verwaltung".</p>
+        <div class="luk-dialog-actions">
+          <button type="button" class="luk-btn" id="ez-new-cancel">Abbrechen</button>
+          <button type="button" class="luk-btn luk-btn-primary" id="ez-new-save">Anlegen</button>
+        </div>
+      </form>
+    </dialog>
+    {{end}}
+
+    {{.Footer}}
+    <script src="/js/einsatz_hub.js?v={{.AssetVersion}}"></script>
+  </body>
+</html>

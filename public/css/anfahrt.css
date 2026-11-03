@@ -1,0 +1,66 @@
+/* anfahrt.css - Kraefteuebersicht (vier Spalten) */
+/* Ganze Bildschirmhoehe nutzen: Header, Inhalt (fuellt), Footer unten. Keine
+   feste Hoehe fuer Kopf/Fuss annehmen - die Fussleiste bricht auf schmalen
+   Bildschirmen (Notebook) auf zwei Zeilen um. */
+body.af-body { display: flex; flex-direction: column; height: 100vh; margin: 0; }
+body.af-body .luk-readonly-banner { flex: 0 0 auto; }
+.af-container { flex: 1 1 auto; min-height: 0; display: flex; align-items: stretch; justify-content: center; padding: 12px; overflow: hidden; }
+.af-row { flex: 1 1 auto; min-height: 0; }
+.af-box { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.af-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.af-toolbar-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.af-check { font-size: 0.9em; display: inline-flex; gap: 4px; align-items: center; }
+
+/* Kacheln mit Anzahl je Status */
+.af-summary { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.af-tile { flex: 1 1 140px; background: #f3f5fa; border-radius: 6px; padding: 8px 12px; text-align: center; border-top: 4px solid #c8d0e0; }
+.af-tile-num { font-size: 1.8em; font-weight: bold; color: rgb(0,51,153); }
+.af-tile-label { font-size: 0.85em; color: #555; }
+
+/* Vier Spalten */
+.af-board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; flex: 1; min-height: 0; overflow: auto; align-items: start; }
+.af-col { background: #f7f8fb; border-radius: 6px; border-top: 4px solid #c8d0e0; min-height: 120px; display: flex; flex-direction: column; }
+.af-col-title { margin: 0; padding: 8px 10px; font-size: 1em; color: rgb(0,51,153); display: flex; justify-content: space-between; align-items: center; }
+.af-col-count { background: #fff; border-radius: 10px; padding: 0 8px; font-size: 0.85em; color: #333; }
+.af-col-body { padding: 0 8px 8px; display: flex; flex-direction: column; gap: 8px; }
+.af-col-empty { color: #999; text-align: center; padding: 12px 0; }
+.af-board-hint { grid-column: 1 / -1; text-align: center; padding: 6px 0; font-size: 0.9em; }
+
+/* Statusfarben (Kachel + Spalte) */
+.af-tile-angefordert, .af-col-angefordert { border-top-color: #e0a800; }
+.af-tile-anfahrt,     .af-col-anfahrt     { border-top-color: #2b7de9; }
+.af-tile-vor_ort,     .af-col-vor_ort     { border-top-color: #2e9e4f; }
+.af-tile-abgerueckt,  .af-col-abgerueckt  { border-top-color: #8a8f99; }
+
+/* Faellige Schichten (noch geplant, Beginn innerhalb der Vorwarnzeit) */
+.af-due { background: #fff8e1; border: 1px solid #f0d27a; border-left: 5px solid #e0a800; border-radius: 6px; padding: 8px 12px; margin-bottom: 10px; }
+.af-due-title { font-weight: bold; color: #7a5a00; margin-bottom: 4px; }
+.af-due-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 3px 0; border-top: 1px solid #f3e2a8; }
+.af-due-row:first-of-type { border-top: 0; }
+.af-due-when { white-space: nowrap; color: #555; font-size: 0.9em; }
+.af-due-over { color: #b00020; font-weight: bold; }
+.af-due-actions { display: flex; gap: 4px; margin-left: auto; }
+
+/* Karten */
+.af-card { background: #fff; border: 1px solid #dde2ec; border-radius: 6px; padding: 8px 10px; font-size: 0.92em; }
+.af-card-abgerueckt { opacity: 0.75; }
+.af-card-head { margin-bottom: 2px; }
+.af-card-shift { display: inline-block; margin-top: 2px; padding: 1px 6px; border-radius: 4px; background: #eef2fa; color: #2b4a8a; font-size: 0.85em; }
+.af-card-line { margin-top: 2px; }
+.af-path { color: #666; font-size: 0.85em; }
+.af-since { margin-top: 4px; font-size: 0.85em; white-space: nowrap; }
+.af-actions { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+
+@media (max-width: 1100px) {
+  .af-board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .af-board { grid-template-columns: 1fr; }
+}
+@media print {
+  .af-board { display: grid; grid-template-columns: repeat(4, 1fr); overflow: visible; }
+  .af-card { break-inside: avoid; }
+}
+/* Kraeftekatalog: Heimatstandort / Verfuegbarkeit auf der Karte */
+.af-katalog { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; font-size: 0.92em; }
+.af-katalog .luk-kp-dot { width: 9px; height: 9px; }

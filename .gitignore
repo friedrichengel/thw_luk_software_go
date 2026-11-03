@@ -1,0 +1,29 @@
+# Secrets / Umgebungen - nie committen (.env.sample bleibt als Vorlage)
+config/.env
+.env
+.env.local
+
+# Datenverzeichnis (wird beim ersten Start angelegt)
+data/
+updates/
+
+# Build-Ausgaben
+dist/
+/luk
+/luk.exe
+*.exe
+*.old
+*.new
+
+# Betriebssystem / Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Stammdaten dieser Installation (Landesverband, Ortsverbaende, Einheiten):
+# nie committen, Vorlage ist public/daten/stammdaten.example.json
+public/daten/stammdaten.json

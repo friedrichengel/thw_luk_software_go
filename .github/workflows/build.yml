@@ -1,0 +1,163 @@
+# THW LuK Stabsansicht (Go) - Tests, Release-Binaries und Container-Image.
+#
+# Bei jedem Push auf main (und bei Tags v*): go test, Binaries fuer
+# linux/amd64, linux/arm64, windows/amd64, darwin/arm64 (dist/, als
+# Workflow-Artefakt bzw. Release-Anhang), Image nach ghcr.io und zusaetzlich
+# das Archiv luk-image-<version>.tar.gz (+ .sha256, optional .minisig) fuer
+# Server ohne GitHub-Zugriff (docker/setup.sh load, Admin > System-Update).
+#
+# Optionales Secret MINISIGN_SECRET_KEY: Inhalt einer ohne Passwort erzeugten
+# minisign-Schluesseldatei (minisign -G -W). Dann werden Binaries und Archiv
+# signiert; Server mit UPDATE_PUBKEY nehmen nur noch signierte Dateien an.
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: go vet ./...
+      - run: go test ./...
+      - name: Shell-Skripte pruefen
+        run: |
+          for f in docker/setup.sh docker/make-archive.sh docker/host/luk-updater.sh scripts/build.sh docker/entrypoint.sh; do
+            [ -f "$f" ] && bash -n "$f"
+          done
+
+  binaries:
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      MINISIGN_SECRET_KEY: ${{ secrets.MINISIGN_SECRET_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Binaries bauen
+        run: |
+          if [ -n "$MINISIGN_SECRET_KEY" ]; then
+            sudo apt-get install -y -qq minisign >/dev/null
+            umask 077; printf '%s\n' "$MINISIGN_SECRET_KEY" > /tmp/luk.key
+            bash scripts/build.sh --sign /tmp/luk.key
+            rm -f /tmp/luk.key
+          else
+            bash scripts/build.sh
+          fi
+          ls -lh dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: luk-binaries
+          path: dist/luk-*
+          retention-days: 30
+      - name: Release-Anhang (nur Tags)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/luk-*
+
+  image:
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      MINISIGN_SECRET_KEY: ${{ secrets.MINISIGN_SECRET_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Metadaten
+        id: meta
+        run: |
+          VERSION="$(grep -E '^APP_VERSION=' config/.env.sample | cut -d= -f2 | tr -d '[:space:]')"
+          YEAR="$(grep -E '^APP_COPYRIGHT_YEAR=' config/.env.sample | cut -d= -f2 | tr -d '[:space:]')"
+          REPO="ghcr.io/${GITHUB_REPOSITORY,,}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "year=${YEAR:-2026}" >> "$GITHUB_OUTPUT"
+          echo "repo=$REPO" >> "$GITHUB_OUTPUT"
+          echo "sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          echo "date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Image bauen
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          load: true
+          provenance: false
+          tags: |
+            ${{ steps.meta.outputs.repo }}:${{ steps.meta.outputs.version }}
+            ${{ steps.meta.outputs.repo }}:sha-${{ steps.meta.outputs.sha }}
+            ${{ steps.meta.outputs.repo }}:latest
+          build-args: |
+            APP_VERSION=${{ steps.meta.outputs.version }}
+            APP_COPYRIGHT_YEAR=${{ steps.meta.outputs.year }}
+            GIT_SHA=${{ steps.meta.outputs.sha }}
+            BUILD_DATE=${{ steps.meta.outputs.date }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Image pruefen (Container startet, Health-Check gruen)
+        run: |
+          docker run -d --name luk-test -e APP_BASE_URL=http://localhost "${{ steps.meta.outputs.repo }}:${{ steps.meta.outputs.version }}"
+          for i in $(seq 1 30); do
+            st="$(docker inspect --format '{{.State.Health.Status}}' luk-test 2>/dev/null || true)"
+            [ "$st" = healthy ] && break
+            sleep 2
+          done
+          docker logs luk-test
+          [ "$st" = healthy ] || { echo "Container wurde nicht gesund"; exit 1; }
+          docker rm -f luk-test
+
+      - name: Image pushen
+        run: docker push --all-tags "${{ steps.meta.outputs.repo }}"
+
+      - name: Archiv erzeugen
+        run: |
+          mkdir -p dist
+          F="dist/luk-image-${{ steps.meta.outputs.version }}.tar.gz"
+          docker save "${{ steps.meta.outputs.repo }}:${{ steps.meta.outputs.version }}" "${{ steps.meta.outputs.repo }}:latest" | gzip -6 > "$F"
+          (cd dist && sha256sum "$(basename "$F")" > "$(basename "$F").sha256")
+          ls -lh dist
+
+      - name: Archiv signieren (minisign)
+        if: env.MINISIGN_SECRET_KEY != ''
+        run: |
+          sudo apt-get install -y -qq minisign >/dev/null
+          umask 077; printf '%s\n' "$MINISIGN_SECRET_KEY" > /tmp/luk.key
+          F="dist/luk-image-${{ steps.meta.outputs.version }}.tar.gz"
+          minisign -S -W -s /tmp/luk.key -m "$F" -t "luk-image ${{ steps.meta.outputs.version }} ${{ steps.meta.outputs.sha }}"
+          rm -f /tmp/luk.key
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: luk-image-${{ steps.meta.outputs.version }}
+          path: dist/luk-image-*
+          retention-days: 30
+
+      - name: Release-Anhang (nur Tags)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/luk-image-*

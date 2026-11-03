@@ -1,0 +1,37 @@
+# THW LuK Stabsansicht - Reverse-Proxy auf dem Host vor dem Docker-Container.
+#
+# Nur noetig, wenn KEIN cloudflared-Tunnel (COMPOSE_PROFILES=cloudflare)
+# genutzt wird. Der Container lauscht auf HTTP_BIND (Standard 127.0.0.1:8080)
+# und erwartet X-Forwarded-For/-Proto; TLS macht diese Site.
+# Ziel: /etc/nginx/sites-available/luk.example.org (+ Symlink in sites-enabled),
+# Zertifikat z.B. per certbot --nginx.
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name luk.example.org;
+    location / { return 301 https://$host$request_uri; }
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name luk.example.org;
+
+    ssl_certificate     /etc/letsencrypt/live/luk.example.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/luk.example.org/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+
+    # Gesamtexport-Import bis 50 MB; der Update-Upload kommt in 8-MB-Teilen.
+    client_max_body_size 52m;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 180s;
+    }
+}

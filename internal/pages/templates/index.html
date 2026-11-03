@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="referrer" content="origin">
+    <title>Dashboard – {{.AppName}}</title>
+
+    <link rel="icon" type="image/png" href="/images/favicon_dashboard.png">
+    {{.PwaHead}}
+
+    <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/leaflet.css" />
+    <link rel="stylesheet" href="/css/index.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/waldbrand_container.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/dashboard_einsatz.css?v={{.AssetVersion}}" />
+    {{if .HasDivera}}<link rel="stylesheet" href="/css/divera_container.css?v={{.AssetVersion}}" />{{end}}
+
+    <link rel="stylesheet" href="/fonts/fa_v6/css/fontawesome.css" />
+    <link rel="stylesheet" href="/fonts/fa_v6/css/solid.css" />
+
+    <script src="/js/leaflet.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
+
+    <!-- Kartenzentrum (Konfiguration) -->
+    {{.MapCenter}}
+    {{.StabScript}}
+
+    <script src="/js/tabs.js?v={{.AssetVersion}}"></script>
+    <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+    <script src="/js/rss_reader.js?v={{.AssetVersion}}"></script>
+    <script src="/js/iframe_reload.js?v={{.AssetVersion}}"></script>
+    <script src="/js/mowas_meldungsn.js?v={{.AssetVersion}}"></script>
+    <script src="/js/luk_core.js?v={{.AssetVersion}}"></script>
+  </head>
+
+  <body class="is-dashboard">
+    <div class="header">
+      <div id="tacticalClock" class="title"></div>
+      <div id="mid-alert">
+        <img src="/images/Blaulicht_slower.gif" alt="Blaulicht" />
+      </div>
+      <div class="header-right">
+        <img src="/images/image.png" alt="THW" />
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="box">
+          <div class="tab-wrapper">
+            <div class="tabs">
+              {{if .HasDivera}}<button class="tab-btn active" onclick="switchTab(this, 'content1-0')">Divera</button>{{end}}
+              <button class="tab-btn{{if not .HasDivera}} active{{end}}" onclick="switchTab(this, 'content1-1')">{{if .HasCtx}}Kräfteübersicht{{else}}Einsätze{{end}}</button>
+              {{if .HasCtx}}<button class="tab-btn" onclick="switchTab(this, 'content1-2')">Einsätze</button>{{end}}
+            </div>
+            {{if .HasDivera}}
+            <div class="tab-content active" id="content1-0">
+              <div class="divera_filters">
+                <div class="divera_dropdown" id="divera_filter-group-dropdown">
+                  <div class="divera_dropdown-label">Gruppe</div>
+                  <div class="divera_dropdown-options"></div>
+                </div>
+                <div class="divera_dropdown" id="divera_filter_status-dropdown">
+                  <div class="divera_dropdown-label">Status</div>
+                  <div class="divera_dropdown-options"></div>
+                </div>
+              </div>
+              <div id="divera_entrys"></div>
+              <div id="divera_tooltip" class="divera_tooltip"></div>
+            </div>
+            {{end}}
+            <div class="tab-content{{if not .HasDivera}} active{{end}}" id="content1-1">
+              <div id="db-einsatz-main" class="db-einsatz">Lade…</div>
+            </div>
+            {{if .HasCtx}}
+            <div class="tab-content" id="content1-2">
+              <div id="db-einsatz-list" class="db-einsatz">Lade…</div>
+            </div>
+            {{end}}
+          </div>
+        </div>
+
+        <div class="box">
+          <div class="tab-wrapper">
+            <div class="tabs">
+              <button class="tab-btn active" onclick="switchTab(this, 'content2-1')">Hochwasser</button>
+              <button class="tab-btn" onclick="switchTab(this, 'content2-2')">Waldbrand</button>
+            </div>
+            <div class="tab-content active" id="content2-1">
+              <div id="map-stations"></div>
+            </div>
+            <div class="tab-content" id="content2-2">
+              <div id="waldbrand-image" onclick="window.open('https://www.dwd.de/DE/leistungen/waldbrandgef/waldbrandgef.html', '_blank');"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="box">
+          <div class="tab-wrapper">
+            <div class="tabs">
+              <button class="tab-btn active" onclick="switchTab(this, 'content3-1')">Karte</button>
+              <button class="tab-btn" onclick="switchTab(this, 'content3-2')">Meldungen</button>
+            </div>
+            <div class="tab-content active" id="content3-1">
+              <div id="map-mowas"></div>
+            </div>
+            <div class="tab-content" id="content3-2">
+              <div id="feed-container-mowas">Lade Daten...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="box">
+          <div class="tab-wrapper">
+            <div class="tabs">
+              <button class="tab-btn active" onclick="switchTab(this, 'content4-1')">Tagesschau</button>
+              <button class="tab-btn" onclick="switchTab(this, 'content4-2')">GDACS</button>
+            </div>
+            <div class="tab-content active" id="content4-1">
+              <div class="feed-container"><div id="rss-feed-4-1">Lade RSS-Feed...</div></div>
+            </div>
+            <div class="tab-content" id="content4-2">
+              <div class="feed-container"><div id="rss-feed-4-2">Lade RSS-Feed...</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="box">
+          <div id="kartencontainer"></div>
+        </div>
+
+        <div class="box">
+          <div class="tab-wrapper">
+            <div class="tabs">
+              <button class="tab-btn active" onclick="switchTab(this, 'content6-1')">RBB</button>
+              <button class="tab-btn" onclick="switchTab(this, 'content6-2')">MDR</button>
+            </div>
+            <div class="tab-content active" id="content6-1">
+              <div class="feed-container"><div id="rss-feed-6-1">Lade RSS-Feed...</div></div>
+            </div>
+            <div class="tab-content" id="content6-2">
+              <div class="feed-container"><div id="rss-feed-6-2">Lade RSS-Feed...</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{.Footer}}
+
+    <script src="/js/dwd_map.js?v={{.AssetVersion}}"></script>
+    <script src="/js/lhp_map_body.js?v={{.AssetVersion}}"></script>
+    <script src="/js/mowas_map_body.js?v={{.AssetVersion}}"></script>
+    <script src="/js/waldbrand_container.js?v={{.AssetVersion}}"></script>
+    {{if .HasDivera}}<script src="/js/divera_container.js?v={{.AssetVersion}}"></script>{{end}}
+    <script src="/js/dashboard_einsatz.js?v={{.AssetVersion}}"></script>
+  </body>
+</html>

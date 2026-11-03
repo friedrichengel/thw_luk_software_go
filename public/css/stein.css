@@ -1,0 +1,216 @@
+/* stein.css – Einzigartige Regeln */
+
+/* Zusätzliche Body-Einstellungen */
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Header mit fester Höhe und flex-Eigenschaft */
+.header {
+  flex: 0 0 118px;
+  margin: 0 auto;
+}
+
+/* #mid-alert Bildskalierung */
+#mid-alert img {
+  transform: scale(0.8);
+  transform-origin: center center;
+}
+
+/* Container, der den mittleren Bereich füllt */
+.container {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  min-height: 0;
+  background-color: rgb(0, 51, 153);
+}
+
+/* Zeile (row) mit zusätzlichen Eigenschaften */
+.row {
+  flex: 1;
+  margin: 0 auto;
+  min-height: 0;
+}
+
+/* Box, die den verfügbaren Platz füllt */
+.box {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+/* --- Stein API CSS (Inhalt innerhalb der Box) --- */
+/* mach den Filter-Container “sticky” */
+.filter-container {
+  position: sticky;
+  top: 0;
+  background: #f1f1f1;
+  z-index: 10;
+  padding-top: 2px;
+  display: flex;
+  padding-bottom: 2px;
+  border-radius: 4px;
+}
+
+.dropdown {
+  position: relative;
+  flex: 1;
+  border-radius: 4px;
+}
+
+.dropbtn {
+  background-color: #f1f1f1;
+  color: #333;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-radius: 4px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  width: 100%;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  border: 1px solid #ccc;
+  z-index: 1;
+  max-height: 200px;
+  overflow-y: auto;
+  border-radius: 4px;
+}
+
+.dropdown-content label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.dropdown.show .dropdown-content {
+  display: block;
+}
+
+  /* Container als Grid, das sich automatisch an die Fenstergröße anpasst */
+  #asset-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 10px;
+    padding-top: 10px;
+  }
+  /* Asset-Boxen als flexible, gleich große Boxen mit drei Zeilen */
+  .asset-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100px; /* ggf. anpassen, sodass beide Zeilen reinpassen */
+    border-radius: 8px; /* Ecken sind jetzt abgerundet */
+  }
+  /* Gruppen-Header (Trennstrich) – über alle Spalten gespannt */
+  .group-header {
+    grid-column: 1 / -1;
+    background-color: #ddd;
+    font-weight: bold;
+    padding: 8px;
+    /*margin-top: 20px;*/
+    color: black;
+    border-radius: 4px;
+  }
+  /* Zusammenfassungsfeld oberhalb der Anzeige */
+  .summary-field {
+    grid-column: 1 / -1;
+    background-color: #ddd;
+    font-weight: bold;
+    padding: 10px;
+    /*margin-bottom: 10px;*/
+    font-size: 18px;
+    text-align: center;
+    color: black;
+    border-radius: 4px;
+  }
+  
+
+  .tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    z-index: 1000;
+    max-width: 300px;
+    font-size: 0.9em;
+    display: none;
+  }
+
+  .search-container {
+    position: relative;
+    align-items: center;
+    flex: 1;
+  }
+  
+  .search-container #search-input {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box; /* Damit Padding und Border in der Breite enthalten sind */
+  }
+
+  .export-container {
+    position: relative;
+    align-items: center;
+    flex: 1;
+  }
+  
+  .export-container #exportBtn {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box; /* Damit Padding und Border in der Breite enthalten sind */
+  }
+
+  /* volle Breite Trennlinie zwischen Regionalstellen-Blöcken */
+  .regional-divider {
+    width: 100%;
+    height: 0;
+    border: none;
+    border-top: 2px solid #888;
+    margin: 12px 0;
+    clear: both;
+  }
+    
+
+/* Responsive: Bei kleinen Bildschirmen werden die Dropdowns untereinander angeordnet */
+@media (max-width: 768px) {
+  .filter-container {
+    flex-direction: column;
+  }
+}
+
+/* Kraeftekatalog: Band "im Einsatz" und Uebernahme-Link in Asset-Boxen */
+.asset-bind { margin-top: 4px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.9); color: #003399; font-size: 11px; font-weight: 600; }
+.asset-bind-link, .asset-take-link { color: #003399; text-decoration: underline; font-size: 11px; }
+.asset-take-link { display: inline-block; margin-top: 3px; background: rgba(255,255,255,0.9); padding: 1px 6px; border-radius: 4px; font-weight: 600; }

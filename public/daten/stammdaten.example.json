@@ -1,0 +1,185 @@
+{
+    "version": 2,
+    "stand": "2026-10-29",
+    "hinweis": "Beispiel-Stammdaten (fiktiver Landesverband Musterland). Aufbau der echten Datei public/daten/stammdaten.json, die nicht im Repository liegt: Liegt sie beim Bauen vor, wird sie in das Binary eingebettet, sonst diese Beispieldatei. Alternativ zur Laufzeit STAMM_FILE=/pfad/stammdaten.json. Abschnitte: lv (eigener Landesverband), karte (Kartenmittelpunkt, wenn MAP_CENTER_* nicht gesetzt), feeds (regionale Nachrichten-Kacheln 6-1/6-2 des Dashboards; 4-1/4-2 sind Tagesschau und GDACS), bezirke (optional: ein Landkreis, der in Bezirke gegliedert ist, mit GeoJSON unter /geo/), regionen (Regionalstellen und Nachbar-Landesverbaende; extern=true fuer fremde, live=true fuer Regionalstellen mit STEIN-Daten, nachbarn = Schluessel angrenzender Regionen), ovs (Ortsverbaende und Dienststellen: key = STEIN-BU-ID oder freier Schluessel 'n-...' fuer Nachbar-OVs ohne STEIN, art = ov|rst|lv, buid = STEIN-BU-ID oder null, region = Schluessel aus regionen, landkreis = Name wie in /geo/landkreise_simplify20.geojson (GEN), einheiten mit key '<ov>:<typ>' bzw. '<ov>:<typ>#<nr>' bei mehreren gleichen Einheiten; Typschluessel siehe internal/kraefte/typen.go und public/js/kraefte_typ.js).",
+    "lv": {
+        "key": "muster",
+        "name": "LV Musterland",
+        "kurz": "LV MU"
+    },
+    "karte": {
+        "lat": 51.1657,
+        "lng": 10.4515,
+        "name": "THW LV Musterland"
+    },
+    "feeds": [
+        {
+            "slot": "6-1",
+            "title": "Regional",
+            "urls": [
+                "https://www.tagesschau.de/infoservices/alle-meldungen-100~rss2.xml"
+            ]
+        },
+        {
+            "slot": "6-2",
+            "title": "Katastrophen",
+            "urls": [
+                "https://gdacs.org/xml/rss_24h.xml"
+            ]
+        }
+    ],
+    "bezirke": null,
+    "regionen": [
+        {
+            "key": "rst_nord",
+            "name": "Regionalstelle Nordstadt",
+            "kurz": "RSt Nordstadt",
+            "live": true,
+            "extern": false,
+            "nachbarn": [
+                "rst_sued"
+            ]
+        },
+        {
+            "key": "rst_sued",
+            "name": "Regionalstelle Südstadt",
+            "kurz": "RSt Südstadt",
+            "live": false,
+            "extern": false,
+            "nachbarn": [
+                "rst_nord"
+            ]
+        },
+        {
+            "key": "lv_dst",
+            "name": "LV-DSt Musterland",
+            "kurz": "LV-DSt",
+            "live": false,
+            "extern": false,
+            "nachbarn": [
+                "rst_nord",
+                "rst_sued"
+            ]
+        },
+        {
+            "key": "lv_nachbar",
+            "name": "LV Nachbarland",
+            "kurz": "LV NL",
+            "live": false,
+            "extern": true,
+            "nachbarn": []
+        }
+    ],
+    "ovs": [
+        {
+            "key": "101",
+            "name": "Nordstadt",
+            "buid": "101",
+            "art": "ov",
+            "region": "rst_nord",
+            "extern": false,
+            "lat": 52.52,
+            "lng": 13.405,
+            "landkreis": "Nordstadt",
+            "einheiten": [
+                { "key": "101:ztr", "typ": "ztr", "nr": 1, "short": "ZTr", "label": "Zugtrupp" },
+                { "key": "101:bgr", "typ": "bgr", "nr": null, "short": "BGr", "label": "Bergungsgruppe" },
+                { "key": "101:fgrn", "typ": "fgrn", "nr": null, "short": "FGr N", "label": "Fachgruppe Notversorgung und Notinstandsetzung" },
+                { "key": "101:fgro", "typ": "fgro", "nr": null, "short": "FGr O", "label": "Fachgruppe Ortung" },
+                { "key": "101:tress", "typ": "tress", "nr": null, "short": "Tr ESS", "label": "Trupp Einsatzstellensicherungssystem" },
+                { "key": "101:ztr#2", "typ": "ztr", "nr": 2, "short": "ZTr", "label": "Zugtrupp" },
+                { "key": "101:fgrsba", "typ": "fgrsba", "nr": null, "short": "FGr SB (A)", "label": "Fachgruppe Schwere Bergung (A)" }
+            ]
+        },
+        {
+            "key": "102",
+            "name": "Musterhausen",
+            "buid": "102",
+            "art": "ov",
+            "region": "rst_nord",
+            "extern": false,
+            "lat": 52.4,
+            "lng": 13.1,
+            "landkreis": "Musterkreis",
+            "einheiten": [
+                { "key": "102:ztr", "typ": "ztr", "nr": null, "short": "ZTr", "label": "Zugtrupp" },
+                { "key": "102:bgr", "typ": "bgr", "nr": 1, "short": "BGr", "label": "Bergungsgruppe" },
+                { "key": "102:bgr#2", "typ": "bgr", "nr": 2, "short": "BGr", "label": "Bergungsgruppe" },
+                { "key": "102:fgroc", "typ": "fgroc", "nr": null, "short": "FGr O (C)", "label": "Fachgruppe Ortung (C)" },
+                { "key": "102:fgrwb", "typ": "fgrwb", "nr": null, "short": "FGr W (B)", "label": "Fachgruppe Wassergefahren (B)" }
+            ]
+        },
+        {
+            "key": "103",
+            "name": "Südstadt",
+            "buid": "103",
+            "art": "ov",
+            "region": "rst_sued",
+            "extern": false,
+            "lat": 51.3,
+            "lng": 12.4,
+            "landkreis": "Südkreis",
+            "einheiten": [
+                { "key": "103:ztr", "typ": "ztr", "nr": null, "short": "ZTr", "label": "Zugtrupp" },
+                { "key": "103:bgr", "typ": "bgr", "nr": null, "short": "BGr", "label": "Bergungsgruppe" },
+                { "key": "103:fgrn", "typ": "fgrn", "nr": null, "short": "FGr N", "label": "Fachgruppe Notversorgung und Notinstandsetzung" },
+                { "key": "103:fgrwpa", "typ": "fgrwpa", "nr": null, "short": "FGr WP (A)", "label": "Fachgruppe Wasserschaden/Pumpen (A)" }
+            ]
+        },
+        {
+            "key": "104",
+            "name": "Beispieldorf",
+            "buid": "104",
+            "art": "ov",
+            "region": "rst_sued",
+            "extern": false,
+            "lat": 51.0,
+            "lng": 11.9,
+            "landkreis": "Südkreis",
+            "einheiten": [
+                { "key": "104:ztr", "typ": "ztr", "nr": null, "short": "ZTr", "label": "Zugtrupp" },
+                { "key": "104:bgr", "typ": "bgr", "nr": null, "short": "BGr", "label": "Bergungsgruppe" },
+                { "key": "104:fgrlogv", "typ": "fgrlogv", "nr": null, "short": "FGr Log-V", "label": "Fachgruppe Logistik-Verpflegung" }
+            ]
+        },
+        {
+            "key": "110",
+            "name": "Regionalstelle Nordstadt",
+            "buid": "110",
+            "art": "rst",
+            "region": "rst_nord",
+            "extern": false,
+            "lat": 52.5,
+            "lng": 13.4,
+            "landkreis": "",
+            "einheiten": []
+        },
+        {
+            "key": "120",
+            "name": "LV-DSt Musterland",
+            "buid": "120",
+            "art": "lv",
+            "region": "lv_dst",
+            "extern": false,
+            "lat": 52.51,
+            "lng": 13.28,
+            "landkreis": "",
+            "einheiten": []
+        },
+        {
+            "key": "n-fremdstadt",
+            "name": "Fremdstadt",
+            "buid": null,
+            "art": "ov",
+            "region": "lv_nachbar",
+            "extern": true,
+            "lat": 50.9,
+            "lng": 14.8,
+            "landkreis": "Fremdkreis",
+            "einheiten": [
+                { "key": "n-fremdstadt:ztr", "typ": "ztr", "nr": null, "short": "ZTr", "label": "Zugtrupp" },
+                { "key": "n-fremdstadt:bgr", "typ": "bgr", "nr": null, "short": "BGr", "label": "Bergungsgruppe" }
+            ]
+        }
+    ]
+}

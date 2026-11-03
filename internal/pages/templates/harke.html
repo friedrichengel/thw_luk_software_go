@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="referrer" content="origin">
+    <title>Führungsharke – {{.Title}}</title>
+    <link rel="icon" type="image/png" href="/images/favicon_steinmap.png">
+    {{.PwaHead}}
+    <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/einsatz_tree.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/einsatz.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/harke.css?v={{.AssetVersion}}" />
+    {{.StabScript}}
+    <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+    <script src="/js/luk_core.js?v={{.AssetVersion}}"></script>
+  </head>
+  <body class="einsatz-body einsatz-mode-editor luk-page">
+    {{.Header}}
+    <div id="luk-readonly-banner" class="luk-readonly-banner" hidden></div>
+
+    <div class="container">
+      <div class="row">
+        <div class="fh-main-box ez-main-box">
+          <div id="fh-tree" class="fh-tree ez-tree"></div>
+        </div>
+
+        <aside class="fh-side-box ez-side-box luk-no-print" aria-label="Steuerung">
+          <div class="fh-section" id="hk-root-add" hidden>
+            <div class="fh-section-title">Oberste Ebene</div>
+            <div class="fh-row fh-row-split">
+              <button type="button" id="hk-root-add-fuehrung" title="Neue Führungsstelle auf oberster Ebene">+ Führungsstelle</button>
+              <button type="button" id="hk-root-add-einheit" title="Neue Einheit auf oberster Ebene">+ Einheit</button>
+            </div>
+          </div>
+
+          <div class="fh-section">
+            <div class="fh-section-title">Ansicht</div>
+            <div class="fh-row fh-row-split">
+              <button type="button" id="hk-zoom-out" title="Verkleinern">−</button>
+              <button type="button" id="hk-zoom-reset" title="Standardansicht">1:1</button>
+              <button type="button" id="hk-zoom-in" title="Vergrößern">+</button>
+            </div>
+            <div class="fh-row" id="hk-zoom-display" style="font-size:12px;color:#555;text-align:center;">100 %</div>
+            <div class="fh-row">
+              <label class="fh-checkbox-label" title="Knoten ohne aktive Schichten verbergen">
+                <input type="checkbox" id="hk-hide-inactive" /> Inaktive ausblenden
+              </label>
+            </div>
+            <div class="fh-row">
+              <label class="fh-checkbox-label" title="Knoten mit Status abgerückt verbergen">
+                <input type="checkbox" id="hk-hide-abgerueckt" /> Abgerückte ausblenden
+              </label>
+            </div>
+          </div>
+
+          <div class="fh-section">
+            <div class="fh-section-title">Gesamt-Stärke (jetzt)</div>
+            <div id="hk-staerke" class="fh-staerke-overview"></div>
+          </div>
+
+          <div class="fh-section" id="hk-katalog-section">
+            <div class="fh-section-title">Kräftekatalog</div>
+            <div id="hk-katalog" class="hk-katalog luk-muted">Lade…</div>
+            <div class="fh-row" style="margin-top:6px;">
+              <a class="luk-btn" href="/kraefteplanung?einsatz={{.UUID}}#verfuegbar">Verfügbare Kräfte</a>
+            </div>
+          </div>
+
+          <div class="fh-section">
+            <div class="fh-section-title">Auf Anfahrt</div>
+            <div id="hk-anfahrt" class="hk-anfahrt"></div>
+            <div class="fh-row" style="margin-top:6px;">
+              <a class="luk-btn" href="/anfahrt?einsatz={{.UUID}}">Kräfteübersicht öffnen</a>
+            </div>
+          </div>
+
+          <div class="fh-section">
+            <div class="fh-section-title">Drucken</div>
+            <div class="fh-row">
+              <button type="button" id="hk-print-btn">Drucken / PDF</button>
+            </div>
+          </div>
+
+          <div class="fh-section">
+            <div class="fh-section-title">Letzte Änderungen</div>
+            <div id="hk-recent" class="ez-audit"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- Knoten-Dialog -->
+    <dialog id="hk-node-dialog" class="luk-dialog luk-dialog-wide">
+      <h2 id="hk-nd-title">Element bearbeiten</h2>
+      <form method="dialog" id="hk-node-form">
+        <div class="luk-field-row">
+          <label>Typ
+            <select id="hk-nd-type">
+              <option value="fuehrung">Führungsstelle</option>
+              <option value="einheit">Einheit</option>
+            </select>
+          </label>
+          <label id="hk-nd-status-label">Status
+            <select id="hk-nd-status"></select>
+          </label>
+        </div>
+        <label>Bezeichnung
+          <input type="text" id="hk-nd-bez" maxlength="160" autocomplete="off" placeholder="Freitext oder aus dem Kräftekatalog wählen (z.B. „FGr N Musterstadt“)" />
+        </label>
+        <div id="hk-nd-kraft" class="luk-kp-line"></div>
+        <div class="luk-field-row">
+          <label>Funkrufname
+            <input type="text" id="hk-nd-funkruf" maxlength="120" autocomplete="off" />
+          </label>
+          <label>Ortsverband / Herkunft
+            <input type="text" id="hk-nd-ov" maxlength="120" autocomplete="off" />
+          </label>
+        </div>
+        <label>Bemerkung
+          <textarea id="hk-nd-note" rows="2" maxlength="500"></textarea>
+        </label>
+        <fieldset class="hk-fieldset" id="hk-nd-link-fs">
+          <legend>Externer Stab (Freigabelink)</legend>
+          <p class="luk-hint">Hier kann der Freigabelink eines anderen Stabes hinterlegt werden. Ein Klick auf die Einheit bietet dann an, dessen Lage in einem neuen Tab zu öffnen.</p>
+          <div class="luk-field-row">
+            <label>Link (https://…/view?t=…)
+              <input type="url" id="hk-nd-link-url" maxlength="500" autocomplete="off" placeholder="https://" />
+            </label>
+            <label>Beschriftung
+              <input type="text" id="hk-nd-link-label" maxlength="160" autocomplete="off" placeholder="z.B. Stab OV Musterstadt" />
+            </label>
+          </div>
+        </fieldset>
+        <div class="luk-dialog-actions">
+          <button type="button" class="luk-btn" id="hk-nd-cancel">Abbrechen</button>
+          <button type="button" class="luk-btn luk-btn-primary" id="hk-nd-save">Übernehmen</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Mitglieder-Dialog (Fachberater / interne Einheit) -->
+    <dialog id="hk-member-dialog" class="luk-dialog">
+      <h2 id="hk-md-title">Mitglied bearbeiten</h2>
+      <form method="dialog">
+        <label id="hk-md-funktion-label">Funktion
+          <input type="text" id="hk-md-funktion" maxlength="120" autocomplete="off" placeholder="z.B. FB Stromversorgung" />
+        </label>
+        <label id="hk-md-name-label">Name
+          <input type="text" id="hk-md-name" maxlength="160" autocomplete="off" />
+        </label>
+        <label id="hk-md-bez-label">Bezeichnung
+          <input type="text" id="hk-md-bez" maxlength="160" autocomplete="off" placeholder="Freitext oder aus dem Kräftekatalog wählen" />
+        </label>
+        <div id="hk-md-kraft" class="luk-kp-line"></div>
+        <div class="luk-field-row">
+          <label id="hk-md-funkruf-label">Funkrufname
+            <input type="text" id="hk-md-funkruf" maxlength="120" autocomplete="off" />
+          </label>
+          <label id="hk-md-telefon-label">Telefon
+            <input type="text" id="hk-md-telefon" maxlength="60" autocomplete="off" />
+          </label>
+        </div>
+        <div class="luk-field-row">
+          <label>Ortsverband / Herkunft
+            <input type="text" id="hk-md-ov" maxlength="120" autocomplete="off" />
+          </label>
+          <label>Status
+            <select id="hk-md-status"></select>
+          </label>
+        </div>
+        <label>Bemerkung
+          <textarea id="hk-md-note" rows="2" maxlength="500"></textarea>
+        </label>
+        <div class="luk-dialog-actions">
+          <button type="button" class="luk-btn" id="hk-md-cancel">Abbrechen</button>
+          <button type="button" class="luk-btn luk-btn-primary" id="hk-md-save">Übernehmen</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Externer-Link-Dialog -->
+    <dialog id="hk-extern-dialog" class="luk-dialog">
+      <h2>Externen Stab öffnen</h2>
+      <p id="hk-extern-text"></p>
+      <p class="luk-hint">Der Link führt zur Leseansicht eines anderen Stabes. Er wird in einem neuen Tab geöffnet.</p>
+      <div class="luk-dialog-actions">
+        <button type="button" class="luk-btn" id="hk-extern-cancel">Abbrechen</button>
+        <a class="luk-btn luk-btn-primary" id="hk-extern-open" target="_blank" rel="noopener noreferrer">In neuem Tab öffnen</a>
+      </div>
+    </dialog>
+
+    {{.Footer}}
+    <script src="/js/harke.js?v={{.AssetVersion}}"></script>
+  </body>
+</html>

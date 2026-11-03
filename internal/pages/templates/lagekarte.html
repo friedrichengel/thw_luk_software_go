@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="referrer" content="origin">
+    <title>Lagekarte – {{.Title}}</title>
+    <link rel="icon" type="image/png" href="/images/favicon_steinmap.png">
+    {{.PwaHead}}
+
+    {{if .TileOrigin}}<link rel="preconnect" href="{{.TileOrigin}}" crossorigin />{{end}}
+    <link rel="preconnect" href="https://server.arcgisonline.com" crossorigin />
+    <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/leaflet.css" />
+    <link rel="stylesheet" href="/css/leaflet.draw.css" />
+    <link rel="stylesheet" href="/css/lagekarte.css?v={{.AssetVersion}}" />
+
+    {{.StabScript}}
+    <script>
+      window.LAGEKARTE_CONFIG = {{.Config}};
+    </script>
+
+    <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+    <script src="/js/leaflet.js"></script>
+    <script src="/js/leaflet.draw.js"></script>
+    <script src="/js/luk_core.js?v={{.AssetVersion}}"></script>
+    <!-- jspdf / html2canvas / dom-to-image werden erst beim Druck nachgeladen
+         (siehe loadPrintLibs() in lagekarte.js) -->
+  </head>
+  <body class="lk-body{{if not .CanWrite}} lk-readonly{{end}}">
+    {{.Header}}
+    <div id="luk-readonly-banner" class="luk-readonly-banner" hidden></div>
+
+    <div class="container">
+      <div class="row">
+        <!-- Linke Seite: Karte -->
+        <div class="map-box">
+          <div id="map"></div>
+          <div id="lk-status" class="lk-status" hidden></div>
+          <div id="lk-empty" class="lk-empty" hidden>
+            <div class="lk-empty-inner">
+              <h2>Noch keine Lagekarte</h2>
+              {{if .CanWrite}}
+                <p>Für diesen Einsatz wurde noch keine Lagekarte angelegt.</p>
+                <button type="button" id="lk-empty-new-btn" class="luk-btn luk-btn-primary">Neue Lagekarte anlegen</button>
+              {{else}}
+                <p>Für diesen Einsatz wurde noch keine Lagekarte angelegt. Sobald der Stab eine Karte anlegt, erscheint sie hier automatisch.</p>
+              {{end}}
+            </div>
+          </div>
+        </div>
+
+        <!-- Rechte Seite: Sidebar -->
+        <aside class="side-box luk-no-print" aria-label="Werkzeuge und Zeichen">
+          <div class="lk-section">
+            <div class="lk-section-title"><span id="luk-sync-indicator" class="luk-sync" title="Live-Sync"></span>Lagekarte</div>
+            <div class="lk-row lk-row-select">
+              <select id="lk-map-select" aria-label="Lagekarte wählen"></select>
+              {{if .CanWrite}}
+              <button type="button" id="lk-rename-btn" class="lk-icon-btn" title="Gewählte Lagekarte umbenennen" aria-label="Gewählte Lagekarte umbenennen">✎</button>
+              {{end}}
+            </div>
+            {{if .CanWrite}}
+            <div class="lk-row lk-row-split">
+              <button type="button" id="lk-new-btn" title="Neue Lagekarte für diesen Einsatz anlegen">+ Neue Karte</button>
+              <button type="button" id="lk-delete-map-btn" class="lk-btn-danger-outline" title="Aktuelle Lagekarte löschen">Karte löschen</button>
+            </div>
+            <div class="lk-row">
+              <button type="button" id="lk-save-view-btn" title="Aktuellen Kartenausschnitt, Zoom und Basiskarte als Standardansicht speichern">Ansicht speichern</button>
+            </div>
+            <div class="lk-row lk-row-split">
+              <button type="button" id="lk-export-json-btn" title="Als JSON-Datei herunterladen">JSON ↓</button>
+              <button type="button" id="lk-import-json-btn" title="JSON-Datei als neue Lagekarte importieren">JSON ↑</button>
+              <input type="file" id="lk-import-json-file" accept="application/json,.json" hidden />
+            </div>
+            {{else}}
+            <div class="lk-row">
+              <button type="button" id="lk-export-json-btn" title="Als JSON-Datei herunterladen">JSON ↓</button>
+            </div>
+            {{end}}
+            <div class="lk-row">
+              <button type="button" id="printBtn">Drucken (PDF)</button>
+            </div>
+            <div class="lk-hint" id="lk-map-meta"></div>
+          </div>
+
+          <div class="lk-section">
+            <div class="lk-section-title">Basiskarte</div>
+            <div class="lk-row lk-row-split">
+              <label class="lk-radio"><input type="radio" name="lk-basemap" value="osm" checked /> Karte</label>
+              <label class="lk-radio"><input type="radio" name="lk-basemap" value="sat" /> Satellit</label>
+            </div>
+          </div>
+
+          <div class="lk-section">
+            <div class="lk-section-title">Adresse suchen</div>
+            <div class="lk-row lk-row-split">
+              <input type="search" id="lk-geo-input" placeholder="Ort, Stra&szlig;e, Hausnummer &hellip;" maxlength="200" autocomplete="off" aria-label="Adresse suchen" />
+              <button type="button" id="lk-geo-btn" style="flex:0 0 auto;" title="Adresse suchen und Karte dorthin springen">Suchen</button>
+            </div>
+            <div id="lk-geo-hits" class="lk-geo-hits" hidden></div>
+            <div class="lk-row" id="lk-geo-clear-row" hidden>
+              <button type="button" id="lk-geo-clear" class="lk-btn-danger-outline">Markierung entfernen</button>
+            </div>
+            <div class="lk-hint">Treffer anklicken: Die Karte springt dorthin, setzt eine Markierung (nur Anzeige, wird nicht gespeichert) und die Liste schlie&szlig;t sich. Suche &uuml;ber OpenStreetMap/Nominatim.</div>
+          </div>
+
+          <div class="lk-section">
+            <div class="lk-section-title">Einsatzabschnitte</div>
+            {{if .CanWrite}}
+            <div class="lk-row lk-row-split">
+              <input type="text" id="lk-abschnitt-new-name" placeholder="Name (z.B. &bdquo;Ostseite&ldquo;)" maxlength="80" autocomplete="off" />
+              <button type="button" id="lk-abschnitt-add-btn" style="flex:0 0 auto;">+ Neu</button>
+            </div>
+            {{end}}
+            <div id="lk-abschnitt-list" class="lk-abschnitt-list"></div>
+            <div class="lk-hint">Haken = Sichtbarkeit (nur Anzeige). Stärke = Summe aller Zeichen im Abschnitt, verknüpfte Einheiten live aus der Führungsharke.</div>
+          </div>
+
+          <div class="lk-section">
+            <div class="lk-section-title">Heimatstandorte</div>
+            <div class="lk-row">
+              <label class="lk-checkbox-label"><input type="checkbox" id="lk-show-heimat" /> Ortsverbände mit Verfügbarkeit zeigen</label>
+            </div>
+            <div class="lk-hint">Kräftekatalog: Standort je OV, Farbe = beste Verfügbarkeit seiner Einheiten (grün einsatzbereit, gelb bedingt, lila keine Live-Daten, blau im Einsatz, rot nicht einsatzbereit). Klick zeigt die Einheiten.</div>
+            <div id="lk-heimat-stand" class="luk-kp-stand"></div>
+          </div>
+
+          {{if .CanWrite}}
+          <div class="lk-section">
+            <div class="lk-section-title">Zeichen platzieren</div>
+            <div class="lk-row">
+              <input type="text" id="lk-kat-pick" placeholder="Einheit aus Kräftekatalog (z.B. &bdquo;FGr N Musterstadt&ldquo;)" autocomplete="off" />
+            </div>
+            <div id="lk-kat-line" class="luk-kp-line"></div>
+            <div class="lk-hint">Auswahl setzt das passende taktische Zeichen und belegt OV, Funkruf und Katalog-Verweis vor. Oder unten ein Zeichen frei wählen.</div>
+            <div class="lk-row">
+              <input type="search" id="lk-symbol-search" placeholder="Suche (z.B. &bdquo;Bergung&ldquo;)&nbsp;…" autocomplete="off" />
+            </div>
+            <div class="lk-row">
+              <select id="lk-symbol-category" aria-label="Kategorie"></select>
+            </div>
+            <div id="lk-symbol-grid" class="lk-symbol-grid" role="listbox" aria-label="Taktische Zeichen"></div>
+            <div class="lk-hint">Zeichen anklicken, dann in die Karte klicken. Klick auf ein platziertes Zeichen wählt es aus, zweiter Klick öffnet die Informationen (dort auch Verknüpfung mit einer Einheit der Führungsharke).</div>
+          </div>
+
+          <div class="lk-section">
+            <div class="lk-section-title">Ausgew&auml;hltes Zeichen</div>
+            <div class="lk-row">
+              <label for="lk-scale-slider">Gr&ouml;&szlig;e: <span id="lk-scale-val">40</span> px</label>
+              <input type="range" id="lk-scale-slider" min="20" max="240" value="40" />
+            </div>
+            <div class="lk-row">
+              <label for="lk-rotate-slider">Drehung: <span id="lk-rotate-val">0</span>&deg;</label>
+              <input type="range" id="lk-rotate-slider" min="0" max="359" value="0" />
+            </div>
+            <div class="lk-row lk-row-split">
+              <button type="button" id="lk-delete-marker-btn" disabled>L&ouml;schen</button>
+              <button type="button" id="lk-cancel-place-btn" hidden>Abbrechen</button>
+            </div>
+          </div>
+
+          <div class="lk-section">
+            <div class="lk-section-title">Zeichnen</div>
+            <div class="lk-row lk-row-split lk-draw-row">
+              <label class="lk-draw-color-label">Farbe
+                <input type="color" id="lk-draw-color" value="#d94b2b" />
+              </label>
+              <label class="lk-draw-weight-label">St&auml;rke: <span id="lk-draw-weight-val">3</span> px
+                <input type="range" id="lk-draw-weight" min="1" max="10" value="3" />
+              </label>
+            </div>
+            <div class="lk-row">
+              <label for="lk-draw-fill">F&uuml;llung: <span id="lk-draw-fill-val">30</span>&nbsp;%</label>
+              <input type="range" id="lk-draw-fill" min="0" max="100" value="30" />
+            </div>
+            <div class="lk-row lk-row-split">
+              <button type="button" id="lk-tool-polygon" title="Fl&auml;che zeichnen (Punkte klicken, Doppelklick zum Abschlie&szlig;en)">Fl&auml;che</button>
+              <button type="button" id="lk-tool-polyline" title="Linienzug zeichnen (Punkte klicken, Doppelklick zum Abschlie&szlig;en)">Linie</button>
+              <button type="button" id="lk-tool-rectangle" title="Rechteck zeichnen (klicken, ziehen, loslassen)">Rechteck</button>
+            </div>
+            <div class="lk-row lk-row-split">
+              <button type="button" id="lk-tool-circle" title="Kreis zeichnen (klicken, ziehen, loslassen)">Kreis</button>
+              <button type="button" id="lk-tool-arrow" title="Pfeil zeichnen (Start- und Endpunkt anklicken, Esc bricht ab)">Pfeil</button>
+              <button type="button" id="lk-tool-text" title="Text platzieren (in die Karte klicken)">Text</button>
+            </div>
+            <div class="lk-hint">Werkzeug w&auml;hlen, dann in die Karte zeichnen. Esc bricht ab. Klick auf bestehende Strukturen zum Nachbearbeiten; Stift-Symbol links oben für Eckpunkte.</div>
+          </div>
+          {{end}}
+        </aside>
+      </div>
+    </div>
+
+    <!-- Marker-Info-Dialog (OV, Funkrufname, Staerke, Verknuepfung) -->
+    <dialog id="lk-marker-dialog" class="lk-dialog">
+      <h2 id="lk-mi-title">Zeichen-Informationen</h2>
+      <form method="dialog" id="lk-marker-form">
+        <div id="lk-mi-symbol" class="lk-mi-symbol"></div>
+
+        <!-- Verknuepft: live aufgeloeste Werte (read-only) -->
+        <div id="lk-mi-linked" class="lk-linked-box" hidden>
+          <div class="lk-linked-head"><span class="luk-linked">Verknüpft mit Führungsharke</span><span id="lk-mi-orphan" class="luk-chip luk-chip-orphan" hidden>verwaist</span></div>
+          <dl class="lk-linked-dl" id="lk-mi-linked-dl"></dl>
+          <p class="luk-hint" id="lk-mi-orphan-hint" hidden>Die verknüpfte Einheit existiert nicht mehr in der Führungsharke. Verknüpfung lösen oder neu verknüpfen.</p>
+          {{if .CanWrite}}
+          <div class="lk-row lk-row-split">
+            <button type="button" id="lk-mi-unlink" class="luk-btn" title="Aktuelle Werte als festen Text übernehmen und Verknüpfung lösen">Verknüpfung lösen</button>
+          </div>
+          {{end}}
+        </div>
+
+        <!-- Nicht verknuepft: Freitext -->
+        <div id="lk-mi-free">
+          <label>Ortsverband / Einheit
+            <input type="text" id="lk-mi-ov" maxlength="120" autocomplete="off" placeholder="Freitext oder aus dem Kräftekatalog wählen" />
+          </label>
+          <div id="lk-mi-kraft" class="luk-kp-line"></div>
+          <label>Funkrufname(n)
+            <input type="text" id="lk-mi-call" maxlength="120" autocomplete="off" />
+          </label>
+          <label>St&auml;rke (z.B. 1/3/8)
+            <input type="text" id="lk-mi-staerke" maxlength="60" autocomplete="off" />
+          </label>
+        </div>
+
+        {{if .CanWrite}}
+        <label id="lk-mi-link-label">Mit Einheit verknüpfen
+          <select id="lk-mi-link"></select>
+        </label>
+        {{end}}
+
+        <label>Einsatzabschnitte
+          <div id="lk-mi-abschnitte" class="lk-mi-abschnitte"></div>
+        </label>
+        <label>Auftrag / Bemerkung
+          <textarea id="lk-mi-note" rows="3" maxlength="500"></textarea>
+        </label>
+        <div class="lk-dialog-actions">
+          {{if .CanWrite}}
+          <button type="button" id="lk-mi-save">&Uuml;bernehmen</button>
+          <button type="button" id="lk-mi-cancel">Abbrechen</button>
+          <button type="button" id="lk-mi-delete" class="lk-btn-danger">L&ouml;schen</button>
+          {{else}}
+          <button type="button" id="lk-mi-cancel">Schlie&szlig;en</button>
+          {{end}}
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Shape-Info-Dialog (Einsatzabschnitte + Stil fuer gezeichnete Strukturen) -->
+    <dialog id="lk-shape-dialog" class="lk-dialog">
+      <h2 id="lk-shape-title">Struktur-Informationen</h2>
+      <form method="dialog" id="lk-shape-form">
+        <label>Bezeichnung
+          <input type="text" id="lk-shape-label" maxlength="160" autocomplete="off" placeholder="optional" />
+        </label>
+        <label>Einsatzabschnitte
+          <div id="lk-shape-abschnitte" class="lk-mi-abschnitte"></div>
+        </label>
+        <div class="lk-shape-style-row">
+          <label>Farbe
+            <input type="color" id="lk-shape-color" value="#d94b2b" />
+          </label>
+          <label>Linie: <span id="lk-shape-weight-val">3</span>&nbsp;px
+            <input type="range" id="lk-shape-weight" min="1" max="10" value="3" />
+          </label>
+        </div>
+        <label id="lk-shape-fill-label">F&uuml;llung: <span id="lk-shape-fill-val">30</span>&nbsp;%
+          <input type="range" id="lk-shape-fill" min="0" max="100" value="30" />
+        </label>
+        {{if .CanWrite}}
+        <label>Mit Einheit verknüpfen
+          <select id="lk-shape-link"></select>
+        </label>
+        {{end}}
+        <div id="lk-shape-linked" class="lk-linked-box" hidden>
+          <div class="lk-linked-head"><span class="luk-linked">Verknüpft</span><span id="lk-shape-orphan" class="luk-chip luk-chip-orphan" hidden>verwaist</span></div>
+          <dl class="lk-linked-dl" id="lk-shape-linked-dl"></dl>
+        </div>
+        <label>Bemerkung
+          <textarea id="lk-shape-note" rows="3" maxlength="500"></textarea>
+        </label>
+        <div class="lk-dialog-actions">
+          {{if .CanWrite}}
+          <button type="button" id="lk-shape-save">&Uuml;bernehmen</button>
+          <button type="button" id="lk-shape-cancel">Abbrechen</button>
+          <button type="button" id="lk-shape-delete" class="lk-btn-danger">L&ouml;schen</button>
+          {{else}}
+          <button type="button" id="lk-shape-cancel">Schlie&szlig;en</button>
+          {{end}}
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Text-Dialog (Freitext auf der Karte) -->
+    <dialog id="lk-text-dialog" class="lk-dialog">
+      <h2>Text</h2>
+      <form method="dialog" id="lk-text-form">
+        <label>Inhalt
+          <textarea id="lk-text-content" rows="3" maxlength="500"></textarea>
+        </label>
+        <div class="lk-shape-style-row">
+          <label>Farbe
+            <input type="color" id="lk-text-color" value="#222222" />
+          </label>
+          <label>Gr&ouml;&szlig;e: <span id="lk-text-size-val">16</span>&nbsp;px
+            <input type="range" id="lk-text-size" min="10" max="64" value="16" />
+          </label>
+        </div>
+        <div class="lk-text-format-row">
+          <label class="lk-text-fmt-btn" title="Fett">
+            <input type="checkbox" id="lk-text-bold" /><b>F</b>
+          </label>
+          <label class="lk-text-fmt-btn" title="Kursiv">
+            <input type="checkbox" id="lk-text-italic" /><i>K</i>
+          </label>
+          <label class="lk-text-fmt-btn" title="Unterstrichen">
+            <input type="checkbox" id="lk-text-underline" /><u>U</u>
+          </label>
+        </div>
+        <label>Einsatzabschnitte
+          <div id="lk-text-abschnitte" class="lk-mi-abschnitte"></div>
+        </label>
+        <label>Bemerkung
+          <textarea id="lk-text-note" rows="2" maxlength="500"></textarea>
+        </label>
+        <div class="lk-dialog-actions">
+          {{if .CanWrite}}
+          <button type="button" id="lk-text-save">&Uuml;bernehmen</button>
+          <button type="button" id="lk-text-cancel">Abbrechen</button>
+          <button type="button" id="lk-text-delete" class="lk-btn-danger">L&ouml;schen</button>
+          {{else}}
+          <button type="button" id="lk-text-cancel">Schlie&szlig;en</button>
+          {{end}}
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Neue Karte / Import: Titel abfragen -->
+    <dialog id="lk-newmap-dialog" class="lk-dialog">
+      <h2 id="lk-newmap-title">Neue Lagekarte</h2>
+      <p class="luk-hint" id="lk-newmap-hint"></p>
+      <label>Titel
+        <input type="text" id="lk-newmap-name" maxlength="200" autocomplete="off" placeholder="z.B. Hochwasser Saale – Übersicht" />
+      </label>
+      <div class="lk-dialog-actions">
+        <button type="button" id="lk-newmap-ok">Anlegen</button>
+        <button type="button" id="lk-newmap-cancel">Abbrechen</button>
+      </div>
+    </dialog>
+
+    <!-- Druck-Dialog -->
+    <dialog id="printDialog" class="lk-dialog">
+      <h2>Lagekarte drucken</h2>
+      <label>&Uuml;berschrift
+        <input type="text" id="printTitle" autocomplete="off" />
+      </label>
+      <label>Dateiname
+        <input type="text" id="printFilename" autocomplete="off" />
+      </label>
+      <label class="lk-checkbox-label"><input type="checkbox" id="printShowStand" checked /> Stand (taktische Zeit) anzeigen</label>
+      <div class="lk-dialog-actions">
+        <button type="button" id="confirmPrintBtn">PDF erstellen</button>
+        <button type="button" id="cancelPrintBtn">Abbrechen</button>
+      </div>
+    </dialog>
+
+    {{.Footer}}
+    <script src="/js/lagekarte.js?v={{.AssetVersion}}"></script>
+  </body>
+</html>

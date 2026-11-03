@@ -1,0 +1,24 @@
+/* dashboard_einsatz.css - Box 1 des Dashboards: Einsaetze / Auf Anfahrt */
+.db-einsatz { padding: 8px 10px; color: #222; font-size: 14px; overflow: auto; height: 100%; }
+.db-einsatz h3 { font-size: 1em; color: rgb(0,51,153); margin: 6px 0 4px; }
+.db-einsatz-item { padding: 6px 8px; border: 1px solid #d8dde6; border-left: 4px solid #2c8c2c; border-radius: 4px; margin-bottom: 6px; background: #f8f9fb; }
+.db-einsatz-item-closed { border-left-color: #888; opacity: 0.8; }
+.db-einsatz-title { font-weight: bold; color: rgb(0,51,153); text-decoration: none; }
+.db-einsatz-title:hover { text-decoration: underline; }
+.db-einsatz-meta { font-size: 0.85em; color: #555; }
+.db-einsatz-links { margin-top: 4px; display: flex; gap: 4px; flex-wrap: wrap; }
+.db-einsatz-links a { font-size: 0.8em; padding: 2px 6px; border: 1px solid #aaa; border-radius: 3px; color: rgb(0,51,153); text-decoration: none; background: #fff; }
+.db-einsatz-links a:hover { background: #eef1f7; }
+.db-tiles { display: flex; gap: 8px; margin-bottom: 8px; }
+.db-tile { flex: 1; background: #f3f5fa; border-radius: 6px; padding: 6px; text-align: center; }
+.db-tile-num { font-size: 1.6em; font-weight: bold; color: rgb(0,51,153); }
+.db-tile-label { font-size: 0.8em; color: #555; }
+.db-anfahrt-row { display: flex; justify-content: space-between; gap: 6px; padding: 4px 0; border-bottom: 1px solid #e5e5e5; align-items: center; }
+.db-anfahrt-row:last-child { border-bottom: 0; }
+.db-anfahrt-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.db-anfahrt-path { font-size: 0.8em; color: #777; }
+.db-empty { color: #666; font-style: italic; padding: 10px 0; }
+/* Kraeftekatalog-Kacheln (eigener Bereich) */
+.db-tiles-katalog .db-tile { text-decoration: none; display: block; }
+.db-tiles-katalog .db-tile:hover { background: #e7f1ff; }
+.db-katalog-stand { font-size: 0.75em; color: #777; margin: -4px 0 8px; }

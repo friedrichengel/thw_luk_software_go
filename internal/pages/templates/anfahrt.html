@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="referrer" content="origin">
+    <title>Kräfteübersicht – {{.Title}}</title>
+    <link rel="icon" type="image/png" href="/images/favicon_steinmap.png">
+    {{.PwaHead}}
+    <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/einsatz.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/anfahrt.css?v={{.AssetVersion}}" />
+    {{.StabScript}}
+    <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+    <script src="/js/luk_core.js?v={{.AssetVersion}}"></script>
+  </head>
+  <body class="luk-page af-body">
+    {{.Header}}
+    <div id="luk-readonly-banner" class="luk-readonly-banner" hidden></div>
+
+    <div class="container af-container">
+      <div class="row af-row">
+        <section class="luk-box af-box">
+          <div class="af-toolbar luk-no-print">
+            <h2 style="margin:0;">Kräfteübersicht</h2>
+            <div class="af-toolbar-right">
+              <label class="af-check"><input type="checkbox" id="af-show-all" /> Heimfahrt auch älter als 24 h zeigen</label>
+              <button type="button" class="luk-btn luk-btn-primary" id="af-print">Drucken / PDF</button>
+            </div>
+          </div>
+          <div id="af-due" class="af-due" hidden></div>
+          <div id="af-summary" class="af-summary"></div>
+          <div id="af-board" class="af-board"></div>
+        </section>
+      </div>
+    </div>
+
+    {{.Footer}}
+    <script src="/js/anfahrt.js?v={{.AssetVersion}}"></script>
+  </body>
+</html>

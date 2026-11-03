@@ -1,0 +1,637 @@
+/* einsatz.css - Einsatz-Modul (Hub + Editor-Erweiterungen) */
+
+/* Container/Layout: Hub und Editor sollen wie die anderen Seiten in
+   weissen Boxen liegen - mit Schatten und abgerundeten Ecken. */
+.einsatz-body .container {
+  padding: 12px;
+  gap: 10px;
+}
+.einsatz-body .row {
+  gap: 12px;
+}
+
+/* ============================================================
+   HUB
+   ============================================================ */
+
+/* Ganze Bildschirmhoehe nutzen: Header, Inhalt (fuellt), Footer unten - wie
+   auf den anderen Einsatz-Seiten. Die Liste scrollt innerhalb der Box. */
+body.einsatz-mode-hub {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+.einsatz-mode-hub .container {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;       /* .row (max-width 2500px) mittig, nicht linksbuendig */
+}
+.einsatz-mode-hub .row {
+  justify-content: center;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0 auto;
+}
+
+.ez-hub {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 18px 22px;
+  background-color: white;
+  color: #222;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.ez-hub-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.ez-hub-head h2 {
+  font-size: 1.6em;
+  color: rgb(0, 51, 153);
+}
+.ez-hub-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.ez-hub-actions input[type="text"] {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: white;
+  color: #222;
+  min-width: 280px;
+}
+.ez-hub-actions input[type="text"]::placeholder {
+  color: #888;
+}
+.ez-hub-actions button {
+  padding: 6px 14px;
+  background-color: rgb(0, 51, 153);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.ez-hub-actions button:hover {
+  background-color: rgb(0, 38, 115);
+}
+/* Import-Button nutzt .ez-secondary (Dialog-Stil mit margin-top) - in der
+   Kopfzeile buendig mit "+ Neuer Einsatz" ausrichten. */
+.ez-hub-actions .ez-secondary {
+  margin-top: 0;
+}
+
+.ez-hub-filters {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 14px;
+  font-size: 0.95em;
+}
+.ez-hub-filters label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.ez-hub-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* Bei vielen Einsaetzen scrollt die Liste in der Box, Kopf und Filter bleiben sichtbar. */
+  flex: 1 1 auto;
+  min-height: 120px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+#ez-hub-shared-list {
+  max-height: calc(40vh - 60px);
+}
+
+.ez-empty {
+  padding: 24px;
+  text-align: center;
+  background: #f5f5f5;
+  border: 1px dashed #bbb;
+  border-radius: 6px;
+  font-style: italic;
+  color: #666;
+}
+
+.ez-card {
+  background: #f8f9fb;
+  border: 1px solid #d8dde6;
+  border-left: 4px solid #888;
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+.ez-card-open    { border-left-color: #2c8c2c; }
+.ez-card-closed  { border-left-color: #888; opacity: 0.9; }
+.ez-card-selected {
+  background: #e7f1ff;
+  border-color: #b6d4fe;
+  box-shadow: 0 0 0 2px rgba(0, 51, 153, 0.15);
+}
+
+.ez-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.ez-card-title {
+  font-size: 1.15em;
+  font-weight: bold;
+  color: rgb(0, 51, 153);
+  text-decoration: none;
+}
+.ez-card-title:hover { text-decoration: underline; }
+
+.ez-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.85em;
+  border-radius: 10px;
+  background: #ddd;
+}
+.ez-badge-open     { background: #2c8c2c; color: white; }
+.ez-badge-share    { background: #6c757d; color: white; }
+.ez-hub-shared { margin-top: 18px; border-top: 1px solid #e3e6ee; padding-top: 10px; }
+.ez-hub-shared h3 { margin: 0 0 4px; color: rgb(0, 51, 153); }
+.ez-card-shared { border-left-color: #6c757d; }
+.vw-link-incoming { margin-top: 6px; }
+.vw-link-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 4px 0; border-top: 1px solid #eef0f5; }
+.vw-link-actions { display: flex; gap: 4px; flex-wrap: wrap; }
+.ez-badge-closed   { background: #888; color: white; }
+.ez-badge-selected { background: rgb(0, 51, 153); color: white; }
+
+.ez-card-meta {
+  font-size: 0.88em;
+  color: #555;
+  margin-top: 4px;
+}
+.ez-card-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ez-btn {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #aaa;
+  background: white;
+  color: rgb(0, 51, 153);
+  cursor: pointer;
+  font-size: 0.9em;
+  text-decoration: none;
+  display: inline-block;
+}
+.ez-btn:hover { background: #eef1f7; }
+.ez-btn-danger {
+  background: #f8d7da;
+  border-color: #f1aeb5;
+  color: #842029;
+}
+.ez-btn-danger:hover { background: #f1aeb5; }
+
+.ez-status {
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background: #fff3cd;
+  color: #664d03;
+  border: 1px solid #ffe69c;
+}
+.ez-status-error { background: #fde2e1; color: #842029; border-color: #f7b1ad; }
+.ez-status-ok    { background: #d1e7dd; color: #0f5132; border-color: #a3cfbb; }
+.ez-status-warn  { background: #fff3cd; color: #664d03; border-color: #ffe69c; }
+.ez-status-info  { background: #cfe2ff; color: #084298; border-color: #9ec5fe; }
+
+.ez-hub-shares {
+  margin-top: 24px;
+  padding: 12px 14px;
+  background: #fff8e1;
+  border: 1px solid #ffe69c;
+  border-radius: 6px;
+}
+.ez-hub-shares h3 {
+  font-size: 1.05em;
+  margin-bottom: 10px;
+  color: #664d03;
+}
+.ez-share-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0e0a0;
+}
+.ez-share-row:last-child { border-bottom: 0; }
+.ez-share-text { flex: 1; }
+
+/* ============================================================
+   EDITOR
+   ============================================================ */
+
+/* Tree-Box als weisse Box mit Schatten - ueberschreibt .fh-main-box
+   aus fuehrungsharke.css (das setzt sonst einen graublauen Hintergrund). */
+.einsatz-mode-editor .fh-main-box.ez-main-box {
+  flex: 1;
+  min-width: 0;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  margin: 0 0 0 4px;
+  padding: 12px;
+  overflow: auto;
+}
+
+/* Side-Box als zweite weisse Box. */
+.einsatz-mode-editor .fh-side-box.ez-side-box {
+  flex: 0 0 340px;
+  max-width: 360px;
+  min-width: 280px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  margin: 0 4px 0 0;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.ez-editor-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.ez-back-link {
+  color: rgb(0, 51, 153);
+  text-decoration: none;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+}
+.ez-back-link:hover { background: #eef1f7; }
+
+#ez-title {
+  flex: 1;
+  min-width: 240px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: white;
+  color: #222;
+  font-size: 1.1em;
+}
+#ez-title:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: #f5f5f5;
+}
+
+.ez-status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: bold;
+}
+.ez-status-badge-open   { background: #2c8c2c; color: white; }
+.ez-status-badge-closed { background: #888; color: white; }
+
+.ez-tree { /* erbt fh-tree styles */ }
+
+/* Editor: Ampel-Indikator (kleiner Kreis im Knoten-/Mitglieder-Header) */
+.fh-ampel {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 6px;
+  vertical-align: middle;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  flex: 0 0 auto;
+}
+.fh-ampel-green  { background: #2ecc71; }
+.fh-ampel-yellow { background: #f1c40f; }
+.fh-ampel-red    { background: #e74c3c; }
+
+/* Editor: ausgegraute Knoten / Mitglieder ohne aktive Schicht */
+.fh-node.fh-node-inactive {
+  opacity: 0.45;
+  filter: grayscale(0.5);
+}
+.fh-fb.fh-fb-inactive {
+  opacity: 0.55;
+  filter: grayscale(0.4);
+}
+
+/* Toggle "Inaktive ausblenden" in der Sidebar: blendet den ganzen
+   Subtree-Wrapper aus, dessen Wurzel-Knoten als inactive markiert ist -
+   Kinder verschwinden mit. */
+body.ez-hide-inactive .fh-subtree:has(> .fh-node.fh-node-inactive) {
+  display: none;
+}
+
+/* Drag & Drop fuer Knoten-Umordnen */
+.fh-node {
+  cursor: grab;
+}
+.fh-node:active {
+  cursor: grabbing;
+}
+.fh-node button,
+.fh-node a {
+  cursor: pointer;
+}
+.fh-node.fh-node-dragging {
+  opacity: 0.4;
+  outline: 2px dashed #0a3d91;
+  outline-offset: 2px;
+}
+
+/* Drop-Indikatoren - fuenf Positionen pro Knoten:
+   - left:   blaue Linie LINKS am Knoten      = Geschwister davor
+   - right:  blaue Linie RECHTS am Knoten     = Geschwister danach
+   - above:  blaue Linie OBEN am Knoten       = Quelle wird neuer Eltern
+   - below:  blaue Linie UNTEN am Knoten      = als Kind unten anfuegen
+   - center: blauer Rahmen um den Knoten      = als internes Mitglied
+                                                (nur Fuehrungsknoten)
+   Realisiert ueber box-shadow (statt ::before/::after, weil wir vier
+   Linien-Positionen brauchen und ::after schon fuer Verbindungslinien
+   genutzt wird).
+*/
+.fh-node.fh-node-drop-center {
+  outline: 3px solid #0a3d91;
+  outline-offset: 4px;
+  background: #e3ecff !important;
+}
+.fh-node.fh-node-drop-above {
+  box-shadow: 0 -8px 0 -4px #0a3d91, 0 0 8px rgba(10, 61, 145, 0.45);
+}
+.fh-node.fh-node-drop-below {
+  box-shadow: 0  8px 0 -4px #0a3d91, 0 0 8px rgba(10, 61, 145, 0.45);
+}
+.fh-node.fh-node-drop-left {
+  box-shadow: -8px 0 0 -4px #0a3d91, 0 0 8px rgba(10, 61, 145, 0.45);
+}
+.fh-node.fh-node-drop-right {
+  box-shadow:  8px 0 0 -4px #0a3d91, 0 0 8px rgba(10, 61, 145, 0.45);
+}
+
+/* Mitglieder-Zeilen (Fachberater, interne Einheit) waehrend des Ziehens */
+.fh-fb {
+  cursor: grab;
+}
+.fh-fb:active { cursor: grabbing; }
+.fh-fb.fh-fb-dragging {
+  opacity: 0.4;
+  outline: 2px dashed #0a3d91;
+}
+
+/* Drop-Zone "oberste Ebene" am Ende des Trees */
+.fh-root-drop {
+  margin: 16px 14px 24px 14px;
+  padding: 14px;
+  border: 2px dashed #cfd6e6;
+  border-radius: 8px;
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  font-style: italic;
+  transition: all 0.15s;
+}
+.fh-root-drop.fh-root-drop-over {
+  border-color: #0a3d91;
+  border-style: solid;
+  background: #e3ecff;
+  color: #0a3d91;
+  font-weight: bold;
+}
+
+/* Editor: Mitglieder-/Hierarchie-Sektionen mit klaren Labels */
+.fh-section-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #555;
+  margin: 6px 0 3px 0;
+  border-top: 1px solid #e4e8f1;
+  padding-top: 4px;
+}
+.fh-members-section {
+  margin-top: 4px;
+}
+.fh-members-empty {
+  padding: 4px 6px;
+  font-size: 10px;
+  color: #888;
+  font-style: italic;
+}
+.fh-add-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.fh-hierarchy-section {
+  margin-top: 6px;
+}
+.fh-node-ops {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  border-top: 1px solid #e4e8f1;
+  padding-top: 5px;
+}
+
+/* Typ-Badges fuer Mitglieder */
+.fh-fb-typebadge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: #b26a00;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-right: 2px;
+}
+.fh-fb-typebadge-fb { background: #b26a00; }
+.fh-internal-einheit .fh-fb-typebadge { background: #0a3d91; }
+
+.ez-audit {
+  font-size: 0.85em;
+  color: #444;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.ez-audit-row {
+  padding: 4px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+.ez-audit-row:last-child { border-bottom: 0; }
+.ez-audit-empty { font-style: italic; color: #888; }
+
+/* Knoten-Dialog mit Tabs */
+.ez-dialog-wide { width: min(720px, 96vw); max-width: 720px; }
+
+.ez-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+.ez-tab {
+  padding: 8px 14px;
+  background: #eee;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  cursor: pointer;
+  font-size: 0.95em;
+}
+.ez-tab.active {
+  background: white;
+  border-color: #ccc;
+  border-bottom-color: white;
+  margin-bottom: -1px;
+  font-weight: bold;
+}
+
+.ez-tab-pane {
+  padding: 6px 0 0 0;
+}
+
+.ez-hint {
+  font-size: 0.85em;
+  color: #555;
+  margin-bottom: 8px;
+  font-style: italic;
+}
+.ez-empty-hint {
+  padding: 8px;
+  font-style: italic;
+  color: #888;
+  text-align: center;
+}
+.ez-secondary {
+  margin-top: 8px;
+  background: #eee;
+  border: 1px solid #aaa;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Personen */
+.ez-personen-list,
+.ez-lagekarten-list,
+.ez-acl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.ez-person-row,
+.ez-lk-row,
+.ez-acl-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 8px;
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 0.95em;
+}
+.ez-person-main, .ez-lk-main, .ez-acl-main {
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+}
+.ez-person-actions, .ez-lk-actions, .ez-acl-actions {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.ez-fieldset {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  margin-top: 8px;
+}
+.ez-fieldset legend { padding: 0 6px; font-weight: bold; }
+
+.ez-schicht-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.ez-schicht-row input[type="datetime-local"] {
+  flex: 1;
+  min-width: 0;
+}
+.ez-schicht-row input[type="text"] {
+  flex: 2;
+  min-width: 0;
+}
+
+/* Lagekarten-Modus-Indikator */
+.ez-lk-mode {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-size: 0.8em;
+  background: #eee;
+  margin-left: 6px;
+}
+.ez-lk-mode-write { background: #fff3cd; color: #856404; }
+.ez-lk-mode-read  { background: #e2e3e5; color: #383d41; }
+
+/* Lagekarten-Indikator im Tree-Knoten */
+.ez-node-lk-row {
+  margin-top: 6px;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.ez-node-lk {
+  display: inline-block;
+  padding: 2px 6px;
+  font-size: 0.78em;
+  border-radius: 3px;
+  text-decoration: none;
+  background: #e2e3e5;
+  color: #383d41;
+}
+.ez-node-lk-write { background: #fff3cd; color: #856404; }
+.ez-node-lk:hover { text-decoration: underline; }
+
+/* Body-Modi */
+.einsatz-mode-hub .container { color: white; }

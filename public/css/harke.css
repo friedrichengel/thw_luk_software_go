@@ -1,0 +1,74 @@
+/* harke.css - Ergaenzungen fuer die Fuehrungsharke (luk) */
+
+.hk-fieldset { border: 1px solid #ccc; border-radius: 4px; padding: 8px 10px; margin-top: 10px; }
+.hk-fieldset legend { padding: 0 6px; font-weight: 600; font-size: 0.9em; }
+
+/* Status-Zeile im Knoten */
+.fh-node-status-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.hk-status-btn {
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid #0a3d91;
+  background: #fff;
+  color: #0a3d91;
+  font-size: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.hk-status-btn:hover { background: #e3ecff; }
+.hk-status-btn.hk-status-btn-ok { border-color: #1f7a3a; color: #1f7a3a; }
+.hk-status-btn.hk-status-btn-ok:hover { background: #d1e7dd; }
+
+/* Kraeftekatalog: Statuspunkt im Knotenkopf, Zusammenfassung in der Seitenleiste */
+.hk-kraft-dot { margin-left: 4px; }
+.hk-katalog { font-size: 12px; line-height: 1.5; }
+.hk-katalog-row { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+.hk-katalog .luk-kp-dot { width: 8px; height: 8px; }
+
+/* Verknuepfungs-Chips im Knoten */
+.hk-links-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.hk-extern-chip {
+  background: #fff3cd;
+  color: #664d03;
+  border: 1px solid #ffe69c;
+  cursor: pointer;
+}
+.hk-extern-chip:hover { background: #ffe69c; }
+
+/* Mitglieder-Zeilen: Status */
+.fh-fb-main .luk-status { margin-left: 4px; }
+
+/* Anfahrt-Kurzliste in der Sidebar */
+.hk-anfahrt { font-size: 0.85em; }
+.hk-anfahrt-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 4px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+.hk-anfahrt-row:last-child { border-bottom: 0; }
+.hk-anfahrt-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hk-anfahrt-empty { font-style: italic; color: #888; }
+
+/* Abgerueckte ausblenden */
+body.hk-hide-abgerueckt .fh-subtree:has(> .fh-node.fh-node-abgerueckt) { display: none; }
+body.hk-hide-abgerueckt .fh-fb.fh-fb-abgerueckt { display: none; }
+.fh-node.fh-node-abgerueckt { opacity: 0.5; }
+
+/* Geschlossener Einsatz / Leseansicht */
+body.hk-readonly .fh-node { cursor: default; }
+
+/* Druck: Sidebar + Steuerung weg, Tree in voller Breite */
+@media print {
+  body.luk-printing .fh-node-ops, body.luk-printing .fh-add-row, body.luk-printing .hk-status-btn,
+  body.luk-printing .fh-fb-actions, body.luk-printing .fh-root-drop, body.luk-printing .fh-section-label { display: none !important; }
+  body.luk-printing .fh-tree { zoom: 1 !important; overflow: visible !important; }
+  body.luk-printing .fh-node { background: #fff !important; border: 1px solid #000 !important; box-shadow: none !important; break-inside: avoid; }
+}

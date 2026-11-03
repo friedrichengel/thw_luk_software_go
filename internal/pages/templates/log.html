@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="referrer" content="origin">
+    <title>Log – {{.Title}}</title>
+    <link rel="icon" type="image/png" href="/images/favicon_steinmap.png">
+    {{.PwaHead}}
+    <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/einsatz.css?v={{.AssetVersion}}" />
+    <link rel="stylesheet" href="/css/log.css?v={{.AssetVersion}}" />
+    {{.StabScript}}
+    <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
+    <script src="/js/luk_core.js?v={{.AssetVersion}}"></script>
+  </head>
+  <body class="luk-page lg-body">
+    {{.Header}}
+
+    <div class="container lg-container">
+      <div class="row lg-row">
+        <section class="luk-box lg-box">
+          <div class="lg-toolbar luk-no-print">
+            <div class="lg-tabs" role="tablist">
+              <button type="button" class="lg-tab active" data-tab="changes">Änderungen <span id="lg-count-changes" class="lg-count"></span></button>
+              <button type="button" class="lg-tab" data-tab="access">Zugriffe <span id="lg-count-access" class="lg-count"></span></button>
+            </div>
+            <input type="search" id="lg-filter" placeholder="Filter (Text, Nutzer, Bereich)…" autocomplete="off" />
+            <select id="lg-entity">
+              <option value="">Alle Bereiche</option>
+              <option value="einsatz">Einsatz</option>
+              <option value="member">Mitglieder/Rollen</option>
+              <option value="node">Führungsharke: Knoten</option>
+              <option value="mitglied">Führungsharke: Mitglieder</option>
+              <option value="schicht">Kräfteplanung</option>
+              <option value="lagekarte">Lagekarten</option>
+              <option value="abschnitt">Lagekarte: Abschnitte</option>
+              <option value="feature">Lagekarte: Objekte</option>
+              <option value="schadenskonto">Schadenskonten</option>
+              <option value="sk_ref">Schadenskonten: Einheiten</option>
+              <option value="sk_fremd">Schadenskonten: Fremdeinheiten</option>
+              <option value="share_link">Freigabelinks</option>
+              <option value="snapshot">Snapshots</option>
+            </select>
+            <label class="lg-check"><input type="checkbox" id="lg-details" /> Details (vorher/nachher)</label>
+            <button type="button" class="luk-btn" id="lg-refresh">Aktualisieren</button>
+            <button type="button" class="luk-btn luk-btn-primary" id="lg-print">Drucken / PDF</button>
+          </div>
+          <div id="lg-changes" class="lg-pane"></div>
+          <div id="lg-access" class="lg-pane" hidden></div>
+        </section>
+      </div>
+    </div>
+
+    {{.Footer}}
+    <script src="/js/log.js?v={{.AssetVersion}}"></script>
+  </body>
+</html>

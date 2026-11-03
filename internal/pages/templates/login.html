@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{.AppName}} – Login</title>
+<link rel="icon" type="image/png" href="/images/favicon_dashboard.png">
+{{.PwaHead}}
+<link rel="stylesheet" href="/css/auth.css?v={{.AssetVersion}}">
+</head>
+<body class="auth-page auth-login">
+<div class="card">
+  <div class="logo"><img src="/images/THW.svg" alt="THW-Logo" class="logo-img"></div>
+  <h1>{{.AppName}} – Stabsansicht</h1>
+  {{if .Error}}<div class="error">{{.Error}}</div>{{end}}
+  <form method="post" action="/login" autocomplete="on">
+    <input type="hidden" name="csrf" value="{{.CSRF}}">
+    <input type="hidden" name="redirect" value="{{.Redirect}}">
+    <label for="username">Benutzername oder E-Mail</label>
+    <input id="username" name="username" type="text" required autofocus>
+    <label for="password">Passwort</label>
+    <input id="password" name="password" type="password" required>
+    <button type="submit">Login</button>
+  </form>
+  <div class="footer">
+    <a href="/forgot_password" style="color:#0a3d91;text-decoration:none">Passwort vergessen?</a>
+  </div>
+</div>
+</body>
+</html>

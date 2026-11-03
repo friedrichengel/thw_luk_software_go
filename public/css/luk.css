@@ -1,0 +1,330 @@
+/* luk.css - gemeinsame Stile der LuK-Stabsansicht (alle Seiten) */
+
+/* Header: Einsatztitel in der Mitte */
+.header-mid {
+  flex: 1;
+  text-align: center;
+  color: #fff;
+  padding: 0 16px;
+  min-width: 0;
+}
+.header-einsatz-title {
+  font-size: 1.6em;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.header-einsatz-meta {
+  font-size: 0.95em;
+  opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Sync-Indikator (Footer rechts) */
+.luk-sync {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background: #9aa6c4;
+  vertical-align: middle;
+}
+.luk-sync-ok { background: #2ecc71; }
+.luk-sync-error { background: #e74c3c; }
+
+/* Lese-Banner */
+.luk-readonly-banner {
+  background: #fff3cd;
+  color: #664d03;
+  border: 1px solid #ffe69c;
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin: 0 12px 8px 12px;
+  font-size: 0.95em;
+}
+.luk-readonly-banner[hidden] { display: none; }
+
+/* Toasts */
+#luk-toast-host {
+  position: fixed;
+  right: 18px;
+  bottom: 56px;
+  z-index: 5000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 420px;
+}
+.luk-toast {
+  padding: 10px 14px;
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  background: #cfe2ff;
+  color: #084298;
+  border: 1px solid #9ec5fe;
+  font-size: 0.95em;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.luk-toast-ok    { background: #d1e7dd; color: #0f5132; border-color: #a3cfbb; }
+.luk-toast-warn  { background: #fff3cd; color: #664d03; border-color: #ffe69c; }
+.luk-toast-error { background: #fde2e1; color: #842029; border-color: #f7b1ad; }
+.luk-toast-out   { opacity: 0; transform: translateY(8px); }
+
+/* Status-Badges (Anforderung / Anfahrt) */
+.luk-status {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  font-weight: 600;
+  background: #e2e3e5;
+  color: #383d41;
+  white-space: nowrap;
+}
+.luk-status-geplant     { background: #e2e3e5; color: #383d41; }
+.luk-status-angefordert { background: #fff3cd; color: #664d03; }
+.luk-status-anfahrt     { background: #cfe2ff; color: #084298; }
+.luk-status-vor_ort     { background: #d1e7dd; color: #0f5132; }
+.luk-status-abgerueckt  { background: #f1f1f1; color: #777; text-decoration: line-through; }
+
+/* Ampel */
+.luk-ampel {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-left: 6px;
+  vertical-align: middle;
+  border: 1px solid rgba(0,0,0,0.25);
+}
+.luk-ampel-green  { background: #2ecc71; }
+.luk-ampel-yellow { background: #f1c40f; }
+.luk-ampel-red    { background: #e74c3c; }
+
+/* Generische Boxen / Buttons / Dialoge */
+.luk-page .container { padding: 12px; }
+.luk-page .row { gap: 12px; }
+.luk-box {
+  background: #fff;
+  color: #222;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  padding: 14px 18px;
+  overflow: auto;
+}
+.luk-box h2 { color: rgb(0,51,153); font-size: 1.3em; margin-bottom: 10px; }
+.luk-box h3 { color: rgb(0,51,153); font-size: 1.05em; margin: 12px 0 6px; }
+
+.luk-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #aaa;
+  background: #fff;
+  color: rgb(0,51,153);
+  cursor: pointer;
+  font-size: 0.92em;
+  text-decoration: none;
+  display: inline-block;
+}
+.luk-btn:hover:not(:disabled) { background: #eef1f7; }
+.luk-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.luk-btn-primary { background: rgb(0,51,153); color: #fff; border-color: rgb(0,51,153); }
+.luk-btn-primary:hover:not(:disabled) { background: rgb(0,38,115); }
+.luk-btn-danger { background: #f8d7da; border-color: #f1aeb5; color: #842029; }
+.luk-btn-danger:hover:not(:disabled) { background: #f1aeb5; }
+.luk-btn-small { padding: 3px 8px; font-size: 0.82em; }
+
+.luk-dialog {
+  border: none;
+  border-radius: 10px;
+  padding: 20px 22px;
+  width: min(560px, 94vw);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  color: #222;
+}
+.luk-dialog::backdrop { background: rgba(0,0,0,0.35); }
+.luk-dialog h2 { color: rgb(0,51,153); font-size: 1.15em; margin-bottom: 12px; }
+.luk-dialog label { display: block; font-weight: 600; font-size: 0.9em; margin: 10px 0 4px; }
+.luk-dialog input[type="text"], .luk-dialog input[type="url"], .luk-dialog input[type="number"],
+.luk-dialog input[type="datetime-local"], .luk-dialog select, .luk-dialog textarea {
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95em;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+.luk-dialog textarea { resize: vertical; }
+/* Per element.hidden ausgeblendete Felder: die display-Regeln dieser Datei
+   (label, .luk-kp-line) sind staerker als das [hidden] des Browsers und
+   muessen zuruecktreten. */
+.luk-dialog [hidden] { display: none !important; }
+.luk-dialog-actions { display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end; flex-wrap: wrap; }
+.luk-dialog-wide { width: min(820px, 96vw); }
+.luk-hint { font-size: 0.85em; color: #555; font-style: italic; margin: 4px 0 8px; }
+.luk-field-row { display: flex; gap: 8px; }
+.luk-field-row > label { flex: 1; }
+
+.luk-table { width: 100%; border-collapse: collapse; font-size: 0.92em; }
+.luk-table th, .luk-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #e3e6ee; vertical-align: top; }
+.luk-table th { background: #f3f5fa; color: rgb(0,51,153); position: sticky; top: 0; }
+.luk-table tr:hover td { background: #f8f9fb; }
+.luk-mono { font-family: ui-monospace, Consolas, monospace; font-size: 0.85em; }
+.luk-muted { color: #777; font-size: 0.9em; }
+.luk-empty { padding: 20px; text-align: center; color: #666; font-style: italic; background: #f5f5f5; border: 1px dashed #bbb; border-radius: 6px; }
+
+.luk-chip {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  background: #e7f1ff;
+  color: #084298;
+  font-size: 0.8em;
+  margin: 1px 2px;
+  white-space: nowrap;
+}
+.luk-chip-link { background: #e2e3e5; color: #383d41; text-decoration: none; }
+.luk-chip-link:hover { background: #cfe2ff; }
+.luk-chip-orphan { background: #fde2e1; color: #842029; }
+
+/* Verknuepfungs-Symbol */
+.luk-linked::before { content: '🔗 '; font-size: 0.9em; }
+
+/* Changelog "Was ist neu": Versionsstempel im Footer + Dialog (public/js/changelog.js) */
+.luk-version-btn {
+  background: none; border: none; padding: 0; margin: 0;
+  color: inherit; font: inherit; cursor: pointer; text-decoration: underline dotted;
+}
+.luk-version-btn:hover { text-decoration: underline; }
+.luk-changelog {
+  border: none; border-radius: 10px; padding: 0;
+  width: min(680px, 94vw); max-height: 85vh;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35); color: #222;
+  display: flex; flex-direction: column;
+}
+.luk-changelog:not([open]) { display: none; }
+.luk-changelog::backdrop { background: rgba(0,0,0,0.4); }
+.luk-changelog-head { display: flex; justify-content: space-between; align-items: baseline; padding: 16px 22px 10px; border-bottom: 1px solid #e3e6ee; }
+.luk-changelog-head h2 { color: rgb(0,51,153); font-size: 1.2em; margin: 0; }
+.luk-changelog-version { color: #777; font-size: 0.9em; }
+.luk-changelog-body { overflow: auto; padding: 8px 22px; flex: 1 1 auto; min-height: 120px; }
+.luk-changelog-intro { background: #e7f1ff; color: #084298; border-radius: 6px; padding: 8px 12px; font-size: 0.92em; margin: 8px 0 12px; }
+.luk-changelog-entry { padding: 10px 0 6px; border-bottom: 1px solid #eef0f5; }
+.luk-changelog-entry:last-child { border-bottom: none; }
+.luk-changelog-entry h3 { font-size: 1em; color: rgb(0,51,153); margin: 0 0 2px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.luk-changelog-entry-new h3 { color: #0f5132; }
+.luk-changelog-badge { background: #d1e7dd; color: #0f5132; border-radius: 10px; padding: 0 8px; font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.03em; }
+.luk-changelog-date { color: #777; font-weight: normal; font-size: 0.85em; }
+.luk-changelog-title { font-weight: 600; margin: 2px 0 6px; }
+.luk-changelog-entry ul { margin: 0 0 6px 18px; padding: 0; font-size: 0.93em; line-height: 1.45; }
+.luk-changelog-entry li { margin: 3px 0; }
+.luk-changelog-empty { color: #666; font-style: italic; padding: 16px 0; }
+.luk-changelog-actions { display: flex; justify-content: flex-end; gap: 8px; padding: 10px 22px 16px; border-top: 1px solid #e3e6ee; background: #f7f8fb; border-radius: 0 0 10px 10px; }
+.luk-changelog-actions .luk-btn[hidden] { display: none; }
+
+/* Kraeftekatalog: Statuspunkt, Chip, Picker (LUK.kraefte) */
+.luk-kp-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.25);
+  vertical-align: middle;
+  flex: 0 0 auto;
+  background: #8a2be2;
+}
+.luk-kp-dot-frei      { background: #2ecc71; }
+.luk-kp-dot-bedingt   { background: #f1c40f; }
+.luk-kp-dot-unbekannt { background: #8a2be2; }
+.luk-kp-dot-gebunden  { background: #003399; }
+.luk-kp-dot-nicht     { background: #e74c3c; }
+.luk-kp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #eef2fb;
+  color: #1b2d5b;
+  font-size: 0.82em;
+  margin: 2px 2px 2px 0;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.luk-kp-chip-unknown { background: #fde2e1; color: #842029; }
+.luk-kp-chip-x {
+  border: none; background: transparent; color: inherit; cursor: pointer;
+  font-size: 1.1em; line-height: 1; padding: 0 2px; opacity: 0.7;
+}
+.luk-kp-chip-x:hover { opacity: 1; }
+.luk-kp-wrap { display: block; position: relative; }
+.luk-kp-pop {
+  position: absolute;
+  left: 0; right: 0;
+  top: calc(100% + 2px);
+  z-index: 60;
+  background: #fff;
+  color: #222;
+  border: 1px solid #b9c2d6;
+  border-radius: 6px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+  max-height: 300px;
+  overflow: auto;
+  font-size: 0.88em;
+  font-weight: normal;
+  text-align: left;
+}
+.luk-kp-pop[hidden] { display: none; }
+.luk-kp-head {
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  padding: 5px 9px; border-bottom: 1px solid #e3e6ee; background: #f7f8fb; font-size: 0.9em;
+  position: sticky; top: 0;
+}
+.luk-kp-filter {
+  border: 1px solid #aaa; border-radius: 10px; background: #fff; color: #333;
+  padding: 1px 8px; font-size: 0.9em; cursor: pointer;
+}
+.luk-kp-filter-on { background: rgb(0,51,153); color: #fff; border-color: rgb(0,51,153); }
+.luk-kp-sec {
+  padding: 4px 9px; font-size: 0.8em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
+  color: #555; background: #fafbfd; border-top: 1px solid #eef0f5;
+}
+.luk-kp-sec-frei { color: #0f5132; }
+.luk-kp-sec-bedingt { color: #664d03; }
+.luk-kp-sec-unbekannt { color: #5b21a6; }
+.luk-kp-sec-gebunden { color: #003399; }
+.luk-kp-sec-nicht { color: #842029; }
+.luk-kp-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 9px; cursor: pointer;
+}
+.luk-kp-row:hover, .luk-kp-row-hi { background: #e7f1ff; }
+.luk-kp-main { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.luk-kp-meta { flex: 0 1 auto; color: #666; font-size: 0.85em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 55%; }
+.luk-kp-empty { padding: 10px; color: #666; font-style: italic; }
+.luk-kp-foot { padding: 5px 9px; border-top: 1px solid #e3e6ee; font-size: 0.8em; }
+.luk-kp-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 2px 0 6px; min-height: 18px; }
+.luk-kp-line:empty { display: none; }
+.luk-kp-stand { font-size: 0.8em; color: #777; }
+
+/* Druck */
+.luk-print-header { display: none; }
+@media print {
+  body.luk-printing { background: #fff !important; color: #000 !important; height: auto !important; overflow: visible !important; display: block !important; }
+  body.luk-printing .luk-print-header { display: block; padding: 0 0 10px 0; border-bottom: 2px solid #000; margin-bottom: 12px; }
+  body.luk-printing .luk-print-header h1 { font-size: 20px; margin: 0; }
+  body.luk-printing .luk-print-meta { font-size: 12px; color: #333; margin-top: 2px; }
+  body.luk-printing .header, body.luk-printing .footer, body.luk-printing dialog,
+  body.luk-printing .luk-no-print, body.luk-printing .luk-readonly-banner, body.luk-printing #luk-toast-host { display: none !important; }
+  body.luk-printing .container, body.luk-printing .row, body.luk-printing .luk-box {
+    display: block !important; background: #fff !important; box-shadow: none !important; border: none !important;
+    padding: 0 !important; margin: 0 !important; overflow: visible !important; height: auto !important; max-height: none !important; flex: none !important;
+  }
+  body.luk-printing .luk-table th { position: static; background: #eee; color: #000; }
+  body.luk-printing .luk-table td, body.luk-printing .luk-table th { border: 1px solid #999; }
+  body.luk-printing tr { break-inside: avoid; }
+}

@@ -1,0 +1,239 @@
+{
+  "hinweis": "Changelog fuer Nutzer (Dialog 'Was ist neu', Versionsstempel im Footer). Neuester Eintrag zuerst. 'show': true loest nach dem Login einmalig ein Overlay aus; kleinere Korrekturen mit 'show': false bleiben nur in der Liste. Version muss zu APP_VERSION in config/.env passen.",
+  "entries": [
+    {
+      "version": "3.2.5",
+      "date": "2026-11-03",
+      "title": "Export des STEINboards repariert",
+      "show": false,
+      "items": [
+        "STEINboard: Der Excel-Export erzeugte nach dem Bestätigen keine Datei, weil die Excel-Bibliothek unter den Sicherheitsregeln der Seite nicht geladen wurde. Der Export funktioniert wieder; Fehler werden jetzt als Hinweis angezeigt statt still zu scheitern.",
+        "Karten-PDF (Lagekarte, STEINmap, Divera): Bei einer extern konfigurierten Kachel-Quelle werden die Kacheln jetzt auch im PDF gerendert."
+      ]
+    },
+    {
+      "version": "3.2.4",
+      "date": "2026-10-30",
+      "title": "Stammdaten des Landesverbands in einer eigenen Datei",
+      "show": false,
+      "items": [
+        "Landesverband, Regionalstellen, Ortsverbände und Einheiten stehen jetzt zusammen mit Kartenmittelpunkt, regionalen Nachrichten-Feeds und Bezirksebene in einer Datei (public/daten/stammdaten.json). Sie gehört zur Installation, nicht zum Quellcode; im Repository liegt nur eine Beispieldatei mit einem fiktiven Landesverband.",
+        "Neue optionale Einstellung STAMM_FILE: Pfad einer Stammdaten-Datei auf dem Rechner, die beim Start gelesen wird und vor der eingebetteten gilt.",
+        "MAP_CENTER_* ist nicht mehr nötig: ohne Angabe gilt der Abschnitt „karte“ der Stammdaten (sonst die Mitte Deutschlands). Die regionalen Dashboard-Kacheln 6-1/6-2 kommen aus dem Abschnitt „feeds“; Tagesschau und GDACS bleiben fest.",
+        "STEINmap: Die Bezirksebene (bisher fest für Berlin) wird über den Abschnitt „bezirke“ der Stammdaten eingeschaltet; ohne ihn gibt es keine Bezirke.",
+        "Der Server meldet beim Start, welche Stammdaten-Quelle er nutzt."
+      ]
+    },
+    {
+      "version": "3.2.3",
+      "date": "2026-10-26",
+      "title": "Adresssuche in der Lagekarte, Korrekturen bei Login und STEINmap",
+      "show": false,
+      "items": [
+        "Lagekarte: Neuer Abschnitt „Adresse suchen“ in der Seitenleiste. Treffer anklicken, die Karte springt dorthin und zeigt eine rote Markierung mit Adresse (nur Anzeige, wird nicht gespeichert; „Markierung entfernen“ blendet sie aus).",
+        "Login: Admin-Konten landen jetzt immer auf der Serververwaltung, auch wenn vorher das Dashboard oder eine Einsatzseite aufgerufen wurde (bisher erschien „Zugriff verweigert“, erst „Zurück“ führte zur Nutzerverwaltung).",
+        "Erster Login mit Initialpasswort: Nach dem Passwortwechsel geht es automatisch dorthin weiter, wo man hinwollte (sonst zur Einsatzliste), statt auf der Einstellungsseite zu bleiben.",
+        "STEINmap: Adresssuche, Adresse zum Klickpunkt und Fahrtroute zum Marker funktionieren wieder. Der Browser rief Nominatim und OSRM bisher direkt auf, was die Sicherheitsrichtlinie der Seite (Content Security Policy) blockiert; jetzt fragt der Server an, bremst auf eine Anfrage je Sekunde und merkt sich Antworten.",
+        "Organisation verwalten › Einstellungen: Die Adresssuche für den Kartenmittelpunkt läuft ebenfalls über den Server.",
+        "Die Wartezeit zwischen zwei Suchen im Browser sinkt von 10 auf 2 Sekunden; ist der Dienst ausgelastet, erscheint ein Hinweis.",
+        "Neue optionale Einstellungen NOMINATIM_BASE_URL und OSRM_BASE_URL (Standard: öffentliche Dienste)."
+      ]
+    },
+    {
+      "version": "3.2.2",
+      "date": "2026-10-25",
+      "title": "Korrektur: Start auf bestehender Datenbank der Version 3.1/3.2",
+      "show": false,
+      "items": [
+        "Dashboard: Die Kachel „ERCC“ zeigt jetzt den GDACS-Ticker (Global Disaster Alert and Coordination System, gdacs.org/xml/rss_24h.xml), weil das ERCC-Portal seinen Feed eingestellt hat. Organisationen können unter „Einstellungen“ weiterhin eine eigene Quelle eintragen.",
+        "Neu für Org-Admins: Reiter „Einstellungen“ unter „Organisation verwalten“. Dort setzt die Organisation ihren Kartenmittelpunkt für Dashboard-Karten und neue Lagekarten (Standard: Standort aus den Stammdaten, sonst Server; Marker auf einer Vorschaukarte ziehen) und die Nachrichten-Feeds der vier Dashboard-Kacheln (Standard: Tagesschau, GDACS, RBB, MDR; eigene Adressen und Reitertitel je Kachel, Hosts eigener Feeds sind automatisch freigegeben).",
+        "Serververwaltung › Server: Der E-Mail-Versand (Absender, SMTP-Server, Port, Verschlüsselung, Benutzer, Passwort) lässt sich in der Oberfläche einstellen; leere Felder übernehmen die Umgebungskonfiguration. „Testmail senden“ prüft die Eingaben vor dem Speichern, das Passwort liegt verschlüsselt in der Datenbank und wird nie angezeigt. Auch „luk mail-test“ nutzt diese Einstellungen.",
+        "Die Seite „Nutzerverwaltung“ des Admins heißt jetzt „Serververwaltung“ (Fußleiste, Titel), weil sie neben Nutzern auch Organisationen und Server-Einstellungen umfasst.",
+        "Serververwaltung › Server: Die Einstellungen für die Kartenkacheln sind jetzt in zwei übersichtliche Karten (Quelle, Freigabe des eigenen Endpunkts) mit breiten Eingabefeldern gegliedert; die eigene Kachel-URL wird samt Token zum Kopieren angezeigt.",
+        "Der Dienst startete auf einer vorhandenen Datenbank nicht mehr (Bad Gateway), weil der Index auf die neue Spalte stamm_key angelegt wurde, bevor die Spalte nachgezogen war. Der Index entsteht jetzt nach der Spalten-Migration; ein Test öffnet eine Datenbank des Vorgängerschemas.",
+        "STEIN: Der Server hält einen gemeinsamen Vorrat je Ortsverband für alle Organisationen und fragt nur an, wenn Daten nicht mehr frisch sind; bei mehreren Organisationen mit eigenem Schlüssel geht dadurch pro Frist eine Anfrage statt vieler. Alte Daten bleiben bei STEIN-Ausfall erhalten und werden als veraltet gekennzeichnet, auch über einen Neustart hinweg. Webhook-Meldungen mehrerer Organisationen zu demselben Ortsverband führen zu einem Nachabruf.",
+        "Admin > Server: Die Kachelquelle der Karten wird in der Oberfläche eingestellt. Leer heißt OpenStreetMap über den eigenen Cache; eine externe Quelle (andere Installation oder zentraler Kachel-Dienst) lässt sich eintragen und per „Testabruf“ prüfen. Dort auch die Freigabe des eigenen Kachel-Endpunkts für andere Installationen mit Token.",
+        "Divera: Der Org-Admin wählt unter „Zugänge“ aus, welche Divera-Gruppen die Dashboard-Kachel zeigt. Die Gruppen kommen live aus Divera, im Standard sind alle angezeigt; Sammelgruppen, die Personen doppelt zählen würden, lassen sich abwählen.",
+        "Waldbrand-Kachel: Die Karte des DWD-Waldbrandgefahrenindex kommt jetzt über den Server. Der Server fragt stündlich nach, ob der DWD ein neues Bild hat (bedingte Anfrage, unverändert kostet nichts), und zeigt den Stand laut DWD an. Ist sie nicht verfügbar, zeigt die Kachel eine Meldung statt eines leeren Feldes, sonst den Stand des Bildes.",
+        "STEINmap: Die Grenzen der zwölf Berliner Bezirke liegen als zuschaltbare Ebene bei (Amt für Statistik Berlin-Brandenburg, CC-BY). Ein Klick in Berlin zeigt den Bezirk und den zuständigen Ortsverband mit dem Bezirksnamen; ein Berliner OV hebt seinen Bezirk hervor statt ganz Berlin.",
+        "Hochwasserkarte: Das Hochwasserportal liefert in seiner API 1.0 standardmäßig kein GeoJSON mehr; der Server fordert es jetzt ausdrücklich an, damit Pegel und Warnflächen wieder erscheinen. MDR-Feed folgt der neuen Adresse des Senders; Fehlermeldungen in den Nachrichten-Kacheln nennen den Grund.",
+        "DiveraMap: „Zurücksetzen in den OV“ setzt Fahrzeuge an den Standort des Ortsverbands aus den Stammdaten der Organisation (Stammdaten-Bezug im Reiter Organisationen), nicht mehr ans Kartenzentrum der Installation. Ohne Standort bleibt die Position in Divera unverändert.",
+        "STEIN mit eigenem Schlüssel fragt alle Einheiten des Landesverbands ab und zeigt, worauf der Schlüssel Zugriff hat; „Verbindung prüfen“ meldet, für wie viele Einheiten Daten kamen. Der Reiter „Nutzer“ warnt bei Divera-Rechten ohne Zugangsschlüssel."
+      ]
+    },
+    {
+      "version": "3.2.1",
+      "date": "2026-10-25",
+      "title": "Korrektur: Neustart nach Binary-Update startete das alte Programm",
+      "show": false,
+      "items": [
+        "Beim Update als einzelnes Programm wurde nach dem Austausch der Programmdatei wieder das alte Programm gestartet, weil der Neustart dem umbenannten Original (luk.old) folgte; ein weiteres Update verschob die Dateien dann zu luk.old.old. Der Installationspfad wird jetzt beim Start festgehalten, Austausch und Neustart verwenden ihn.",
+        "Die Statuszeile des Updaters nennt nach dem Neustart zusätzlich den Build, damit ein erfolgreiches Update bei gleicher Versionsnummer erkennbar ist."
+      ]
+    },
+    {
+      "version": "3.2.0",
+      "date": "2026-10-25",
+      "title": "Eingebauter Kachel-Cache für die Karten",
+      "show": false,
+      "items": [
+        "Die Karten laden ihre OpenStreetMap-Kacheln jetzt über die eigene Installation, die sie 30 Tage zwischenspeichert (data/tiles). Laufen an einem Standort mehrere Installationen, kann eine davon als gemeinsame Quelle freigegeben werden (TILE_PUBLIC, optional TILE_TOKEN), die anderen zeigen mit TILE_SOURCE darauf. So fragt je Standort nur eine Stelle bei OpenStreetMap an.",
+        "Wer weiter einen zentralen Kachel-Dienst nutzen will, trägt ihn als TILE_URL oder TILE_SOURCE ein.",
+        "Nutzerverwaltung: Der Admin kann Landesverband, Regionalstellen und Ortsverbände aus den Stammdaten als Organisationen übernehmen, einzeln ausgewählt oder alle auf einmal. Vorhandene Einträge bleiben unverändert.",
+        "System-Update: Der Upload-Bereich zeigt Programmdatei und Signatur als zwei große, nummerierte Felder mit Hinweis, welche Datei erwartet wird."
+      ]
+    },
+    {
+      "version": "3.1.0",
+      "date": "2026-10-25",
+      "title": "Organisationen, eigene Zugänge für STEIN und Divera, DiveraMap",
+      "show": true,
+      "items": [
+        "Neu: Organisationen (Ortsverband, Regionalstelle, Landesverband). Jedes Einsatz-Konto gehört zu einer Organisation; bestehende Konten und Einsätze wurden automatisch einer Standard-Organisation zugeordnet. Der Admin legt Organisationen an und ordnet Konten zu.",
+        "Neu: Org-Admin. Ein Einsatz-Konto mit diesem Recht verwaltet die Nutzer seiner Organisation, vergibt Divera-Rechte und hinterlegt die Zugänge der Organisation (STEIN API-Schlüssel, Divera Access-Key) unter „Organisation verwalten“. Die Schlüssel werden verschlüsselt gespeichert, nie angezeigt und nie an den Browser ausgeliefert; der globale Admin sieht sie nicht.",
+        "Neu: Divera 24/7. Mit Divera-Recht und hinterlegtem Zugang erscheinen im Dashboard oben links der Tab „Divera“ (Personalübersicht mit Gruppen- und Statusfilter) und in den Hilfsmitteln die DiveraMap (Fahrzeugstatus, Einsätze, PDF, Status setzen mit Schreibrecht). Ohne Recht bleibt alles wie bisher.",
+        "Neu: STEIN-Webhook als Alternative zum regelmäßigen Abruf. Der Org-Admin wählt unter „Zugänge“ den Modus: „Abruf alle 2 Minuten“ (Standard, wie bisher) oder „Webhook“. Im Webhook-Modus zeigt die Seite die einzutragende URL, nimmt die Secrets der Ortsverbände auf und listet die eingegangenen Ereignisse; Änderungen erscheinen dann nach Sekunden, der volle Abruf läuft nur noch alle 30 Minuten.",
+        "Neu: Freigabe an Organisationen. In der Einsatz-Verwaltung lassen sich neben einzelnen Nutzern ganze Organisationen (auch fremde OV oder RSt) mit Stabsrollen eintragen; alle Einsatz-Konten dieser Organisation arbeiten dann mit. Hilfsmittel wie Divera werden dadurch nicht freigegeben.",
+        "STEIN-Live-Status kommt jetzt über den STEIN-Schlüssel der jeweiligen Organisation; Einsätze nutzen den Zugang der Organisation ihres Erstellers. „Verbindung prüfen“ testet einen hinterlegten Zugang einmal live. Ohne Schlüssel findet kein Abruf statt; lehnt ein Dienst den Schlüssel ab, pausieren weitere Abrufe automatisch, damit die Server-Adresse nicht gesperrt wird.",
+        "Technik: Warnmeldungen (NINA), Hochwasserportal und Nachrichten-Feeds ruft das Programm direkt ab und cacht sie selbst; Daten gibt es nur für angemeldete Nutzer."
+      ]
+    },
+    {
+      "version": "3.0.1",
+      "date": "2026-10-25",
+      "title": "Aufgeräumte Adressen, Stammdaten nur nach Anmeldung",
+      "show": false,
+      "items": [
+        "Alle Seiten und Schnittstellen sind nur noch ohne Endung erreichbar (z. B. /harke statt /harke.php). Installierte Web-Apps auf Tablets starten weiter über die Einsatzübersicht.",
+        "Die Stammdaten der Einheiten (Ortsverbände, Koordinaten, STEIN-Kennungen) werden nicht mehr als freie Datei ausgeliefert, sondern erst nach der Anmeldung geladen."
+      ]
+    },
+    {
+      "version": "3.0.0",
+      "date": "2026-10-23",
+      "title": "Neue Technik: ein Programm statt PHP",
+      "show": true,
+      "items": [
+        "Die Stabsansicht läuft jetzt als ein einzelnes Programm (Go) ohne PHP, nginx oder weitere Laufzeitumgebung. Bedienung, Seiten und Datenmodell bleiben gleich; die Anwendung wird neu aufgesetzt, Einsätze lassen sich per JSON-Export übernehmen.",
+        "Installation auf einem lokalen Rechner: eine Datei starten, fertig. Datenbank, Sitzungen und Geheimnis werden beim ersten Start im Ordner data/ angelegt, das Admin-Konto mit Initialpasswort ebenfalls.",
+        "Updates ohne Internet: Im Docker-Betrieb wie bisher über Admin > System-Update (Archiv hochladen). Ohne Docker lädt der Admin dort ein neues Programm hoch; Prüfsumme und optional eine minisign-Signatur werden geprüft, danach startet die Anwendung sich selbst neu.",
+        "Anmeldungen bleiben über Neustarts und Updates erhalten, weil die Sitzungen in der Datenbank liegen."
+      ]
+    },
+    {
+      "version": "2.2.1",
+      "date": "2026-10-21",
+      "title": "Sicherheitsupdate PHP (PHP2Shell)",
+      "show": false,
+      "items": [
+        "Das Container-Image wird mit PHP 8.3.36 neu gebaut; damit sind die am 21.10.2026 veröffentlichten Lücken CVE-2026-109618 und CVE-2026-109619 (PHP2Shell) geschlossen. Der Build holt das Basis-Image jetzt immer frisch.",
+        "Als zusätzliche Härtung ist der nicht benötigte Session-Upload-Fortschritt in PHP abgeschaltet."
+      ]
+    },
+    {
+      "version": "2.2.0",
+      "date": "2026-10-14",
+      "title": "Betrieb als Docker-Container mit Setup-Assistent und System-Update",
+      "show": false,
+      "items": [
+        "Die Anwendung lässt sich jetzt als Docker-Container betreiben. Ein einzelnes Skript (docker/setup.sh) fragt die nötigen Angaben ab – Adresse, Mail, optional SMTP, Kartenzentrum, Cloudflare-Tunnel – und startet den Container; nichts muss von Hand in Dateien eingetragen werden. Das Image kommt wahlweise aus der GitHub-Registry (ghcr.io) oder, für Server ohne GitHub-Zugriff, aus einem Archiv, das per Datei auf den Server kopiert wird.",
+        "Neue Admin-Seite „System-Update“ (nur im Docker-Betrieb): Ein Image-Archiv kann direkt im Browser hochgeladen werden, alternativ zieht ein Knopf das aktuelle Image aus der Registry; ein weiterer stellt den vorherigen Stand wieder her. Die Web-App selbst hat dabei keinen Docker-Zugriff – sie legt nur Dateien ab, ein kleiner Host-Dienst (luk-updater) prüft Prüfsumme und optional Signatur, spielt das Image ein, wartet auf den Health-Check und dreht bei Problemen automatisch zurück."
+      ]
+    },
+    {
+      "version": "2.1.7",
+      "date": "2026-10-11",
+      "title": "STEINboard: „im Einsatz“ folgt dem tatsächlichen Status",
+      "show": false,
+      "items": [
+        "STEINboard und STEINmap zeigten Einheiten weiter als „im Einsatz“, obwohl sie längst abgerückt waren. Ursache: Der Server bewertete Einheit und Schichten getrennt – eine abgerückte Einheit mit noch „geplanten“ Schichten (oder umgekehrt eine abgerückte Schicht an einer noch „geplanten“ Einheit) blieb gebunden. Jetzt gilt serverseitig dieselbe Regel wie in Kräfteplanung und Führungsharke: Der Status der Einheit ergibt sich aus ihren Schichten (vor Ort > auf Anfahrt > angefordert > abgerückt), sonst aus der Einheit selbst; abgerückte Einheiten binden nicht mehr, auch nicht über ihre Schichten. Das betrifft das Band „im Einsatz“, den Übernahme-Link und die Verfügbarkeits-Rangfolge im Kräfte-Picker.",
+        "STEIN-Einheiten ohne Gegenstück in den Stammdaten (LuK, OV-Stab, Leitung …) hatten bisher keinen Link „in Einsatz übernehmen“. Jetzt öffnet der Link für sie den Dialog „Neue Einheit“ in der Führungsharke mit vorbelegter Bezeichnung, OV und Funkrufname – ohne Katalog-Verweis.",
+        "Stammdaten ergänzt: Bei zwei Ortsverbänden fehlten Einheiten im Katalog (zweiter Zugtrupp, Trupp ESS, Fachgruppen Ortung und Elektroversorgung); sie bekamen deshalb weder Band noch Übernahme-Link.",
+        "Die Zuordnung STEIN ↔ Stammdaten verlangt nicht mehr die exakte Variante: Meldet STEIN „O (B)“ und der Katalog kennt nur „FGr O“ (oder umgekehrt), wird die Einheit trotzdem erkannt. Die exakte Variante hat weiterhin Vorrang."
+      ]
+    },
+    {
+      "version": "2.1.6",
+      "date": "2026-10-11",
+      "title": "Dreh-Hinweis auch auf der Login-Seite",
+      "show": false,
+      "items": [
+        "Login, Zwei-Faktor-Abfrage und Passwort-vergessen/-zurücksetzen zeigten am Smartphone im Hochformat nur eine leere blaue Seite: Der Dreh-Hinweis war dort abgeschaltet, der Seiteninhalt aber trotzdem ausgeblendet. Jetzt erscheint auf diesen Seiten im Hochformat derselbe Hinweis „Bitte Gerät drehen“ wie überall sonst; im Querformat ist die Anmeldung wie gewohnt möglich."
+      ]
+    },
+    {
+      "version": "2.1.5",
+      "date": "2026-10-10",
+      "title": "Dialoge öffnen mittig",
+      "show": false,
+      "items": [
+        "Alle Dialogfenster öffnen jetzt mittig auf dem Bildschirm statt in der linken oberen Ecke – betroffen waren unter anderem „Neue Karte“ und „Umbenennen“ auf der Lagekarte, die Knoten- und Mitglieder-Dialoge der Führungsharke, der Schichtdialog der Kräfteplanung, die Dialoge der Schadenskonten und der Verwaltung sowie die Druckdialoge.",
+        "Der Druckdialog der STEINmap saß bisher 124 Pixel neben der Mitte; auch das ist behoben.",
+        "Beim Herauszoomen bleiben die Seiten jetzt über die volle Breite nutzbar. Vorher hörte der Inhalt ab einer bestimmten Zoomstufe auf mitzuwachsen und es entstanden blaue Ränder – auf dem Dashboard schon ab etwa 80 %, auf den übrigen Seiten ab etwa 58 %. Die Dashboard-Kacheln teilen sich jetzt immer die volle Breite."
+      ]
+    },
+    {
+      "version": "2.1.4",
+      "date": "2026-10-10",
+      "title": "Lagekarte: Umbenennen statt Titelfeld",
+      "show": false,
+      "items": [
+        "Lagekarte: Das Textfeld unter der Kartenauswahl ist entfallen. Es hat die gewählte Karte stillschweigend umbenannt, sobald man es verließ – sah aber aus wie das Eingabefeld für „+ Neue Karte“. Zum Umbenennen gibt es jetzt den Stift-Knopf neben der Auswahl; er öffnet denselben Dialog wie das Anlegen, nur mit dem bisherigen Namen vorbelegt."
+      ]
+    },
+    {
+      "version": "2.1.3",
+      "date": "2026-10-10",
+      "title": "Einheitliche Fußleiste",
+      "show": false,
+      "items": [
+        "Die Fußleiste ist auf allen Seiten gleich aufgebaut: links zwei Bereiche in fester Reihenfolge – „Einsatz“, dann „Hilfsmittel“, getrennt durch einen senkrechten Strich. Aufgeklappt ist immer der Bereich, in dem die Seite liegt; der andere zeigt nur seinen Namen und führt mit einem Klick dorthin.",
+        "Im Einsatz steht links „Einsatz: Führungsharke · Kräfteplanung · …“, auf einer Hilfsmittel-Seite „Einsatz: <Einsatzname> │ Hilfsmittel: Dashboard · STEINboard · STEINmap“. Der eigene Zurück-Link „← Einsatzname“ ist entfallen, der Einsatzname steht jetzt im Einsatz-Bereich.",
+        "Dashboard: Bei knapper Fensterhöhe wurde bisher die ganze Seite verkleinert – Kopfzeile und Fußleiste waren dort spürbar kleiner als auf den Einsatz-Seiten. Verkleinert wird jetzt nur noch der Kachelbereich, Kopf und Fuß haben überall dieselbe Größe.",
+        "Die gewählte Seite ist überall fett und unterstrichen – vorher war der Hilfsmittel-Bereich immer kleiner und blasser als der Einsatz-Bereich, auch wenn man gerade darin war. Schriftgrößen, Abstände und Trenner sind auf allen Seiten identisch, auch auf STEINboard.",
+        "Einstellungen: Der Abschnitt „Was ist neu“ stand als schwarzer Text direkt auf dem blauen Hintergrund – er trug die Kachel-Klasse der Login-Seiten, die dort nicht geladen wird. Jetzt liegt er wie die anderen Abschnitte in einer weißen Kachel.",
+        "Fußleiste rechts: „Angemeldet: … | Einstellungen | Abmelden“ ist zu einer Schaltfläche zusammengefasst. Name und Rolle stehen auf dem Knopf, ein Klick öffnet darüber ein kleines Menü mit Einstellungen und Abmelden. Dadurch passt die Leiste auf Notebooks wieder in eine Zeile."
+      ]
+    },
+    {
+      "version": "2.1.2",
+      "date": "2026-10-09",
+      "title": "Nachtrag zu 2.1.1",
+      "show": false,
+      "items": [
+        "Kräfteübersicht: Führungsstellen standen dort weiterhin in den Anfahrtsspalten. Ebenso in der Seitenleiste „Auf Anfahrt“ der Führungsharke, in der Infotafel der Lagekarte und in den Einheiten-Zeilen der Schadenskonten. Überall entfernt – den Status führen nur Einheiten und Fachberater.",
+        "Die Höhen-Korrektur am Dashboard kam im Browser nicht an: /css/index.css wurde ohne Versionsangabe eingebunden, nginx liefert statische Dateien aber als „immutable“ aus und der Service Worker bedient sie aus seinem Cache. Alle eigenen CSS- und JS-Dateien tragen jetzt die Versionsangabe."
+      ]
+    },
+    {
+      "version": "2.1.1",
+      "date": "2026-10-09",
+      "title": "Seitenhöhe auf Notebooks",
+      "show": false,
+      "items": [
+        "Kräfteübersicht, Log und Verwaltung: Auf Bildschirmen mit wenig Höhe (zum Beispiel MacBook Air) war die Fußleiste angeschnitten und die ganze Seite ließ sich scrollen. Kopf- und Fußzeile dürfen jetzt beliebig hoch werden, der Inhalt nimmt den Rest ein und scrollt innerhalb der Box.",
+        "Dashboard: Bei knapper Fensterhöhe blieb unten ein Streifen Hintergrund frei. Die Kacheln füllen den Bildschirm jetzt vollständig aus.",
+        "Führungsharke: Im Dialog für Fachberater und interne Einheiten erschienen bisher immer alle Felder. Jetzt stehen dort nur noch die Felder, die zur gewählten Art gehören – „Funktion“ und „Name“ beim Fachberater, die Katalog-Einheit bei der internen Einheit.",
+        "Fußleiste aufgeräumt: „Was ist neu“ ist entfallen, der Dialog öffnet sich weiterhin über die Versionsnummer rechts daneben und über Einstellungen.",
+        "Führungsharke und Kräfteplanung: Führungsstellen (TEL, EAL, Abschnittsleitung) haben keinen eigenen Anforderungs- und Anfahrtsstatus mehr. Den führen die Einheiten und Fachberater, die an dieser Stelle sitzen – die Führungsstelle selbst rückt ja nicht an. In der Kräfteübersicht tauchen Führungsstellen entsprechend nicht mehr in den Anfahrtsspalten auf.",
+        "Fußleiste: Die Hilfsmittel (Dashboard, STEINboard, STEINmap) stehen nur noch auf diesen Seiten selbst ausgeschrieben da. Im Einsatz steht dort das Wort „Hilfsmittel“ und führt auf das Dashboard – so wie umgekehrt auf den Hilfsmittel-Seiten nur „Einsätze“ steht."
+      ]
+    },
+    {
+      "version": "2.1",
+      "date": "2026-10-08",
+      "title": "Kräftekatalog: STEIN-Daten und Verfügbarkeit auf allen Einsatz-Seiten",
+      "show": true,
+      "items": [
+        "Führungsharke: Einheiten können aus dem Kräftekatalog gewählt werden (Bezeichnung tippen, Vorschläge erscheinen). Freie Einheiten des eigenen Bereichs stehen oben, angrenzende Regionalstellen und Nachbar-Landesverbände danach, bereits eingeplante Einheiten unten. Freitext bleibt wie bisher möglich.",
+        "Kräfteplanung: Im Schichtdialog lässt sich die Einheit wählen, die eine Schicht stellt, zum Beispiel für eine Ablösung durch eine andere Einheit. Beim Speichern warnt das System, wenn dieselbe Einheit im Zeitraum schon eingeplant ist, auch in anderen Einsätzen.",
+        "Kräfteplanung: Neuer Bereich „Verfügbare Kräfte“ zum Bewertungszeitpunkt mit Typfilter. Ein Klick legt eine Schicht bei der gewählten Einheit an.",
+        "Lagekarte: Taktische Zeichen direkt aus einer Katalog-Einheit setzen, Layer „Heimatstandorte“ zeigt die Ortsverbände mit ihrer Verfügbarkeit (grün einsatzbereit, gelb bedingt, lila keine Live-Daten, blau im Einsatz, rot nicht einsatzbereit).",
+        "Kräfteübersicht und Dashboard: Entfernung und grobe Fahrzeit vom Heimatstandort zum Einsatzort, Hinweis bei knapper Anfahrt, Kacheln für den eigenen Bereich.",
+        "STEINboard und STEINmap: Einheiten, die in einem offenen Einsatz eingeplant sind, tragen ein Band „im Einsatz“. Aus dem Einsatz-Kontext heraus gibt es „in Einsatz übernehmen“. Einheiten ohne Live-Daten sind überall lila.",
+        "Verwaltung: Je Einsatz können eigener Bereich (Regionalstelle oder Ortsverband), Einsatzort und die Verwendung von STEIN-Live-Daten eingestellt werden.",
+        "Neu ist außerdem dieser Dialog „Was ist neu“: erreichbar über die Versionsnummer unten rechts und unter Einstellungen."
+      ]
+    }
+  ]
+}

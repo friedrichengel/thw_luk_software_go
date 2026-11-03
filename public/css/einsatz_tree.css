@@ -1,0 +1,682 @@
+/* einsatz_tree.css - Tree-Layout fuer den Einsatz-Editor (Knoten-Boxen,
+   Verbindungslinien, Mitglieder-Listen). Wird von einsatz.php geladen.
+   Klassen-Praefix .fh-* ist historisch (frueher fuehrungsharke.css). */
+
+/* ============================================================
+   Druck (Browser-Druckdialog → PDF / Papier)
+   ============================================================ */
+@media print {
+  /* Body und Container neutralisieren */
+  body.ez-printing,
+  body.einsatz-mode-editor {
+    background: white !important;
+    color: black !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+  body.ez-printing .header,
+  body.ez-printing .footer,
+  body.ez-printing .ez-side-box,
+  body.ez-printing .ez-back-link,
+  body.ez-printing #ez-status-badge,
+  body.ez-printing #ez-status,
+  body.ez-printing .ez-editor-head input,
+  body.ez-printing .ez-editor-head a,
+  body.ez-printing .fh-node-actions,
+  body.ez-printing .fh-node-ops,
+  body.ez-printing .fh-add-row,
+  body.ez-printing .fh-section-label,
+  body.ez-printing .ez-tabs,
+  body.ez-printing .ez-status,
+  body.ez-printing dialog {
+    display: none !important;
+  }
+
+  body.ez-printing .container,
+  body.ez-printing .row,
+  body.ez-printing .ez-main-box,
+  body.ez-printing .fh-main-box {
+    display: block !important;
+    background: white !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+    flex: none !important;
+  }
+
+  /* Tree selber zeigt sich an */
+  body.ez-printing .fh-tree {
+    overflow: visible !important;
+    zoom: 1 !important;
+  }
+
+  /* Knoten kontrastreich, nicht ueber Seitenkanten brechen */
+  body.ez-printing .fh-node {
+    background: white !important;
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    color: black !important;
+  }
+
+  /* Verbindungslinien zwischen Knoten (vertikal Eltern->Kind und
+     horizontaler Ruecken zwischen Geschwistern). Werden als
+     Pseudo-Elemente mit background-color gezeichnet - Browser drucken
+     das nur mit print-color-adjust: exact. Farbe auf Schwarz fuer
+     hoechsten Druckkontrast. */
+  body.ez-printing .fh-subtree.fh-has-children > .fh-node::after,
+  body.ez-printing .fh-children > .fh-subtree::before,
+  body.ez-printing .fh-children > .fh-subtree::after {
+    background: #000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Inaktiv-Schraffierung fuer Druck nicht zu blass */
+  body.ez-printing .fh-node-inactive,
+  body.ez-printing .fh-fb-inactive {
+    opacity: 1 !important;
+    filter: none !important;
+  }
+  body.ez-printing .fh-node-inactive .fh-node-title::after,
+  body.ez-printing .fh-fb-inactive .fh-fb-main::after {
+    content: '  (inaktiv)';
+    font-style: italic;
+    color: #555;
+  }
+
+  /* Ampel-Punkt sichtbar im Druck */
+  body.ez-printing .fh-ampel {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    border: 1px solid #000 !important;
+  }
+
+  /* Druck-Header oben auf jeder Seite */
+  body.ez-printing .ez-print-header {
+    text-align: center;
+    margin: 0 0 18px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #000;
+  }
+  body.ez-printing .ez-print-header h1 {
+    font-size: 18pt;
+    margin: 0;
+    color: #000;
+  }
+  body.ez-printing .ez-print-stand {
+    font-size: 10pt;
+    color: #444;
+    margin-top: 4px;
+  }
+
+  /* Querformat als Standard - Tree wird breit */
+  @page { size: A4 landscape; margin: 12mm; }
+}
+
+/* Beim Drucken nicht-printing-Modus zwischenzeitlich neutralisieren */
+body.ez-printing .ez-print-header { display: block; }
+body:not(.ez-printing) .ez-print-header { display: none; }
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 0;
+}
+
+.row {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  width: 100%;
+}
+
+/* Linke Seite: Baum */
+.fh-main-box {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px 0 10px 10px;
+  overflow: auto;
+  box-sizing: border-box;
+  min-height: 0;
+  background: #eef1f7;
+}
+
+.fh-status {
+  background: #fff3cd;
+  border: 1px solid #ffe69c;
+  color: #664d03;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-right: 10px;
+}
+.fh-status.fh-status-error { background: #fde2e1; border-color: #f7b1ad; color: #842029; }
+.fh-status.fh-status-ok    { background: #d1e7dd; border-color: #a3cfbb; color: #0f5132; }
+
+.fh-tree {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: flex-start;
+  padding: 14px 14px 20px 6px;
+  min-width: min-content;
+}
+
+.fh-empty-hint {
+  color: #555;
+  font-size: 14px;
+  padding: 40px 14px;
+  font-style: italic;
+}
+
+/* Ein Sub-Baum (rekursiv): Wurzelknoten oben, Kinder als horizontale Reihe darunter */
+.fh-subtree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.fh-children {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  margin-top: 28px;
+  position: relative;
+}
+
+/* Verbindung Eltern -> Kinder: senkrechte Linie aus dem Elternknoten bis
+   auf den horizontalen Ruecken. margin-top der .fh-children = 28px; die
+   Linie ist 30px lang und ueberlappt den 2px dicken Ruecken so sauber,
+   dass keine Subpixel-Luecke sichtbar wird. */
+.fh-subtree.fh-has-children > .fh-node::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -30px;
+  width: 2px;
+  height: 30px;
+  background: #0a3d91;
+}
+
+/* Stich aus dem horizontalen Balken in jeden Kind-Kopf */
+.fh-children > .fh-subtree {
+  position: relative;
+  padding-top: 14px;
+}
+.fh-children > .fh-subtree::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 14px;
+  background: #0a3d91;
+}
+
+/* Horizontaler Balken (der "Rücken" der Harke): pro Kind ein Segment, das die
+   Haelfte des gap (12px bei gap:24px) in die Nachbar-Luecke hineinragt. Beim
+   ersten Kind beginnt der Rücken erst in der Mitte, beim letzten endet er
+   in der Mitte. Bei nur einem Kind entfaellt der Ruecken komplett. */
+.fh-children > .fh-subtree::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -12px;
+  right: -12px;
+  height: 2px;
+  background: #0a3d91;
+}
+.fh-children > .fh-subtree:first-child::after { left: 50%; }
+.fh-children > .fh-subtree:last-child::after  { right: 50%; }
+.fh-children.fh-single > .fh-subtree::after   { display: none; }
+
+/* Knoten (Karte) */
+.fh-node {
+  position: relative;
+  background: #fff;
+  border: 2px solid #0a3d91;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 8px 10px;
+  min-width: 220px;
+  max-width: 260px;
+  box-sizing: border-box;
+  font-size: 12px;
+  color: #222;
+}
+.fh-node.fh-type-einheit {
+  border-color: #2e7d32;
+  background: #f5faf5;
+}
+.fh-node.fh-type-fuehrung {
+  border-color: #0a3d91;
+  background: #f3f6ff;
+}
+
+.fh-node-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.fh-node-type-badge {
+  flex: 0 0 auto;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: #0a3d91;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+.fh-type-einheit .fh-node-type-badge { background: #2e7d32; }
+
+.fh-node-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0a3d91;
+  word-break: break-word;
+}
+.fh-type-einheit .fh-node-title { color: #1f5924; }
+
+.fh-node-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+.fh-node-meta-row {
+  display: flex;
+  gap: 4px;
+  font-size: 11px;
+  line-height: 1.35;
+}
+.fh-node-meta-label {
+  flex: 0 0 auto;
+  width: 52px;
+  color: #555;
+  font-weight: 600;
+}
+.fh-node-meta-val {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: #222;
+  word-break: break-word;
+}
+.fh-node-meta-val.fh-empty { color: #999; font-style: italic; }
+
+.fh-node-staerke-sum {
+  margin-top: 4px;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 10px;
+  color: #0a3d91;
+  background: #e3ecff;
+  border: 1px solid #cfd6e6;
+  border-radius: 3px;
+  padding: 1px 6px;
+  display: inline-block;
+}
+
+.fh-node-note {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #555;
+  font-style: italic;
+  white-space: pre-wrap;
+}
+
+/* Fachberater-Liste innerhalb einer Fuehrungsstelle */
+.fh-fb-list {
+  margin-top: 6px;
+  border-top: 1px dashed #cfd6e6;
+  padding-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.fh-fb-item {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 11px;
+  padding: 2px 4px;
+  background: #fff8e1;
+  border: 1px solid #f0dca8;
+  border-radius: 4px;
+}
+.fh-fb-item-label {
+  flex: 0 0 auto;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: #b26a00;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.fh-fb-item-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: #442c00;
+  word-break: break-word;
+}
+.fh-fb-item-actions {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 2px;
+}
+.fh-fb-btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  line-height: 1;
+  font-size: 11px;
+  background: transparent;
+  color: #b26a00;
+  border: 1px solid #e0c88a;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.fh-fb-btn:hover { background: #fff1c7; }
+.fh-fb-btn.fh-danger { color: #b23a48; border-color: #e4c0c4; }
+.fh-fb-btn.fh-danger:hover { background: #fde2e1; }
+
+/* Action-Leiste unten auf dem Knoten */
+.fh-node-actions {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  border-top: 1px solid #e4e8f1;
+  padding-top: 5px;
+}
+.fh-action-btn {
+  flex: 0 0 auto;
+  padding: 3px 7px;
+  font-size: 10px;
+  font-weight: 600;
+  background: #fff;
+  color: #0a3d91;
+  border: 1px solid #0a3d91;
+  border-radius: 4px;
+  cursor: pointer;
+  line-height: 1.2;
+}
+.fh-action-btn:hover { background: #e3ecff; }
+.fh-action-btn.fh-primary { background: #0a3d91; color: #fff; }
+.fh-action-btn.fh-primary:hover { background: #0d4bb0; }
+.fh-action-btn.fh-danger { color: #b23a48; border-color: #e4c0c4; background: #fff; }
+.fh-action-btn.fh-danger:hover { background: #fde2e1; }
+
+/* Neue Root-Struktur anlegen */
+.fh-root-add-row {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px;
+  margin: 0 14px 10px 6px;
+  background: #fff;
+  border: 1px dashed #cfd6e6;
+  border-radius: 10px;
+}
+.fh-root-add-row button {
+  padding: 7px 14px;
+  font-size: 13px;
+  background: #0a3d91;
+  color: #fff;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.fh-root-add-row button:hover { background: #0d4bb0; }
+
+/* Rechte Sidebar */
+.fh-side-box {
+  flex: 1;
+  max-width: 380px;
+  min-width: 300px;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-y: auto;
+  margin: 10px 10px 10px 10px;
+}
+
+.fh-section {
+  background: #fff;
+  border: 1px solid #e4e8f1;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.fh-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #0a3d91;
+}
+.fh-row { margin-bottom: 10px; }
+.fh-row:last-child { margin-bottom: 0; }
+.fh-row-split { display: flex; gap: 6px; }
+.fh-row-split > * { flex: 1; }
+
+.fh-side-box input[type="text"],
+.fh-side-box input[type="search"] {
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 14px;
+  border: 1px solid #cfd6e6;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background: #fff;
+  color: #222;
+}
+.fh-side-box input:focus {
+  outline: none;
+  border-color: #0a3d91;
+  box-shadow: 0 0 0 2px rgba(10,61,145,0.15);
+}
+.fh-side-box button {
+  padding: 7px 12px;
+  font-size: 14px;
+  background-color: #0a3d91;
+  color: #fff;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.fh-side-box button:hover:not(:disabled) { background-color: #0d4bb0; }
+.fh-side-box button:disabled { background-color: #9aa6c4; cursor: not-allowed; opacity: 0.75; }
+#fh-print-btn { width: 100%; background-color: #d94b2b; }
+#fh-print-btn:hover { background-color: #bc3d21; }
+
+.fh-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+}
+
+.fh-staerke-overview {
+  font-size: 13px;
+  background: #f7f9fd;
+  border: 1px solid #cfd6e6;
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.fh-staerke-overview .fh-staerke-total {
+  font-weight: 700;
+  color: #0a3d91;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e4e8f1;
+  margin-bottom: 6px;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+.fh-staerke-overview ul { list-style: none; padding: 0; margin: 0; }
+.fh-staerke-overview li {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  font-size: 12px;
+}
+.fh-staerke-overview .fh-staerke-val {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  color: #0a3d91;
+}
+
+.fh-hints {
+  list-style: disc;
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12px;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Dialog */
+.fh-dialog {
+  border: none;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 520px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.fh-dialog::backdrop { background: rgba(0,0,0,0.35); }
+.fh-dialog h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  color: #0a3d91;
+}
+.fh-dialog label {
+  display: block;
+  font-weight: 600;
+  margin: 10px 0 4px;
+  font-size: 14px;
+  color: #333;
+}
+.fh-dialog input[type="text"],
+.fh-dialog select,
+.fh-dialog textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  font-family: inherit;
+  background: #fff;
+  color: #222;
+}
+.fh-dialog textarea { resize: vertical; }
+.fh-dialog-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+.fh-dialog-actions button {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #fff;
+  color: #333;
+}
+.fh-dialog-actions button:first-child {
+  background: #0a3d91;
+  color: #fff;
+  border-color: #0a3d91;
+  font-weight: 600;
+}
+.fh-dialog-actions button:first-child:hover { background: #0d4bb0; }
+
+.fh-load-list {
+  max-height: 50vh;
+  overflow-y: auto;
+  border: 1px solid #e4e8f1;
+  border-radius: 6px;
+}
+.fh-load-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #eef1f7;
+}
+.fh-load-row:last-child { border-bottom: 0; }
+.fh-load-row .fh-load-name {
+  flex: 1;
+  font-weight: 600;
+  color: #222;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fh-load-row .fh-load-date {
+  color: #666;
+  font-size: 12px;
+  flex: 0 0 auto;
+}
+.fh-load-row button {
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: 0;
+  background: #0a3d91;
+  color: #fff;
+  cursor: pointer;
+}
+.fh-load-row button.fh-danger {
+  background: #b23a48;
+}
+.fh-load-row button:hover { opacity: 0.9; }
+
+/* Read-only */
+body.fh-readonly .fh-node-actions,
+body.fh-readonly .fh-fb-item-actions,
+body.fh-readonly .fh-root-add-row {
+  display: none !important;
+}
+
+/* Druck */
+@media print {
+  body { background: #fff; }
+  .header, .footer, .fh-side-box, .fh-root-add-row, .fh-node-actions, .fh-fb-item-actions, .fh-status { display: none !important; }
+  .container, .row { display: block; }
+  .fh-main-box { overflow: visible !important; background: #fff; padding: 0; }
+  .fh-tree { padding: 0; }
+  .fh-subtree, .fh-node, .fh-children, .fh-fb-list { break-inside: avoid; page-break-inside: avoid; }
+  .fh-node { box-shadow: none; }
+}

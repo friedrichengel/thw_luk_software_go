@@ -1,0 +1,3748 @@
+{
+ "Bundeswehr_Einheiten": {
+  "label": "Bundeswehr Einheiten",
+  "items": [
+   {
+    "file": "Einheit_der_Bundeswehr.svg",
+    "label": "Einheit der Bundeswehr"
+   }
+  ]
+ },
+ "Bundeswehr_Fahrzeuge": {
+  "label": "Bundeswehr Fahrzeuge",
+  "items": [
+   {
+    "file": "Kettenfahrzeug.svg",
+    "label": "Kettenfahrzeug"
+   },
+   {
+    "file": "Kraftfahrzeug.svg",
+    "label": "Kraftfahrzeug"
+   },
+   {
+    "file": "Kraftfahrzeug_geländegängig.svg",
+    "label": "Kraftfahrzeug geländegängig"
+   }
+  ]
+ },
+ "Bundeswehr_Personen": {
+  "label": "Bundeswehr Personen",
+  "items": [
+   {
+    "file": "Führungskraft.svg",
+    "label": "Führungskraft"
+   },
+   {
+    "file": "Gruppenführer.svg",
+    "label": "Gruppenführer"
+   },
+   {
+    "file": "Person_mit_Sonderfunktion.svg",
+    "label": "Person mit Sonderfunktion"
+   },
+   {
+    "file": "Staffelführer.svg",
+    "label": "Staffelführer"
+   },
+   {
+    "file": "Truppführer.svg",
+    "label": "Truppführer"
+   },
+   {
+    "file": "Zugführer.svg",
+    "label": "Zugführer"
+   }
+  ]
+ },
+ "Einheiten": {
+  "label": "Einheiten",
+  "items": [
+   {
+    "file": "Führungsgruppe.svg",
+    "label": "Führungsgruppe"
+   },
+   {
+    "file": "Führungsstaffel.svg",
+    "label": "Führungsstaffel"
+   },
+   {
+    "file": "Führungstrupp.svg",
+    "label": "Führungstrupp"
+   },
+   {
+    "file": "Gruppe.svg",
+    "label": "Gruppe"
+   },
+   {
+    "file": "Staffel.svg",
+    "label": "Staffel"
+   },
+   {
+    "file": "Trupp.svg",
+    "label": "Trupp"
+   },
+   {
+    "file": "Zug.svg",
+    "label": "Zug"
+   }
+  ]
+ },
+ "Einrichtungen": {
+  "label": "Einrichtungen",
+  "items": [
+   {
+    "file": "Behandlungsplatz.svg",
+    "label": "Behandlungsplatz"
+   },
+   {
+    "file": "Belegungsstelle.svg",
+    "label": "Belegungsstelle"
+   },
+   {
+    "file": "Bereitstellungsraum.svg",
+    "label": "Bereitstellungsraum"
+   },
+   {
+    "file": "Bereitstellungsraum_mit_Führungsstelle.svg",
+    "label": "Bereitstellungsraum mit Führungsstelle"
+   },
+   {
+    "file": "Bereitstellungsraum_mit_Meldekopf.svg",
+    "label": "Bereitstellungsraum mit Meldekopf"
+   },
+   {
+    "file": "Betreuungsstelle.svg",
+    "label": "Betreuungsstelle"
+   },
+   {
+    "file": "Elektroversorgung.svg",
+    "label": "Elektroversorgung"
+   },
+   {
+    "file": "Entsorgungsstelle.svg",
+    "label": "Entsorgungsstelle"
+   },
+   {
+    "file": "Feldlager.svg",
+    "label": "Feldlager"
+   },
+   {
+    "file": "Halteplatz_für_Fahrzeuge_zum_Verletztentransport.svg",
+    "label": "Halteplatz für Fahrzeuge zum Verletztentransport"
+   },
+   {
+    "file": "Hubschrauberlandeplatz.svg",
+    "label": "Hubschrauberlandeplatz"
+   },
+   {
+    "file": "Leitstelle.svg",
+    "label": "Leitstelle"
+   },
+   {
+    "file": "Logistikstützpunkt.svg",
+    "label": "Logistikstützpunkt"
+   },
+   {
+    "file": "Lotsenstelle.svg",
+    "label": "Lotsenstelle"
+   },
+   {
+    "file": "Meldekopf.svg",
+    "label": "Meldekopf"
+   },
+   {
+    "file": "Sammelstelle.svg",
+    "label": "Sammelstelle"
+   },
+   {
+    "file": "Stelle.svg",
+    "label": "Stelle"
+   },
+   {
+    "file": "Stelle_Betrieb.svg",
+    "label": "Stelle Betrieb"
+   },
+   {
+    "file": "Stelle_Infrastruktur.svg",
+    "label": "Stelle Infrastruktur"
+   },
+   {
+    "file": "Trinkwasserversorgung.svg",
+    "label": "Trinkwasserversorgung"
+   },
+   {
+    "file": "Versorgungsstelle_Materialerhaltung.svg",
+    "label": "Versorgungsstelle Materialerhaltung"
+   },
+   {
+    "file": "Versorgungsstelle_Verbrauchsgüter.svg",
+    "label": "Versorgungsstelle Verbrauchsgüter"
+   },
+   {
+    "file": "Versorgungsstelle_Verpflegung.svg",
+    "label": "Versorgungsstelle Verpflegung"
+   },
+   {
+    "file": "Wache.svg",
+    "label": "Wache"
+   },
+   {
+    "file": "Werkstatt.svg",
+    "label": "Werkstatt"
+   }
+  ]
+ },
+ "Fahrzeuge": {
+  "label": "Fahrzeuge",
+  "items": [
+   {
+    "file": "Abrollbehälter_Container.svg",
+    "label": "Abrollbehälter Container"
+   },
+   {
+    "file": "Anhänger.svg",
+    "label": "Anhänger"
+   },
+   {
+    "file": "Fahrrad.svg",
+    "label": "Fahrrad"
+   },
+   {
+    "file": "Fahrzeug.svg",
+    "label": "Fahrzeug"
+   },
+   {
+    "file": "Flugzeug.svg",
+    "label": "Flugzeug"
+   },
+   {
+    "file": "Hubschrauber.svg",
+    "label": "Hubschrauber"
+   },
+   {
+    "file": "Kettenfahrzeug.svg",
+    "label": "Kettenfahrzeug"
+   },
+   {
+    "file": "Kraftfahrzeug.svg",
+    "label": "Kraftfahrzeug"
+   },
+   {
+    "file": "Kraftfahrzeug_geländegängig.svg",
+    "label": "Kraftfahrzeug geländegängig"
+   },
+   {
+    "file": "Kraftrad.svg",
+    "label": "Kraftrad"
+   },
+   {
+    "file": "Schienenfahrzeug.svg",
+    "label": "Schienenfahrzeug"
+   },
+   {
+    "file": "Wasserfahrzeug.svg",
+    "label": "Wasserfahrzeug"
+   },
+   {
+    "file": "Wechselladerfahrzeug.svg",
+    "label": "Wechselladerfahrzeug"
+   }
+  ]
+ },
+ "Fernmeldewesen": {
+  "label": "Fernmeldewesen",
+  "items": [
+   {
+    "file": "AWINAP-AWITEL.svg",
+    "label": "AWINAP-AWITEL"
+   },
+   {
+    "file": "AWINAP-Funkbrücke-2m.svg",
+    "label": "AWINAP-Funkbrücke-2m"
+   },
+   {
+    "file": "AWINAP-Funkbrücke-4m.svg",
+    "label": "AWINAP-Funkbrücke-4m"
+   },
+   {
+    "file": "AWINAP-Funkbrücke.svg",
+    "label": "AWINAP-Funkbrücke"
+   },
+   {
+    "file": "AWINAP-OB.svg",
+    "label": "AWINAP-OB"
+   },
+   {
+    "file": "AWINAP-Telefonnetz.svg",
+    "label": "AWINAP-Telefonnetz"
+   },
+   {
+    "file": "AWINAP.svg",
+    "label": "AWINAP"
+   },
+   {
+    "file": "Abholpunkt.svg",
+    "label": "Abholpunkt"
+   },
+   {
+    "file": "Anschlusspunkt.svg",
+    "label": "Anschlusspunkt"
+   },
+   {
+    "file": "Antenne.svg",
+    "label": "Antenne"
+   },
+   {
+    "file": "Antenne_Bake.svg",
+    "label": "Antenne Bake"
+   },
+   {
+    "file": "Antenne_Empfang.svg",
+    "label": "Antenne Empfang"
+   },
+   {
+    "file": "Antenne_Peil.svg",
+    "label": "Antenne Peil"
+   },
+   {
+    "file": "Antenne_Peiler.svg",
+    "label": "Antenne Peiler"
+   },
+   {
+    "file": "Antenne_Pol_H.svg",
+    "label": "Antenne Pol H"
+   },
+   {
+    "file": "Antenne_Pol_V.svg",
+    "label": "Antenne Pol V"
+   },
+   {
+    "file": "Antenne_Pol_Zirk.svg",
+    "label": "Antenne Pol Zirk"
+   },
+   {
+    "file": "Antenne_Richt.svg",
+    "label": "Antenne Richt"
+   },
+   {
+    "file": "Antenne_SE_Gleichzeitig.svg",
+    "label": "Antenne SE Gleichzeitig"
+   },
+   {
+    "file": "Antenne_SE_Wechselnd.svg",
+    "label": "Antenne SE Wechselnd"
+   },
+   {
+    "file": "Antenne_Sende.svg",
+    "label": "Antenne Sende"
+   },
+   {
+    "file": "Basisstation.svg",
+    "label": "Basisstation"
+   },
+   {
+    "file": "Basisstation_DECT.svg",
+    "label": "Basisstation DECT"
+   },
+   {
+    "file": "Bedingung.svg",
+    "label": "Bedingung"
+   },
+   {
+    "file": "Bedingung_AWITEL.svg",
+    "label": "Bedingung AWITEL"
+   },
+   {
+    "file": "Bedingung_DMO.svg",
+    "label": "Bedingung DMO"
+   },
+   {
+    "file": "Bedingung_Fax.svg",
+    "label": "Bedingung Fax"
+   },
+   {
+    "file": "Bedingung_Nebenstelle.svg",
+    "label": "Bedingung Nebenstelle"
+   },
+   {
+    "file": "Bedingung_OB.svg",
+    "label": "Bedingung OB"
+   },
+   {
+    "file": "Bedingung_TMO.svg",
+    "label": "Bedingung TMO"
+   },
+   {
+    "file": "Bedingung_Telefon.svg",
+    "label": "Bedingung Telefon"
+   },
+   {
+    "file": "Datenfernsprechverbindung.svg",
+    "label": "Datenfernsprechverbindung"
+   },
+   {
+    "file": "Datenfunk.svg",
+    "label": "Datenfunk"
+   },
+   {
+    "file": "Datenverbindung.svg",
+    "label": "Datenverbindung"
+   },
+   {
+    "file": "Digitaler_Sprechfunk.svg",
+    "label": "Digitaler Sprechfunk"
+   },
+   {
+    "file": "Endgerät_Fernsprechen.svg",
+    "label": "Endgerät Fernsprechen"
+   },
+   {
+    "file": "Endgerät_Sprechfunk.svg",
+    "label": "Endgerät Sprechfunk"
+   },
+   {
+    "file": "Fahrzeugfunkgerät_digital.svg",
+    "label": "Fahrzeugfunkgerät digital"
+   },
+   {
+    "file": "Faxgerät.svg",
+    "label": "Faxgerät"
+   },
+   {
+    "file": "Fernsprechen_über_Draht.svg",
+    "label": "Fernsprechen über Draht"
+   },
+   {
+    "file": "Fernsprechen_über_Funk.svg",
+    "label": "Fernsprechen über Funk"
+   },
+   {
+    "file": "Fernsprechvermittlung.svg",
+    "label": "Fernsprechvermittlung"
+   },
+   {
+    "file": "Fernsprechvermittlung_OB10.svg",
+    "label": "Fernsprechvermittlung OB10"
+   },
+   {
+    "file": "Fernsprechvermittlung_OB10_2AZ.svg",
+    "label": "Fernsprechvermittlung OB10 2AZ"
+   },
+   {
+    "file": "Fernsprechvermittlung_OB20.svg",
+    "label": "Fernsprechvermittlung OB20"
+   },
+   {
+    "file": "Fernsprechvermittlung_OB30.svg",
+    "label": "Fernsprechvermittlung OB30"
+   },
+   {
+    "file": "Fernsprechvermittlung_OB30_4AZ.svg",
+    "label": "Fernsprechvermittlung OB30 4AZ"
+   },
+   {
+    "file": "Fernsprechvermittlung_Wählbetrieb.svg",
+    "label": "Fernsprechvermittlung Wählbetrieb"
+   },
+   {
+    "file": "Firewall.svg",
+    "label": "Firewall"
+   },
+   {
+    "file": "FuG_10.svg",
+    "label": "FuG 10"
+   },
+   {
+    "file": "FuG_10a.svg",
+    "label": "FuG 10a"
+   },
+   {
+    "file": "FuG_11b.svg",
+    "label": "FuG 11b"
+   },
+   {
+    "file": "FuG_13b.svg",
+    "label": "FuG 13b"
+   },
+   {
+    "file": "FuG_7b.svg",
+    "label": "FuG 7b"
+   },
+   {
+    "file": "FuG_8.svg",
+    "label": "FuG 8"
+   },
+   {
+    "file": "FuG_8b.svg",
+    "label": "FuG 8b"
+   },
+   {
+    "file": "FuG_8b1.svg",
+    "label": "FuG 8b1"
+   },
+   {
+    "file": "FuG_8b1_Relais.svg",
+    "label": "FuG 8b1 Relais"
+   },
+   {
+    "file": "FuG_8c.svg",
+    "label": "FuG 8c"
+   },
+   {
+    "file": "FuG_8c_Relais.svg",
+    "label": "FuG 8c Relais"
+   },
+   {
+    "file": "FuG_9.svg",
+    "label": "FuG 9"
+   },
+   {
+    "file": "FuG_9c.svg",
+    "label": "FuG 9c"
+   },
+   {
+    "file": "FuG_9c_Relais.svg",
+    "label": "FuG 9c Relais"
+   },
+   {
+    "file": "FuG_Relais.svg",
+    "label": "FuG Relais"
+   },
+   {
+    "file": "Funk_Feststation_digital.svg",
+    "label": "Funk Feststation digital"
+   },
+   {
+    "file": "Funkstation.svg",
+    "label": "Funkstation"
+   },
+   {
+    "file": "Handfunkgerät_digital.svg",
+    "label": "Handfunkgerät digital"
+   },
+   {
+    "file": "Hub.svg",
+    "label": "Hub"
+   },
+   {
+    "file": "Kabel_Akb.svg",
+    "label": "Kabel Akb"
+   },
+   {
+    "file": "Kabel_FFkb.svg",
+    "label": "Kabel FFkb"
+   },
+   {
+    "file": "Kabel_Fkb.svg",
+    "label": "Kabel Fkb"
+   },
+   {
+    "file": "Kabel_LWL.svg",
+    "label": "Kabel LWL"
+   },
+   {
+    "file": "Kabel_Vkb.svg",
+    "label": "Kabel Vkb"
+   },
+   {
+    "file": "Kabelbau.svg",
+    "label": "Kabelbau"
+   },
+   {
+    "file": "Kabelbau_leicht.svg",
+    "label": "Kabelbau leicht"
+   },
+   {
+    "file": "Kabelbau_schwer.svg",
+    "label": "Kabelbau schwer"
+   },
+   {
+    "file": "Kofferfunkgerät_digital.svg",
+    "label": "Kofferfunkgerät digital"
+   },
+   {
+    "file": "Längenverbindung-1.svg",
+    "label": "Längenverbindung-1"
+   },
+   {
+    "file": "Längenverbindung-2.svg",
+    "label": "Längenverbindung-2"
+   },
+   {
+    "file": "Modem.svg",
+    "label": "Modem"
+   },
+   {
+    "file": "Netzwerkbrücke.svg",
+    "label": "Netzwerkbrücke"
+   },
+   {
+    "file": "Netzübergang.svg",
+    "label": "Netzübergang"
+   },
+   {
+    "file": "OB_Telefon.svg",
+    "label": "OB Telefon"
+   },
+   {
+    "file": "PC.svg",
+    "label": "PC"
+   },
+   {
+    "file": "RS2.svg",
+    "label": "RS2"
+   },
+   {
+    "file": "RS2_2m-2m.svg",
+    "label": "RS2 2m-2m"
+   },
+   {
+    "file": "RS2_2m-4m.svg",
+    "label": "RS2 2m-4m"
+   },
+   {
+    "file": "RS2_4m-4m.svg",
+    "label": "RS2 4m-4m"
+   },
+   {
+    "file": "Relaisfunkbetrieb.svg",
+    "label": "Relaisfunkbetrieb"
+   },
+   {
+    "file": "Repeaterstation.svg",
+    "label": "Repeaterstation"
+   },
+   {
+    "file": "Richtfunk.svg",
+    "label": "Richtfunk"
+   },
+   {
+    "file": "Richtfunk_Endstelle.svg",
+    "label": "Richtfunk Endstelle"
+   },
+   {
+    "file": "Richtfunk_Endstelle_mit_Übertragungstechnik.svg",
+    "label": "Richtfunk Endstelle mit Übertragungstechnik"
+   },
+   {
+    "file": "Richtfunk_Relaisstelle.svg",
+    "label": "Richtfunk Relaisstelle"
+   },
+   {
+    "file": "Router.svg",
+    "label": "Router"
+   },
+   {
+    "file": "Server.svg",
+    "label": "Server"
+   },
+   {
+    "file": "Switch.svg",
+    "label": "Switch"
+   },
+   {
+    "file": "Untersuchungsstelle.svg",
+    "label": "Untersuchungsstelle"
+   },
+   {
+    "file": "Verteiler.svg",
+    "label": "Verteiler"
+   },
+   {
+    "file": "Wähltelefon.svg",
+    "label": "Wähltelefon"
+   },
+   {
+    "file": "Wähltelefon_AWITEL.svg",
+    "label": "Wähltelefon AWITEL"
+   },
+   {
+    "file": "Wähltelefon_IP.svg",
+    "label": "Wähltelefon IP"
+   },
+   {
+    "file": "Wähltelefon_ISDN.svg",
+    "label": "Wähltelefon ISDN"
+   },
+   {
+    "file": "Wähltelefon_Satellit.svg",
+    "label": "Wähltelefon Satellit"
+   },
+   {
+    "file": "Wähltelefon_Up0.svg",
+    "label": "Wähltelefon Up0"
+   },
+   {
+    "file": "Wähltelefon_analog.svg",
+    "label": "Wähltelefon analog"
+   },
+   {
+    "file": "Übertrager-1.svg",
+    "label": "Übertrager-1"
+   },
+   {
+    "file": "Übertrager-2.svg",
+    "label": "Übertrager-2"
+   }
+  ]
+ },
+ "Feuerwehr_Einheiten": {
+  "label": "Feuerwehr Einheiten",
+  "items": [
+   {
+    "file": "ABC_Erkundungsgruppe.svg",
+    "label": "ABC Erkundungsgruppe"
+   },
+   {
+    "file": "Dekontaminationsgruppe_Gerät.svg",
+    "label": "Dekontaminationsgruppe Gerät"
+   },
+   {
+    "file": "Dekontaminationsgruppe_Personen.svg",
+    "label": "Dekontaminationsgruppe Personen"
+   },
+   {
+    "file": "Fernsprech_Bau_und_Betriebstrupp.svg",
+    "label": "Fernsprech Bau und Betriebstrupp"
+   },
+   {
+    "file": "Führungsgruppe_Feuerwehrbereitschaft.svg",
+    "label": "Führungsgruppe Feuerwehrbereitschaft"
+   },
+   {
+    "file": "Führungsgruppe_TEL.svg",
+    "label": "Führungsgruppe TEL"
+   },
+   {
+    "file": "Gefahrstoffzug_ABC_Zug.svg",
+    "label": "Gefahrstoffzug ABC Zug"
+   },
+   {
+    "file": "IuK_Zug.svg",
+    "label": "IuK Zug"
+   },
+   {
+    "file": "Löschgruppe.svg",
+    "label": "Löschgruppe"
+   },
+   {
+    "file": "Löschstaffel.svg",
+    "label": "Löschstaffel"
+   },
+   {
+    "file": "Löschtrupp.svg",
+    "label": "Löschtrupp"
+   },
+   {
+    "file": "Löschzug.svg",
+    "label": "Löschzug"
+   },
+   {
+    "file": "Löschzug_Berufsfeuerwehr.svg",
+    "label": "Löschzug Berufsfeuerwehr"
+   },
+   {
+    "file": "Löschzug_Freiwillige_Feuerwehr.svg",
+    "label": "Löschzug Freiwillige Feuerwehr"
+   },
+   {
+    "file": "Löschzug_Wasser.svg",
+    "label": "Löschzug Wasser"
+   },
+   {
+    "file": "Löschzug_Werkfeuerwehr.svg",
+    "label": "Löschzug Werkfeuerwehr"
+   },
+   {
+    "file": "RettR-UAV_Erkundungsgruppe.svg",
+    "label": "RettR-UAV Erkundungsgruppe"
+   },
+   {
+    "file": "RettR-UAV_Erkundungsstaffel.svg",
+    "label": "RettR-UAV Erkundungsstaffel"
+   },
+   {
+    "file": "RettR-UAV_Erkundungstrupp.svg",
+    "label": "RettR-UAV Erkundungstrupp"
+   },
+   {
+    "file": "Sprechfunkbetriebstrupp.svg",
+    "label": "Sprechfunkbetriebstrupp"
+   },
+   {
+    "file": "Versorgungstrupp_Materialerhaltung.svg",
+    "label": "Versorgungstrupp Materialerhaltung"
+   },
+   {
+    "file": "Versorgungstrupp_Verbrauchsgüter.svg",
+    "label": "Versorgungstrupp Verbrauchsgüter"
+   }
+  ]
+ },
+ "Feuerwehr_Fahrzeuge": {
+  "label": "Feuerwehr Fahrzeuge",
+  "items": [
+   {
+    "file": "Abrollbehälter_Container.svg",
+    "label": "Abrollbehälter Container"
+   },
+   {
+    "file": "Drehleiter_mit_Korb.svg",
+    "label": "Drehleiter mit Korb"
+   },
+   {
+    "file": "ELW_1.svg",
+    "label": "ELW 1"
+   },
+   {
+    "file": "ELW_2.svg",
+    "label": "ELW 2"
+   },
+   {
+    "file": "Feuerwehranhänger.svg",
+    "label": "Feuerwehranhänger"
+   },
+   {
+    "file": "Feuerwehrboot.svg",
+    "label": "Feuerwehrboot"
+   },
+   {
+    "file": "Gerätewagen_Atemschutz.svg",
+    "label": "Gerätewagen Atemschutz"
+   },
+   {
+    "file": "Gerätewagen_Gefahrgut.svg",
+    "label": "Gerätewagen Gefahrgut"
+   },
+   {
+    "file": "Gerätewagen_Logistik.svg",
+    "label": "Gerätewagen Logistik"
+   },
+   {
+    "file": "Gerätewagen_Logistik_1.svg",
+    "label": "Gerätewagen Logistik 1"
+   },
+   {
+    "file": "Gerätewagen_Logistik_2.svg",
+    "label": "Gerätewagen Logistik 2"
+   },
+   {
+    "file": "HLF.svg",
+    "label": "HLF"
+   },
+   {
+    "file": "KTW.svg",
+    "label": "KTW"
+   },
+   {
+    "file": "Kraftfahrzeug.svg",
+    "label": "Kraftfahrzeug"
+   },
+   {
+    "file": "Kraftfahrzeug_Geländegängig.svg",
+    "label": "Kraftfahrzeug Geländegängig"
+   },
+   {
+    "file": "LF_16-TS.svg",
+    "label": "LF 16-TS"
+   },
+   {
+    "file": "LF_24-50.svg",
+    "label": "LF 24-50"
+   },
+   {
+    "file": "LF_8-6.svg",
+    "label": "LF 8-6"
+   },
+   {
+    "file": "LF_KatS.svg",
+    "label": "LF KatS"
+   },
+   {
+    "file": "Löschfahrzeug.svg",
+    "label": "Löschfahrzeug"
+   },
+   {
+    "file": "Messfahrzeug.svg",
+    "label": "Messfahrzeug"
+   },
+   {
+    "file": "Notarzteinsatzfahrzeug.svg",
+    "label": "Notarzteinsatzfahrzeug"
+   },
+   {
+    "file": "Notarztwagen.svg",
+    "label": "Notarztwagen"
+   },
+   {
+    "file": "RTW.svg",
+    "label": "RTW"
+   },
+   {
+    "file": "Reaktorerkundungskraftwagen.svg",
+    "label": "Reaktorerkundungskraftwagen"
+   },
+   {
+    "file": "Rüstwagen.svg",
+    "label": "Rüstwagen"
+   },
+   {
+    "file": "Schlauchwagen.svg",
+    "label": "Schlauchwagen"
+   },
+   {
+    "file": "TLF_16-25.svg",
+    "label": "TLF 16-25"
+   },
+   {
+    "file": "TLF_2000.svg",
+    "label": "TLF 2000"
+   },
+   {
+    "file": "TLF_3000.svg",
+    "label": "TLF 3000"
+   },
+   {
+    "file": "TLF_4000.svg",
+    "label": "TLF 4000"
+   },
+   {
+    "file": "Tanklöschfahrzeug.svg",
+    "label": "Tanklöschfahrzeug"
+   },
+   {
+    "file": "Wechselladerfahrzeug.svg",
+    "label": "Wechselladerfahrzeug"
+   }
+  ]
+ },
+ "Feuerwehr_Gebäude": {
+  "label": "Feuerwehr Gebäude",
+  "items": [
+   {
+    "file": "Feuerwehrgerätehaus.svg",
+    "label": "Feuerwehrgerätehaus"
+   }
+  ]
+ },
+ "Feuerwehr_Personen": {
+  "label": "Feuerwehr Personen",
+  "items": [
+   {
+    "file": "Angriffstruppführer.svg",
+    "label": "Angriffstruppführer"
+   },
+   {
+    "file": "Angriffstruppmann.svg",
+    "label": "Angriffstruppmann"
+   },
+   {
+    "file": "Einsatzabschnittsleiter_Feuerwehr.svg",
+    "label": "Einsatzabschnittsleiter Feuerwehr"
+   },
+   {
+    "file": "Gruppenführer.svg",
+    "label": "Gruppenführer"
+   },
+   {
+    "file": "Maschinist.svg",
+    "label": "Maschinist"
+   },
+   {
+    "file": "Melder.svg",
+    "label": "Melder"
+   },
+   {
+    "file": "RettR_Bildauswerter.svg",
+    "label": "RettR Bildauswerter"
+   },
+   {
+    "file": "RettR_Fachberater.svg",
+    "label": "RettR Fachberater"
+   },
+   {
+    "file": "RettR_Flugleiter.svg",
+    "label": "RettR Flugleiter"
+   },
+   {
+    "file": "RettR_Gruppenführer.svg",
+    "label": "RettR Gruppenführer"
+   },
+   {
+    "file": "Schlauchtruppführer.svg",
+    "label": "Schlauchtruppführer"
+   },
+   {
+    "file": "Schlauchtruppmann.svg",
+    "label": "Schlauchtruppmann"
+   },
+   {
+    "file": "Staffelführer.svg",
+    "label": "Staffelführer"
+   },
+   {
+    "file": "Truppführer.svg",
+    "label": "Truppführer"
+   },
+   {
+    "file": "UAV_Flugleiter.svg",
+    "label": "UAV Flugleiter"
+   },
+   {
+    "file": "Wassertruppführer.svg",
+    "label": "Wassertruppführer"
+   },
+   {
+    "file": "Wassertruppmann.svg",
+    "label": "Wassertruppmann"
+   },
+   {
+    "file": "Zugführer_Löschzug.svg",
+    "label": "Zugführer Löschzug"
+   }
+  ]
+ },
+ "Führungsstellen": {
+  "label": "Führungsstellen",
+  "items": [
+   {
+    "file": "Abschnittsführungsstelle.svg",
+    "label": "Abschnittsführungsstelle"
+   },
+   {
+    "file": "BR500.svg",
+    "label": "BR500"
+   },
+   {
+    "file": "EAL.svg",
+    "label": "EAL"
+   },
+   {
+    "file": "EL.svg",
+    "label": "EL"
+   },
+   {
+    "file": "Feldlager.svg",
+    "label": "Feldlager"
+   },
+   {
+    "file": "Führungsstab.svg",
+    "label": "Führungsstab"
+   },
+   {
+    "file": "Führungsstelle.svg",
+    "label": "Führungsstelle"
+   },
+   {
+    "file": "KatSL.svg",
+    "label": "KatSL"
+   },
+   {
+    "file": "TEL.svg",
+    "label": "TEL"
+   },
+   {
+    "file": "UEAL.svg",
+    "label": "UEAL"
+   },
+   {
+    "file": "ÖEL.svg",
+    "label": "ÖEL"
+   }
+  ]
+ },
+ "Gebäude": {
+  "label": "Gebäude",
+  "items": [
+   {
+    "file": "Gebäude.svg",
+    "label": "Gebäude"
+   },
+   {
+    "file": "Krankenhaus.svg",
+    "label": "Krankenhaus"
+   },
+   {
+    "file": "Unterkunft.svg",
+    "label": "Unterkunft"
+   }
+  ]
+ },
+ "Gefahren": {
+  "label": "Gefahren",
+  "items": [
+   {
+    "file": "Akute_Gefahr.svg",
+    "label": "Akute Gefahr"
+   },
+   {
+    "file": "Akute_Gefahr_durch_Explosion.svg",
+    "label": "Akute Gefahr durch Explosion"
+   },
+   {
+    "file": "Akute_Gefahr_durch_Explosivstoffe.svg",
+    "label": "Akute Gefahr durch Explosivstoffe"
+   },
+   {
+    "file": "Akute_Gefahr_durch_Gas.svg",
+    "label": "Akute Gefahr durch Gas"
+   },
+   {
+    "file": "Akute_Gefahr_durch_Luftmangel.svg",
+    "label": "Akute Gefahr durch Luftmangel"
+   },
+   {
+    "file": "Akute_Gefahr_durch_Mineralöl.svg",
+    "label": "Akute Gefahr durch Mineralöl"
+   },
+   {
+    "file": "Akute_Gefahr_durch_Radioaktivität.svg",
+    "label": "Akute Gefahr durch Radioaktivität"
+   },
+   {
+    "file": "Akute_Gefahr_durch_Wassereinbruch.svg",
+    "label": "Akute Gefahr durch Wassereinbruch"
+   },
+   {
+    "file": "Akute_Gefahr_durch_elektrischen_Strom.svg",
+    "label": "Akute Gefahr durch elektrischen Strom"
+   },
+   {
+    "file": "Akute_Gefahr_durch_gefährliche_Stoffe.svg",
+    "label": "Akute Gefahr durch gefährliche Stoffe"
+   },
+   {
+    "file": "Entstehungsbrand.svg",
+    "label": "Entstehungsbrand"
+   },
+   {
+    "file": "Flächenbrand.svg",
+    "label": "Flächenbrand"
+   },
+   {
+    "file": "Fortentwickelter_Brand.svg",
+    "label": "Fortentwickelter Brand"
+   },
+   {
+    "file": "Gefahr.svg",
+    "label": "Gefahr"
+   },
+   {
+    "file": "Gefahr_durch_Explosion.svg",
+    "label": "Gefahr durch Explosion"
+   },
+   {
+    "file": "Gefahr_durch_Explosivstoffe.svg",
+    "label": "Gefahr durch Explosivstoffe"
+   },
+   {
+    "file": "Gefahr_durch_Gas.svg",
+    "label": "Gefahr durch Gas"
+   },
+   {
+    "file": "Gefahr_durch_Luftmangel.svg",
+    "label": "Gefahr durch Luftmangel"
+   },
+   {
+    "file": "Gefahr_durch_Mineralöl.svg",
+    "label": "Gefahr durch Mineralöl"
+   },
+   {
+    "file": "Gefahr_durch_Radioaktivität.svg",
+    "label": "Gefahr durch Radioaktivität"
+   },
+   {
+    "file": "Gefahr_durch_Wassereinbruch.svg",
+    "label": "Gefahr durch Wassereinbruch"
+   },
+   {
+    "file": "Gefahr_durch_elektrischen_Strom.svg",
+    "label": "Gefahr durch elektrischen Strom"
+   },
+   {
+    "file": "Gefahr_durch_gefährliche_Stoffe.svg",
+    "label": "Gefahr durch gefährliche Stoffe"
+   },
+   {
+    "file": "Vermutete_Gefahr.svg",
+    "label": "Vermutete Gefahr"
+   },
+   {
+    "file": "Vermutete_Gefahr_durch_Explosion.svg",
+    "label": "Vermutete Gefahr durch Explosion"
+   },
+   {
+    "file": "Vermutete_Gefahr_durch_Explosivstoffe.svg",
+    "label": "Vermutete Gefahr durch Explosivstoffe"
+   },
+   {
+    "file": "Vermutete_Gefahr_durch_Gas.svg",
+    "label": "Vermutete Gefahr durch Gas"
+   },
+   {
+    "file": "Vermutete_Gefahr_durch_Luftmangel.svg",
+    "label": "Vermutete Gefahr durch Luftmangel"
+   },
+   {
+    "file": "Vermutete_Gefahr_durch_Mineralöl.svg",
+    "label": "Vermutete Gefahr durch Mineralöl"
+   },
+   {
+    "file": "Vermutete_Gefahr_durch_Radioaktivität.svg",
+    "label": "Vermutete Gefahr durch Radioaktivität"
+   },
+   {
+    "file": "Vermutete_Gefahr_durch_Wassereinbruch.svg",
+    "label": "Vermutete Gefahr durch Wassereinbruch"
+   },
+   {
+    "file": "Vermutete_Gefahr_durch_elektrischen_Strom.svg",
+    "label": "Vermutete Gefahr durch elektrischen Strom"
+   },
+   {
+    "file": "Vermutete_Gefahr_durch_gefährliche_Stoffe.svg",
+    "label": "Vermutete Gefahr durch gefährliche Stoffe"
+   },
+   {
+    "file": "Vollbrand.svg",
+    "label": "Vollbrand"
+   }
+  ]
+ },
+ "Katastrophenschutz_Einheiten": {
+  "label": "Katastrophenschutz Einheiten",
+  "items": [
+   {
+    "file": "Baugruppe.svg",
+    "label": "Baugruppe"
+   },
+   {
+    "file": "Facheinheit_IuK.svg",
+    "label": "Facheinheit IuK"
+   },
+   {
+    "file": "Funkgruppe.svg",
+    "label": "Funkgruppe"
+   },
+   {
+    "file": "Schlacht_und_Untersuchungsgruppe.svg",
+    "label": "Schlacht und Untersuchungsgruppe"
+   },
+   {
+    "file": "Tier_Dekon_und_Transportgruppe.svg",
+    "label": "Tier Dekon und Transportgruppe"
+   },
+   {
+    "file": "Veterinärzug.svg",
+    "label": "Veterinärzug"
+   },
+   {
+    "file": "Zugtrupp.svg",
+    "label": "Zugtrupp"
+   }
+  ]
+ },
+ "Kommunal_Fahrzeuge": {
+  "label": "Kommunal Fahrzeuge",
+  "items": [
+   {
+    "file": "Abrollbehälter_Container.svg",
+    "label": "Abrollbehälter Container"
+   },
+   {
+    "file": "Anhänger.svg",
+    "label": "Anhänger"
+   },
+   {
+    "file": "Bagger_Kette.svg",
+    "label": "Bagger Kette"
+   },
+   {
+    "file": "Bagger_Rad.svg",
+    "label": "Bagger Rad"
+   },
+   {
+    "file": "Gabelstapler.svg",
+    "label": "Gabelstapler"
+   },
+   {
+    "file": "Gabelstapler_geländegängig.svg",
+    "label": "Gabelstapler geländegängig"
+   },
+   {
+    "file": "Hägglunds.svg",
+    "label": "Hägglunds"
+   },
+   {
+    "file": "Kettenfahrzeug.svg",
+    "label": "Kettenfahrzeug"
+   },
+   {
+    "file": "Kraftfahrzeug.svg",
+    "label": "Kraftfahrzeug"
+   },
+   {
+    "file": "Kraftfahrzeug_geländegängig.svg",
+    "label": "Kraftfahrzeug geländegängig"
+   },
+   {
+    "file": "MTW.svg",
+    "label": "MTW"
+   },
+   {
+    "file": "Mehrzweckarbeitsboot.svg",
+    "label": "Mehrzweckarbeitsboot"
+   },
+   {
+    "file": "PKW.svg",
+    "label": "PKW"
+   },
+   {
+    "file": "PKW_geländegängig.svg",
+    "label": "PKW geländegängig"
+   },
+   {
+    "file": "Wechselladerfahrzeug.svg",
+    "label": "Wechselladerfahrzeug"
+   },
+   {
+    "file": "Wechselladerfahrzeug_geländegängig.svg",
+    "label": "Wechselladerfahrzeug geländegängig"
+   }
+  ]
+ },
+ "Maßnahmen": {
+  "label": "Maßnahmen",
+  "items": [
+   {
+    "file": "Betreuung.svg",
+    "label": "Betreuung"
+   },
+   {
+    "file": "Brückenbau.svg",
+    "label": "Brückenbau"
+   },
+   {
+    "file": "Dekontaminieren.svg",
+    "label": "Dekontaminieren"
+   },
+   {
+    "file": "Drohnenflug.svg",
+    "label": "Drohnenflug"
+   },
+   {
+    "file": "Erkunden.svg",
+    "label": "Erkunden"
+   },
+   {
+    "file": "Maßnahme.svg",
+    "label": "Maßnahme"
+   },
+   {
+    "file": "Ortung_mittels_Rettungshund.svg",
+    "label": "Ortung mittels Rettungshund"
+   },
+   {
+    "file": "Retten_aus_Höhen_und_Tiefen.svg",
+    "label": "Retten aus Höhen und Tiefen"
+   },
+   {
+    "file": "Räumen.svg",
+    "label": "Räumen"
+   },
+   {
+    "file": "Sprengen.svg",
+    "label": "Sprengen"
+   },
+   {
+    "file": "Transportieren.svg",
+    "label": "Transportieren"
+   },
+   {
+    "file": "Ölschadenbekämpfung.svg",
+    "label": "Ölschadenbekämpfung"
+   }
+  ]
+ },
+ "Personen": {
+  "label": "Personen",
+  "items": [
+   {
+    "file": "Einsatzabschnittsleiter.svg",
+    "label": "Einsatzabschnittsleiter"
+   },
+   {
+    "file": "Einsatzleiter.svg",
+    "label": "Einsatzleiter"
+   },
+   {
+    "file": "Flugleiter.svg",
+    "label": "Flugleiter"
+   },
+   {
+    "file": "Gerettete_Person.svg",
+    "label": "Gerettete Person"
+   },
+   {
+    "file": "Gruppenführer.svg",
+    "label": "Gruppenführer"
+   },
+   {
+    "file": "Melder.svg",
+    "label": "Melder"
+   },
+   {
+    "file": "Person.svg",
+    "label": "Person"
+   },
+   {
+    "file": "Person_mit_Sonderfunktion.svg",
+    "label": "Person mit Sonderfunktion"
+   },
+   {
+    "file": "Tote_Person.svg",
+    "label": "Tote Person"
+   },
+   {
+    "file": "Transportierte_Person.svg",
+    "label": "Transportierte Person"
+   },
+   {
+    "file": "Truppführer.svg",
+    "label": "Truppführer"
+   },
+   {
+    "file": "Untereinsatzabschnittsleiter.svg",
+    "label": "Untereinsatzabschnittsleiter"
+   },
+   {
+    "file": "Verbandführer_I.svg",
+    "label": "Verbandführer I"
+   },
+   {
+    "file": "Verbandführer_II.svg",
+    "label": "Verbandführer II"
+   },
+   {
+    "file": "Verbandführer_III.svg",
+    "label": "Verbandführer III"
+   },
+   {
+    "file": "Verletzte_Person.svg",
+    "label": "Verletzte Person"
+   },
+   {
+    "file": "Vermisste_Person.svg",
+    "label": "Vermisste Person"
+   },
+   {
+    "file": "Verschüttete_Person.svg",
+    "label": "Verschüttete Person"
+   },
+   {
+    "file": "Zu_transportierende_Person.svg",
+    "label": "Zu transportierende Person"
+   },
+   {
+    "file": "Zugführer.svg",
+    "label": "Zugführer"
+   }
+  ]
+ },
+ "Polizei_Einheiten": {
+  "label": "Polizei Einheiten",
+  "items": [
+   {
+    "file": "Einheit.svg",
+    "label": "Einheit"
+   },
+   {
+    "file": "Einheit_der_Bundespolizei.svg",
+    "label": "Einheit der Bundespolizei"
+   },
+   {
+    "file": "Einheit_der_Polizei.svg",
+    "label": "Einheit der Polizei"
+   }
+  ]
+ },
+ "Polizei_Fahrzeuge": {
+  "label": "Polizei Fahrzeuge",
+  "items": [
+   {
+    "file": "Anhänger.svg",
+    "label": "Anhänger"
+   },
+   {
+    "file": "Kraftfahrzeug.svg",
+    "label": "Kraftfahrzeug"
+   },
+   {
+    "file": "PKW_Bundespolizei.svg",
+    "label": "PKW Bundespolizei"
+   },
+   {
+    "file": "PKW_Polizei.svg",
+    "label": "PKW Polizei"
+   }
+  ]
+ },
+ "Rettungswesen_Einheiten": {
+  "label": "Rettungswesen Einheiten",
+  "items": [
+   {
+    "file": "Aufklärungstrupp_Luft.svg",
+    "label": "Aufklärungstrupp Luft"
+   },
+   {
+    "file": "Betreuungsgruppe.svg",
+    "label": "Betreuungsgruppe"
+   },
+   {
+    "file": "Betreuungstrupp.svg",
+    "label": "Betreuungstrupp"
+   },
+   {
+    "file": "Betreuungszug.svg",
+    "label": "Betreuungszug"
+   },
+   {
+    "file": "Einheit_für_Psychosoziale_Notfallversorgung.svg",
+    "label": "Einheit für Psychosoziale Notfallversorgung"
+   },
+   {
+    "file": "Einsatzeinheit.svg",
+    "label": "Einsatzeinheit"
+   },
+   {
+    "file": "Gruppe_Technik_und_Sicherheit.svg",
+    "label": "Gruppe Technik und Sicherheit"
+   },
+   {
+    "file": "Gruppe_für_soziale_Betreuung.svg",
+    "label": "Gruppe für soziale Betreuung"
+   },
+   {
+    "file": "Patiententransportgruppe.svg",
+    "label": "Patiententransportgruppe"
+   },
+   {
+    "file": "Rettungsdienst.svg",
+    "label": "Rettungsdienst"
+   },
+   {
+    "file": "Sanitätsgruppe.svg",
+    "label": "Sanitätsgruppe"
+   },
+   {
+    "file": "Sanitätsgruppe_Arzt.svg",
+    "label": "Sanitätsgruppe Arzt"
+   },
+   {
+    "file": "Sanitätstrupp.svg",
+    "label": "Sanitätstrupp"
+   },
+   {
+    "file": "Sanitätszug.svg",
+    "label": "Sanitätszug"
+   },
+   {
+    "file": "Sanitätszug_Arzt.svg",
+    "label": "Sanitätszug Arzt"
+   },
+   {
+    "file": "Schnelleinsatzgruppe_Betreuung.svg",
+    "label": "Schnelleinsatzgruppe Betreuung"
+   },
+   {
+    "file": "Trupp_Technik_und_Sicherheit.svg",
+    "label": "Trupp Technik und Sicherheit"
+   },
+   {
+    "file": "Trupp_für_soziale_Betreuung.svg",
+    "label": "Trupp für soziale Betreuung"
+   },
+   {
+    "file": "Verpflegungsgruppe.svg",
+    "label": "Verpflegungsgruppe"
+   },
+   {
+    "file": "Verpflegungstrupp.svg",
+    "label": "Verpflegungstrupp"
+   },
+   {
+    "file": "Verpflegungszug.svg",
+    "label": "Verpflegungszug"
+   },
+   {
+    "file": "Zug_Technik_und_Sicherheit.svg",
+    "label": "Zug Technik und Sicherheit"
+   },
+   {
+    "file": "Zug_für_Soziale_Betreuung.svg",
+    "label": "Zug für Soziale Betreuung"
+   }
+  ]
+ },
+ "Rettungswesen_Einrichtungen": {
+  "label": "Rettungswesen Einrichtungen",
+  "items": [
+   {
+    "file": "Arztbesetzte_Patientenablage.svg",
+    "label": "Arztbesetzte Patientenablage"
+   },
+   {
+    "file": "Patientenablage.svg",
+    "label": "Patientenablage"
+   },
+   {
+    "file": "Sammelplatz_für_betroffene.svg",
+    "label": "Sammelplatz für betroffene"
+   }
+  ]
+ },
+ "Rettungswesen_Fahrzeuge": {
+  "label": "Rettungswesen Fahrzeuge",
+  "items": [
+   {
+    "file": "Gerätewagen_Sanität.svg",
+    "label": "Gerätewagen Sanität"
+   },
+   {
+    "file": "KTW.svg",
+    "label": "KTW"
+   },
+   {
+    "file": "Kraftfahrzeug.svg",
+    "label": "Kraftfahrzeug"
+   },
+   {
+    "file": "Kraftfahrzeug_Geländegängig.svg",
+    "label": "Kraftfahrzeug Geländegängig"
+   },
+   {
+    "file": "Notarzteinsatzfahrzeug.svg",
+    "label": "Notarzteinsatzfahrzeug"
+   },
+   {
+    "file": "Notarztwagen.svg",
+    "label": "Notarztwagen"
+   },
+   {
+    "file": "RTW.svg",
+    "label": "RTW"
+   }
+  ]
+ },
+ "Rettungswesen_Personen": {
+  "label": "Rettungswesen Personen",
+  "items": [
+   {
+    "file": "Abschnittsleiter_Betreuung.svg",
+    "label": "Abschnittsleiter Betreuung"
+   },
+   {
+    "file": "Abschnittsleiter_Rettungsdienst.svg",
+    "label": "Abschnittsleiter Rettungsdienst"
+   },
+   {
+    "file": "Abschnittsleiter_Technik_und_Sicherheit.svg",
+    "label": "Abschnittsleiter Technik und Sicherheit"
+   },
+   {
+    "file": "Abschnittsleiter_Verpflegung.svg",
+    "label": "Abschnittsleiter Verpflegung"
+   },
+   {
+    "file": "Einsatzleiter_Rettungsdienst.svg",
+    "label": "Einsatzleiter Rettungsdienst"
+   },
+   {
+    "file": "Gruppenführer_Betreuungsgruppe.svg",
+    "label": "Gruppenführer Betreuungsgruppe"
+   },
+   {
+    "file": "Gruppenführer_Sanitätsgruppe.svg",
+    "label": "Gruppenführer Sanitätsgruppe"
+   },
+   {
+    "file": "Gruppenführer_Technik_und_Sicherheit.svg",
+    "label": "Gruppenführer Technik und Sicherheit"
+   },
+   {
+    "file": "Gruppenführer_Verpflegung.svg",
+    "label": "Gruppenführer Verpflegung"
+   },
+   {
+    "file": "Leitender_Notarzt.svg",
+    "label": "Leitender Notarzt"
+   },
+   {
+    "file": "Organisatorischer_Leiter_Rettungsdienst.svg",
+    "label": "Organisatorischer Leiter Rettungsdienst"
+   },
+   {
+    "file": "Rotkreuzbeauftragter.svg",
+    "label": "Rotkreuzbeauftragter"
+   },
+   {
+    "file": "Truppführer_Betreuungstrupp.svg",
+    "label": "Truppführer Betreuungstrupp"
+   },
+   {
+    "file": "Truppführer_Sanitätstrupp.svg",
+    "label": "Truppführer Sanitätstrupp"
+   },
+   {
+    "file": "Truppführer_Technik_und_Sicherheit.svg",
+    "label": "Truppführer Technik und Sicherheit"
+   },
+   {
+    "file": "Truppführer_Verpflegung.svg",
+    "label": "Truppführer Verpflegung"
+   },
+   {
+    "file": "Zugführer_Betreuungszug.svg",
+    "label": "Zugführer Betreuungszug"
+   },
+   {
+    "file": "Zugführer_Einsatzeinheit.svg",
+    "label": "Zugführer Einsatzeinheit"
+   },
+   {
+    "file": "Zugführer_Sanitätszug.svg",
+    "label": "Zugführer Sanitätszug"
+   }
+  ]
+ },
+ "Schadenskonten": {
+  "label": "Schadenskonten",
+  "items": [
+   {
+    "file": "gelb/Schadenskonto.svg",
+    "label": "gelb · Schadenskonto"
+   },
+   {
+    "file": "gelb/Schadenskonto_1.svg",
+    "label": "gelb · Schadenskonto 1"
+   },
+   {
+    "file": "gelb/Schadenskonto_10.svg",
+    "label": "gelb · Schadenskonto 10"
+   },
+   {
+    "file": "gelb/Schadenskonto_11.svg",
+    "label": "gelb · Schadenskonto 11"
+   },
+   {
+    "file": "gelb/Schadenskonto_12.svg",
+    "label": "gelb · Schadenskonto 12"
+   },
+   {
+    "file": "gelb/Schadenskonto_13.svg",
+    "label": "gelb · Schadenskonto 13"
+   },
+   {
+    "file": "gelb/Schadenskonto_14.svg",
+    "label": "gelb · Schadenskonto 14"
+   },
+   {
+    "file": "gelb/Schadenskonto_15.svg",
+    "label": "gelb · Schadenskonto 15"
+   },
+   {
+    "file": "gelb/Schadenskonto_16.svg",
+    "label": "gelb · Schadenskonto 16"
+   },
+   {
+    "file": "gelb/Schadenskonto_17.svg",
+    "label": "gelb · Schadenskonto 17"
+   },
+   {
+    "file": "gelb/Schadenskonto_18.svg",
+    "label": "gelb · Schadenskonto 18"
+   },
+   {
+    "file": "gelb/Schadenskonto_19.svg",
+    "label": "gelb · Schadenskonto 19"
+   },
+   {
+    "file": "gelb/Schadenskonto_2.svg",
+    "label": "gelb · Schadenskonto 2"
+   },
+   {
+    "file": "gelb/Schadenskonto_20.svg",
+    "label": "gelb · Schadenskonto 20"
+   },
+   {
+    "file": "gelb/Schadenskonto_3.svg",
+    "label": "gelb · Schadenskonto 3"
+   },
+   {
+    "file": "gelb/Schadenskonto_4.svg",
+    "label": "gelb · Schadenskonto 4"
+   },
+   {
+    "file": "gelb/Schadenskonto_5.svg",
+    "label": "gelb · Schadenskonto 5"
+   },
+   {
+    "file": "gelb/Schadenskonto_6.svg",
+    "label": "gelb · Schadenskonto 6"
+   },
+   {
+    "file": "gelb/Schadenskonto_7.svg",
+    "label": "gelb · Schadenskonto 7"
+   },
+   {
+    "file": "gelb/Schadenskonto_8.svg",
+    "label": "gelb · Schadenskonto 8"
+   },
+   {
+    "file": "gelb/Schadenskonto_9.svg",
+    "label": "gelb · Schadenskonto 9"
+   },
+   {
+    "file": "gelb/Schadenstelle.svg",
+    "label": "gelb · Schadenstelle"
+   },
+   {
+    "file": "gelb/Schadenstelle_1.svg",
+    "label": "gelb · Schadenstelle 1"
+   },
+   {
+    "file": "gelb/Schadenstelle_10.svg",
+    "label": "gelb · Schadenstelle 10"
+   },
+   {
+    "file": "gelb/Schadenstelle_11.svg",
+    "label": "gelb · Schadenstelle 11"
+   },
+   {
+    "file": "gelb/Schadenstelle_12.svg",
+    "label": "gelb · Schadenstelle 12"
+   },
+   {
+    "file": "gelb/Schadenstelle_13.svg",
+    "label": "gelb · Schadenstelle 13"
+   },
+   {
+    "file": "gelb/Schadenstelle_14.svg",
+    "label": "gelb · Schadenstelle 14"
+   },
+   {
+    "file": "gelb/Schadenstelle_15.svg",
+    "label": "gelb · Schadenstelle 15"
+   },
+   {
+    "file": "gelb/Schadenstelle_16.svg",
+    "label": "gelb · Schadenstelle 16"
+   },
+   {
+    "file": "gelb/Schadenstelle_17.svg",
+    "label": "gelb · Schadenstelle 17"
+   },
+   {
+    "file": "gelb/Schadenstelle_18.svg",
+    "label": "gelb · Schadenstelle 18"
+   },
+   {
+    "file": "gelb/Schadenstelle_19.svg",
+    "label": "gelb · Schadenstelle 19"
+   },
+   {
+    "file": "gelb/Schadenstelle_2.svg",
+    "label": "gelb · Schadenstelle 2"
+   },
+   {
+    "file": "gelb/Schadenstelle_20.svg",
+    "label": "gelb · Schadenstelle 20"
+   },
+   {
+    "file": "gelb/Schadenstelle_3.svg",
+    "label": "gelb · Schadenstelle 3"
+   },
+   {
+    "file": "gelb/Schadenstelle_4.svg",
+    "label": "gelb · Schadenstelle 4"
+   },
+   {
+    "file": "gelb/Schadenstelle_5.svg",
+    "label": "gelb · Schadenstelle 5"
+   },
+   {
+    "file": "gelb/Schadenstelle_6.svg",
+    "label": "gelb · Schadenstelle 6"
+   },
+   {
+    "file": "gelb/Schadenstelle_7.svg",
+    "label": "gelb · Schadenstelle 7"
+   },
+   {
+    "file": "gelb/Schadenstelle_8.svg",
+    "label": "gelb · Schadenstelle 8"
+   },
+   {
+    "file": "gelb/Schadenstelle_9.svg",
+    "label": "gelb · Schadenstelle 9"
+   },
+   {
+    "file": "rot/Schadenskonto.svg",
+    "label": "rot · Schadenskonto"
+   },
+   {
+    "file": "rot/Schadenskonto_1.svg",
+    "label": "rot · Schadenskonto 1"
+   },
+   {
+    "file": "rot/Schadenskonto_10.svg",
+    "label": "rot · Schadenskonto 10"
+   },
+   {
+    "file": "rot/Schadenskonto_11.svg",
+    "label": "rot · Schadenskonto 11"
+   },
+   {
+    "file": "rot/Schadenskonto_12.svg",
+    "label": "rot · Schadenskonto 12"
+   },
+   {
+    "file": "rot/Schadenskonto_13.svg",
+    "label": "rot · Schadenskonto 13"
+   },
+   {
+    "file": "rot/Schadenskonto_14.svg",
+    "label": "rot · Schadenskonto 14"
+   },
+   {
+    "file": "rot/Schadenskonto_15.svg",
+    "label": "rot · Schadenskonto 15"
+   },
+   {
+    "file": "rot/Schadenskonto_16.svg",
+    "label": "rot · Schadenskonto 16"
+   },
+   {
+    "file": "rot/Schadenskonto_17.svg",
+    "label": "rot · Schadenskonto 17"
+   },
+   {
+    "file": "rot/Schadenskonto_18.svg",
+    "label": "rot · Schadenskonto 18"
+   },
+   {
+    "file": "rot/Schadenskonto_19.svg",
+    "label": "rot · Schadenskonto 19"
+   },
+   {
+    "file": "rot/Schadenskonto_2.svg",
+    "label": "rot · Schadenskonto 2"
+   },
+   {
+    "file": "rot/Schadenskonto_20.svg",
+    "label": "rot · Schadenskonto 20"
+   },
+   {
+    "file": "rot/Schadenskonto_3.svg",
+    "label": "rot · Schadenskonto 3"
+   },
+   {
+    "file": "rot/Schadenskonto_4.svg",
+    "label": "rot · Schadenskonto 4"
+   },
+   {
+    "file": "rot/Schadenskonto_5.svg",
+    "label": "rot · Schadenskonto 5"
+   },
+   {
+    "file": "rot/Schadenskonto_6.svg",
+    "label": "rot · Schadenskonto 6"
+   },
+   {
+    "file": "rot/Schadenskonto_7.svg",
+    "label": "rot · Schadenskonto 7"
+   },
+   {
+    "file": "rot/Schadenskonto_8.svg",
+    "label": "rot · Schadenskonto 8"
+   },
+   {
+    "file": "rot/Schadenskonto_9.svg",
+    "label": "rot · Schadenskonto 9"
+   },
+   {
+    "file": "rot/Schadenstelle.svg",
+    "label": "rot · Schadenstelle"
+   },
+   {
+    "file": "rot/Schadenstelle_1.svg",
+    "label": "rot · Schadenstelle 1"
+   },
+   {
+    "file": "rot/Schadenstelle_10.svg",
+    "label": "rot · Schadenstelle 10"
+   },
+   {
+    "file": "rot/Schadenstelle_11.svg",
+    "label": "rot · Schadenstelle 11"
+   },
+   {
+    "file": "rot/Schadenstelle_12.svg",
+    "label": "rot · Schadenstelle 12"
+   },
+   {
+    "file": "rot/Schadenstelle_13.svg",
+    "label": "rot · Schadenstelle 13"
+   },
+   {
+    "file": "rot/Schadenstelle_14.svg",
+    "label": "rot · Schadenstelle 14"
+   },
+   {
+    "file": "rot/Schadenstelle_15.svg",
+    "label": "rot · Schadenstelle 15"
+   },
+   {
+    "file": "rot/Schadenstelle_16.svg",
+    "label": "rot · Schadenstelle 16"
+   },
+   {
+    "file": "rot/Schadenstelle_17.svg",
+    "label": "rot · Schadenstelle 17"
+   },
+   {
+    "file": "rot/Schadenstelle_18.svg",
+    "label": "rot · Schadenstelle 18"
+   },
+   {
+    "file": "rot/Schadenstelle_19.svg",
+    "label": "rot · Schadenstelle 19"
+   },
+   {
+    "file": "rot/Schadenstelle_2.svg",
+    "label": "rot · Schadenstelle 2"
+   },
+   {
+    "file": "rot/Schadenstelle_20.svg",
+    "label": "rot · Schadenstelle 20"
+   },
+   {
+    "file": "rot/Schadenstelle_3.svg",
+    "label": "rot · Schadenstelle 3"
+   },
+   {
+    "file": "rot/Schadenstelle_4.svg",
+    "label": "rot · Schadenstelle 4"
+   },
+   {
+    "file": "rot/Schadenstelle_5.svg",
+    "label": "rot · Schadenstelle 5"
+   },
+   {
+    "file": "rot/Schadenstelle_6.svg",
+    "label": "rot · Schadenstelle 6"
+   },
+   {
+    "file": "rot/Schadenstelle_7.svg",
+    "label": "rot · Schadenstelle 7"
+   },
+   {
+    "file": "rot/Schadenstelle_8.svg",
+    "label": "rot · Schadenstelle 8"
+   },
+   {
+    "file": "rot/Schadenstelle_9.svg",
+    "label": "rot · Schadenstelle 9"
+   },
+   {
+    "file": "weiß/Schadenskonto.svg",
+    "label": "weiß · Schadenskonto"
+   },
+   {
+    "file": "weiß/Schadenskonto_1.svg",
+    "label": "weiß · Schadenskonto 1"
+   },
+   {
+    "file": "weiß/Schadenskonto_10.svg",
+    "label": "weiß · Schadenskonto 10"
+   },
+   {
+    "file": "weiß/Schadenskonto_11.svg",
+    "label": "weiß · Schadenskonto 11"
+   },
+   {
+    "file": "weiß/Schadenskonto_12.svg",
+    "label": "weiß · Schadenskonto 12"
+   },
+   {
+    "file": "weiß/Schadenskonto_13.svg",
+    "label": "weiß · Schadenskonto 13"
+   },
+   {
+    "file": "weiß/Schadenskonto_14.svg",
+    "label": "weiß · Schadenskonto 14"
+   },
+   {
+    "file": "weiß/Schadenskonto_15.svg",
+    "label": "weiß · Schadenskonto 15"
+   },
+   {
+    "file": "weiß/Schadenskonto_16.svg",
+    "label": "weiß · Schadenskonto 16"
+   },
+   {
+    "file": "weiß/Schadenskonto_17.svg",
+    "label": "weiß · Schadenskonto 17"
+   },
+   {
+    "file": "weiß/Schadenskonto_18.svg",
+    "label": "weiß · Schadenskonto 18"
+   },
+   {
+    "file": "weiß/Schadenskonto_19.svg",
+    "label": "weiß · Schadenskonto 19"
+   },
+   {
+    "file": "weiß/Schadenskonto_2.svg",
+    "label": "weiß · Schadenskonto 2"
+   },
+   {
+    "file": "weiß/Schadenskonto_20.svg",
+    "label": "weiß · Schadenskonto 20"
+   },
+   {
+    "file": "weiß/Schadenskonto_3.svg",
+    "label": "weiß · Schadenskonto 3"
+   },
+   {
+    "file": "weiß/Schadenskonto_4.svg",
+    "label": "weiß · Schadenskonto 4"
+   },
+   {
+    "file": "weiß/Schadenskonto_5.svg",
+    "label": "weiß · Schadenskonto 5"
+   },
+   {
+    "file": "weiß/Schadenskonto_6.svg",
+    "label": "weiß · Schadenskonto 6"
+   },
+   {
+    "file": "weiß/Schadenskonto_7.svg",
+    "label": "weiß · Schadenskonto 7"
+   },
+   {
+    "file": "weiß/Schadenskonto_8.svg",
+    "label": "weiß · Schadenskonto 8"
+   },
+   {
+    "file": "weiß/Schadenskonto_9.svg",
+    "label": "weiß · Schadenskonto 9"
+   },
+   {
+    "file": "weiß/Schadenstelle.svg",
+    "label": "weiß · Schadenstelle"
+   },
+   {
+    "file": "weiß/Schadenstelle_1.svg",
+    "label": "weiß · Schadenstelle 1"
+   },
+   {
+    "file": "weiß/Schadenstelle_10.svg",
+    "label": "weiß · Schadenstelle 10"
+   },
+   {
+    "file": "weiß/Schadenstelle_11.svg",
+    "label": "weiß · Schadenstelle 11"
+   },
+   {
+    "file": "weiß/Schadenstelle_12.svg",
+    "label": "weiß · Schadenstelle 12"
+   },
+   {
+    "file": "weiß/Schadenstelle_13.svg",
+    "label": "weiß · Schadenstelle 13"
+   },
+   {
+    "file": "weiß/Schadenstelle_14.svg",
+    "label": "weiß · Schadenstelle 14"
+   },
+   {
+    "file": "weiß/Schadenstelle_15.svg",
+    "label": "weiß · Schadenstelle 15"
+   },
+   {
+    "file": "weiß/Schadenstelle_16.svg",
+    "label": "weiß · Schadenstelle 16"
+   },
+   {
+    "file": "weiß/Schadenstelle_17.svg",
+    "label": "weiß · Schadenstelle 17"
+   },
+   {
+    "file": "weiß/Schadenstelle_18.svg",
+    "label": "weiß · Schadenstelle 18"
+   },
+   {
+    "file": "weiß/Schadenstelle_19.svg",
+    "label": "weiß · Schadenstelle 19"
+   },
+   {
+    "file": "weiß/Schadenstelle_2.svg",
+    "label": "weiß · Schadenstelle 2"
+   },
+   {
+    "file": "weiß/Schadenstelle_20.svg",
+    "label": "weiß · Schadenstelle 20"
+   },
+   {
+    "file": "weiß/Schadenstelle_3.svg",
+    "label": "weiß · Schadenstelle 3"
+   },
+   {
+    "file": "weiß/Schadenstelle_4.svg",
+    "label": "weiß · Schadenstelle 4"
+   },
+   {
+    "file": "weiß/Schadenstelle_5.svg",
+    "label": "weiß · Schadenstelle 5"
+   },
+   {
+    "file": "weiß/Schadenstelle_6.svg",
+    "label": "weiß · Schadenstelle 6"
+   },
+   {
+    "file": "weiß/Schadenstelle_7.svg",
+    "label": "weiß · Schadenstelle 7"
+   },
+   {
+    "file": "weiß/Schadenstelle_8.svg",
+    "label": "weiß · Schadenstelle 8"
+   },
+   {
+    "file": "weiß/Schadenstelle_9.svg",
+    "label": "weiß · Schadenstelle 9"
+   }
+  ]
+ },
+ "Schäden": {
+  "label": "Schäden",
+  "items": [
+   {
+    "file": "Angeschlagen.svg",
+    "label": "Angeschlagen"
+   },
+   {
+    "file": "Angeschlagener_Raum.svg",
+    "label": "Angeschlagener Raum"
+   },
+   {
+    "file": "Angeschlagener_Raum_Halber_Raum.svg",
+    "label": "Angeschlagener Raum Halber Raum"
+   },
+   {
+    "file": "Angeschlagener_Raum_Schwalbennest.svg",
+    "label": "Angeschlagener Raum Schwalbennest"
+   },
+   {
+    "file": "Ausgefüllter_Raum.svg",
+    "label": "Ausgefüllter Raum"
+   },
+   {
+    "file": "Ausgefüllter_Raum_Schichtung.svg",
+    "label": "Ausgefüllter Raum Schichtung"
+   },
+   {
+    "file": "Ausgefüllter_Raum_Wasser.svg",
+    "label": "Ausgefüllter Raum Wasser"
+   },
+   {
+    "file": "Blockiert.svg",
+    "label": "Blockiert"
+   },
+   {
+    "file": "Randtrümmer.svg",
+    "label": "Randtrümmer"
+   },
+   {
+    "file": "Rutschfläche.svg",
+    "label": "Rutschfläche"
+   },
+   {
+    "file": "Schichtung.svg",
+    "label": "Schichtung"
+   },
+   {
+    "file": "Teilblockiert.svg",
+    "label": "Teilblockiert"
+   },
+   {
+    "file": "Teilzerstört.svg",
+    "label": "Teilzerstört"
+   },
+   {
+    "file": "Zerstört.svg",
+    "label": "Zerstört"
+   },
+   {
+    "file": "Überschwemmtes_Gebiet.svg",
+    "label": "Überschwemmtes Gebiet"
+   }
+  ]
+ },
+ "Sonstiges": {
+  "label": "Sonstiges",
+  "items": [
+   {
+    "file": "Ausgangspunkt.svg",
+    "label": "Ausgangspunkt"
+   },
+   {
+    "file": "Bewegung_in_zwei_Richtungen.svg",
+    "label": "Bewegung in zwei Richtungen"
+   },
+   {
+    "file": "Deutlich_erhöhte_Aktivität.svg",
+    "label": "Deutlich erhöhte Aktivität"
+   },
+   {
+    "file": "Endpunkt.svg",
+    "label": "Endpunkt"
+   },
+   {
+    "file": "Ereignis.svg",
+    "label": "Ereignis"
+   },
+   {
+    "file": "Geringfügig_erhöhte_Aktivität.svg",
+    "label": "Geringfügig erhöhte Aktivität"
+   },
+   {
+    "file": "Moderat_erhöhte_Aktivität.svg",
+    "label": "Moderat erhöhte Aktivität"
+   },
+   {
+    "file": "Ortsfest.svg",
+    "label": "Ortsfest"
+   },
+   {
+    "file": "Rettungshund.svg",
+    "label": "Rettungshund"
+   },
+   {
+    "file": "Richtung.svg",
+    "label": "Richtung"
+   },
+   {
+    "file": "Sammeln.svg",
+    "label": "Sammeln"
+   },
+   {
+    "file": "Stark_erhöhte_Aktivität.svg",
+    "label": "Stark erhöhte Aktivität"
+   },
+   {
+    "file": "Tendenz_fallend.svg",
+    "label": "Tendenz fallend"
+   },
+   {
+    "file": "Tendenz_steigend.svg",
+    "label": "Tendenz steigend"
+   },
+   {
+    "file": "Tendenz_unverändert.svg",
+    "label": "Tendenz unverändert"
+   },
+   {
+    "file": "Tier.svg",
+    "label": "Tier"
+   },
+   {
+    "file": "Totes_Tier.svg",
+    "label": "Totes Tier"
+   },
+   {
+    "file": "Verletztes_Tier.svg",
+    "label": "Verletztes Tier"
+   }
+  ]
+ },
+ "THW_Einheiten": {
+  "label": "THW Einheiten",
+  "items": [
+   {
+    "file": "1._Bergungsgruppe.svg",
+    "label": "1. Bergungsgruppe"
+   },
+   {
+    "file": "1._Bergungsgruppe_ASH.svg",
+    "label": "1. Bergungsgruppe ASH"
+   },
+   {
+    "file": "1._Bergungsgruppe_EGS.svg",
+    "label": "1. Bergungsgruppe EGS"
+   },
+   {
+    "file": "2._Bergungsgruppe.svg",
+    "label": "2. Bergungsgruppe"
+   },
+   {
+    "file": "2._Bergungsgruppe_A.svg",
+    "label": "2. Bergungsgruppe A"
+   },
+   {
+    "file": "2._Bergungsgruppe_B.svg",
+    "label": "2. Bergungsgruppe B"
+   },
+   {
+    "file": "Alters_und_Ehrengruppe.svg",
+    "label": "Alters und Ehrengruppe"
+   },
+   {
+    "file": "BR_Stab.svg",
+    "label": "BR Stab"
+   },
+   {
+    "file": "Bergungsgruppe.svg",
+    "label": "Bergungsgruppe"
+   },
+   {
+    "file": "Bergungsgruppe_ASH.svg",
+    "label": "Bergungsgruppe ASH"
+   },
+   {
+    "file": "Bergungsgruppe_EGS.svg",
+    "label": "Bergungsgruppe EGS"
+   },
+   {
+    "file": "ENT.svg",
+    "label": "ENT"
+   },
+   {
+    "file": "FGr_Beleuchtung.svg",
+    "label": "FGr Beleuchtung"
+   },
+   {
+    "file": "FGr_Beleuchtung_A.svg",
+    "label": "FGr Beleuchtung A"
+   },
+   {
+    "file": "FGr_Beleuchtung_B.svg",
+    "label": "FGr Beleuchtung B"
+   },
+   {
+    "file": "FGr_Bergungstauchen.svg",
+    "label": "FGr Bergungstauchen"
+   },
+   {
+    "file": "FGr_Brückenbau.svg",
+    "label": "FGr Brückenbau"
+   },
+   {
+    "file": "FGr_Brückenbau_A.svg",
+    "label": "FGr Brückenbau A"
+   },
+   {
+    "file": "FGr_Brückenbau_B.svg",
+    "label": "FGr Brückenbau B"
+   },
+   {
+    "file": "FGr_Elektroversorgung.svg",
+    "label": "FGr Elektroversorgung"
+   },
+   {
+    "file": "FGr_Fachgruppe.svg",
+    "label": "FGr Fachgruppe"
+   },
+   {
+    "file": "FGr_Führung-Kommunikation.svg",
+    "label": "FGr Führung-Kommunikation"
+   },
+   {
+    "file": "FGr_Führung-Kommunikation_A.svg",
+    "label": "FGr Führung-Kommunikation A"
+   },
+   {
+    "file": "FGr_Führung-Kommunikation_B.svg",
+    "label": "FGr Führung-Kommunikation B"
+   },
+   {
+    "file": "FGr_Führung-Kommunikation_Fernmeldetrupp.svg",
+    "label": "FGr Führung-Kommunikation Fernmeldetrupp"
+   },
+   {
+    "file": "FGr_Führung-Kommunikation_Führungs_und_Kommunikationstrupp.svg",
+    "label": "FGr Führung-Kommunikation Führungs und Kommunikationstrupp"
+   },
+   {
+    "file": "FGr_Führung-Kommunikation_Führungstrupp.svg",
+    "label": "FGr Führung-Kommunikation Führungstrupp"
+   },
+   {
+    "file": "FGr_Führung-Kommunikation_Weitverkehrstrupp.svg",
+    "label": "FGr Führung-Kommunikation Weitverkehrstrupp"
+   },
+   {
+    "file": "FGr_Führungsunterstützung.svg",
+    "label": "FGr Führungsunterstützung"
+   },
+   {
+    "file": "FGr_Infrastruktur.svg",
+    "label": "FGr Infrastruktur"
+   },
+   {
+    "file": "FGr_Kommunikation_A.svg",
+    "label": "FGr Kommunikation A"
+   },
+   {
+    "file": "FGr_Kommunikation_B.svg",
+    "label": "FGr Kommunikation B"
+   },
+   {
+    "file": "FGr_Logistik-Verpflegung.svg",
+    "label": "FGr Logistik-Verpflegung"
+   },
+   {
+    "file": "FGr_Logistik.svg",
+    "label": "FGr Logistik"
+   },
+   {
+    "file": "FGr_Logistik_Führungstrupp.svg",
+    "label": "FGr Logistik Führungstrupp"
+   },
+   {
+    "file": "FGr_Logistik_Materialerhaltungstrupp.svg",
+    "label": "FGr Logistik Materialerhaltungstrupp"
+   },
+   {
+    "file": "FGr_Logistik_Materialwirtschaft.svg",
+    "label": "FGr Logistik Materialwirtschaft"
+   },
+   {
+    "file": "FGr_Logistik_Materialwirtschaft_Verbrauchsgüterversorgungstrupp.svg",
+    "label": "FGr Logistik Materialwirtschaft Verbrauchsgüterversorgungstrupp"
+   },
+   {
+    "file": "FGr_Logistik_Versorgungstrupp.svg",
+    "label": "FGr Logistik Versorgungstrupp"
+   },
+   {
+    "file": "FGr_Notversorgung_und_Notinstandsetzung.svg",
+    "label": "FGr Notversorgung und Notinstandsetzung"
+   },
+   {
+    "file": "FGr_Ortung.svg",
+    "label": "FGr Ortung"
+   },
+   {
+    "file": "FGr_Ortung_biologisch.svg",
+    "label": "FGr Ortung biologisch"
+   },
+   {
+    "file": "FGr_Ortung_biologisch_und_technisch.svg",
+    "label": "FGr Ortung biologisch und technisch"
+   },
+   {
+    "file": "FGr_Ortung_technisch.svg",
+    "label": "FGr Ortung technisch"
+   },
+   {
+    "file": "FGr_Räumen.svg",
+    "label": "FGr Räumen"
+   },
+   {
+    "file": "FGr_Räumen_A.svg",
+    "label": "FGr Räumen A"
+   },
+   {
+    "file": "FGr_Räumen_A_Bagger.svg",
+    "label": "FGr Räumen A Bagger"
+   },
+   {
+    "file": "FGr_Räumen_A_Radlader.svg",
+    "label": "FGr Räumen A Radlader"
+   },
+   {
+    "file": "FGr_Räumen_B.svg",
+    "label": "FGr Räumen B"
+   },
+   {
+    "file": "FGr_Räumen_C.svg",
+    "label": "FGr Räumen C"
+   },
+   {
+    "file": "FGr_Schwere_Bergung.svg",
+    "label": "FGr Schwere Bergung"
+   },
+   {
+    "file": "FGr_Schwere_Bergung_A.svg",
+    "label": "FGr Schwere Bergung A"
+   },
+   {
+    "file": "FGr_Schwere_Bergung_B.svg",
+    "label": "FGr Schwere Bergung B"
+   },
+   {
+    "file": "FGr_Sprengen.svg",
+    "label": "FGr Sprengen"
+   },
+   {
+    "file": "FGr_Trinkwasser.svg",
+    "label": "FGr Trinkwasser"
+   },
+   {
+    "file": "FGr_Trinkwasser_A.svg",
+    "label": "FGr Trinkwasser A"
+   },
+   {
+    "file": "FGr_Trinkwasser_B.svg",
+    "label": "FGr Trinkwasser B"
+   },
+   {
+    "file": "FGr_Wassergefahren.svg",
+    "label": "FGr Wassergefahren"
+   },
+   {
+    "file": "FGr_Wassergefahren_A.svg",
+    "label": "FGr Wassergefahren A"
+   },
+   {
+    "file": "FGr_Wassergefahren_B.svg",
+    "label": "FGr Wassergefahren B"
+   },
+   {
+    "file": "FGr_Wasserschaden-Pumpen.svg",
+    "label": "FGr Wasserschaden-Pumpen"
+   },
+   {
+    "file": "FGr_Wassserschaden-Pumpen_A.svg",
+    "label": "FGr Wassserschaden-Pumpen A"
+   },
+   {
+    "file": "FGr_Wassserschaden-Pumpen_B.svg",
+    "label": "FGr Wassserschaden-Pumpen B"
+   },
+   {
+    "file": "FGr_Wassserschaden-Pumpen_C.svg",
+    "label": "FGr Wassserschaden-Pumpen C"
+   },
+   {
+    "file": "FGr_Ölschaden.svg",
+    "label": "FGr Ölschaden"
+   },
+   {
+    "file": "FGr_Ölschaden_A.svg",
+    "label": "FGr Ölschaden A"
+   },
+   {
+    "file": "FGr_Ölschaden_B.svg",
+    "label": "FGr Ölschaden B"
+   },
+   {
+    "file": "FGr_Ölschaden_C.svg",
+    "label": "FGr Ölschaden C"
+   },
+   {
+    "file": "Fachzug_Führung_Kommunikation.svg",
+    "label": "Fachzug Führung Kommunikation"
+   },
+   {
+    "file": "Fachzug_Logistik.svg",
+    "label": "Fachzug Logistik"
+   },
+   {
+    "file": "Führungseinheit.svg",
+    "label": "Führungseinheit"
+   },
+   {
+    "file": "Führungstrupp.svg",
+    "label": "Führungstrupp"
+   },
+   {
+    "file": "Grundausbildungsgruppe.svg",
+    "label": "Grundausbildungsgruppe"
+   },
+   {
+    "file": "Gruppe.svg",
+    "label": "Gruppe"
+   },
+   {
+    "file": "Jugendgruppe.svg",
+    "label": "Jugendgruppe"
+   },
+   {
+    "file": "Logistikeinheit.svg",
+    "label": "Logistikeinheit"
+   },
+   {
+    "file": "Logistiktrupp.svg",
+    "label": "Logistiktrupp"
+   },
+   {
+    "file": "Lotsengruppe.svg",
+    "label": "Lotsengruppe"
+   },
+   {
+    "file": "Media_Team.svg",
+    "label": "Media Team"
+   },
+   {
+    "file": "OV_Stab.svg",
+    "label": "OV Stab"
+   },
+   {
+    "file": "SEEBA.svg",
+    "label": "SEEBA"
+   },
+   {
+    "file": "SEELift.svg",
+    "label": "SEELift"
+   },
+   {
+    "file": "SEEWA.svg",
+    "label": "SEEWA"
+   },
+   {
+    "file": "Stab.svg",
+    "label": "Stab"
+   },
+   {
+    "file": "Staffel.svg",
+    "label": "Staffel"
+   },
+   {
+    "file": "SysBR.svg",
+    "label": "SysBR"
+   },
+   {
+    "file": "THV_Bereitschaft.svg",
+    "label": "THV Bereitschaft"
+   },
+   {
+    "file": "Technischer_Zug.svg",
+    "label": "Technischer Zug"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Brückenbau.svg",
+    "label": "Technischer Zug mit FGr Brückenbau"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Elektroversorgung.svg",
+    "label": "Technischer Zug mit FGr Elektroversorgung"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Infrastruktur.svg",
+    "label": "Technischer Zug mit FGr Infrastruktur"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Ortung.svg",
+    "label": "Technischer Zug mit FGr Ortung"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Ortung_A.svg",
+    "label": "Technischer Zug mit FGr Ortung A"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Ortung_B.svg",
+    "label": "Technischer Zug mit FGr Ortung B"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Ortung_C.svg",
+    "label": "Technischer Zug mit FGr Ortung C"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Räumen.svg",
+    "label": "Technischer Zug mit FGr Räumen"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Räumen_A.svg",
+    "label": "Technischer Zug mit FGr Räumen A"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Räumen_B.svg",
+    "label": "Technischer Zug mit FGr Räumen B"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Räumen_C.svg",
+    "label": "Technischer Zug mit FGr Räumen C"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Sprengen.svg",
+    "label": "Technischer Zug mit FGr Sprengen"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Trinkwasser.svg",
+    "label": "Technischer Zug mit FGr Trinkwasser"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Wassergefahren.svg",
+    "label": "Technischer Zug mit FGr Wassergefahren"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Wassergefahren_A.svg",
+    "label": "Technischer Zug mit FGr Wassergefahren A"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Wassergefahren_B.svg",
+    "label": "Technischer Zug mit FGr Wassergefahren B"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Wasserschaden_Pumpen.svg",
+    "label": "Technischer Zug mit FGr Wasserschaden Pumpen"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Wasserschaden_Pumpen_A.svg",
+    "label": "Technischer Zug mit FGr Wasserschaden Pumpen A"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Wasserschaden_Pumpen_B.svg",
+    "label": "Technischer Zug mit FGr Wasserschaden Pumpen B"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Wasserschaden_Pumpen_C.svg",
+    "label": "Technischer Zug mit FGr Wasserschaden Pumpen C"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Ölschaden.svg",
+    "label": "Technischer Zug mit FGr Ölschaden"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Ölschaden_A.svg",
+    "label": "Technischer Zug mit FGr Ölschaden A"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Ölschaden_B.svg",
+    "label": "Technischer Zug mit FGr Ölschaden B"
+   },
+   {
+    "file": "Technischer_Zug_mit_FGr_Ölschaden_C.svg",
+    "label": "Technischer Zug mit FGr Ölschaden C"
+   },
+   {
+    "file": "Trupp.svg",
+    "label": "Trupp"
+   },
+   {
+    "file": "Trupp_ESS.svg",
+    "label": "Trupp ESS"
+   },
+   {
+    "file": "Trupp_MHP.svg",
+    "label": "Trupp MHP"
+   },
+   {
+    "file": "Trupp_TS.svg",
+    "label": "Trupp TS"
+   },
+   {
+    "file": "Trupp_UL.svg",
+    "label": "Trupp UL"
+   },
+   {
+    "file": "VOST.svg",
+    "label": "VOST"
+   },
+   {
+    "file": "Verband_Feldlager.svg",
+    "label": "Verband Feldlager"
+   },
+   {
+    "file": "Verband_Logistik.svg",
+    "label": "Verband Logistik"
+   },
+   {
+    "file": "Weitverkehrstrupp.svg",
+    "label": "Weitverkehrstrupp"
+   },
+   {
+    "file": "Zug.svg",
+    "label": "Zug"
+   },
+   {
+    "file": "Zugtrupp.svg",
+    "label": "Zugtrupp"
+   },
+   {
+    "file": "Zugtrupp_FZ-FK.svg",
+    "label": "Zugtrupp FZ-FK"
+   },
+   {
+    "file": "Zugtrupp_FZ-Logistik.svg",
+    "label": "Zugtrupp FZ-Logistik"
+   },
+   {
+    "file": "Örtliche_Gefahrenabwehr.svg",
+    "label": "Örtliche Gefahrenabwehr"
+   }
+  ]
+ },
+ "THW_Fahrzeuge": {
+  "label": "THW Fahrzeuge",
+  "items": [
+   {
+    "file": "Abrollbehälter_Container.svg",
+    "label": "Abrollbehälter Container"
+   },
+   {
+    "file": "Anhänger.svg",
+    "label": "Anhänger"
+   },
+   {
+    "file": "Anhänger_0_5t.svg",
+    "label": "Anhänger 0 5t"
+   },
+   {
+    "file": "Anhänger_2t.svg",
+    "label": "Anhänger 2t"
+   },
+   {
+    "file": "Anhänger_6t.svg",
+    "label": "Anhänger 6t"
+   },
+   {
+    "file": "Anhänger_7t.svg",
+    "label": "Anhänger 7t"
+   },
+   {
+    "file": "Anhänger_BT_2t.svg",
+    "label": "Anhänger BT 2t"
+   },
+   {
+    "file": "Anhänger_DLE.svg",
+    "label": "Anhänger DLE"
+   },
+   {
+    "file": "Anhänger_FKH.svg",
+    "label": "Anhänger FKH"
+   },
+   {
+    "file": "Anhänger_FüLa.svg",
+    "label": "Anhänger FüLa"
+   },
+   {
+    "file": "Anhänger_I_2t.svg",
+    "label": "Anhänger I 2t"
+   },
+   {
+    "file": "Anhänger_K_1t.svg",
+    "label": "Anhänger K 1t"
+   },
+   {
+    "file": "Anhänger_Kühl.svg",
+    "label": "Anhänger Kühl"
+   },
+   {
+    "file": "Anhänger_Lichtmast.svg",
+    "label": "Anhänger Lichtmast"
+   },
+   {
+    "file": "Anhänger_Log-MW_2t.svg",
+    "label": "Anhänger Log-MW 2t"
+   },
+   {
+    "file": "Anhänger_MzAB.svg",
+    "label": "Anhänger MzAB"
+   },
+   {
+    "file": "Anhänger_MzB.svg",
+    "label": "Anhänger MzB"
+   },
+   {
+    "file": "Anhänger_MzPt.svg",
+    "label": "Anhänger MzPt"
+   },
+   {
+    "file": "Anhänger_NEA_200kVA.svg",
+    "label": "Anhänger NEA 200kVA"
+   },
+   {
+    "file": "Anhänger_NEA_50kVA_LiMa.svg",
+    "label": "Anhänger NEA 50kVA LiMa"
+   },
+   {
+    "file": "Anhänger_NEA_650kVA.svg",
+    "label": "Anhänger NEA 650kVA"
+   },
+   {
+    "file": "Anhänger_Netzersatzanlage.svg",
+    "label": "Anhänger Netzersatzanlage"
+   },
+   {
+    "file": "Anhänger_O_A_2t.svg",
+    "label": "Anhänger O A 2t"
+   },
+   {
+    "file": "Anhänger_O_B_2t.svg",
+    "label": "Anhänger O B 2t"
+   },
+   {
+    "file": "Anhänger_PF_12t.svg",
+    "label": "Anhänger PF 12t"
+   },
+   {
+    "file": "Anhänger_Rettungshunde.svg",
+    "label": "Anhänger Rettungshunde"
+   },
+   {
+    "file": "Anhänger_RiFu.svg",
+    "label": "Anhänger RiFu"
+   },
+   {
+    "file": "Anhänger_Ru12t.svg",
+    "label": "Anhänger Ru12t"
+   },
+   {
+    "file": "Anhänger_SchlB.svg",
+    "label": "Anhänger SchlB"
+   },
+   {
+    "file": "Anhänger_Sp_2t.svg",
+    "label": "Anhänger Sp 2t"
+   },
+   {
+    "file": "Anhänger_Spül.svg",
+    "label": "Anhänger Spül"
+   },
+   {
+    "file": "Anhänger_Stromerzeuger.svg",
+    "label": "Anhänger Stromerzeuger"
+   },
+   {
+    "file": "Anhänger_SwPu_15000.svg",
+    "label": "Anhänger SwPu 15000"
+   },
+   {
+    "file": "Anhänger_SwPu_25000.svg",
+    "label": "Anhänger SwPu 25000"
+   },
+   {
+    "file": "Anhänger_SwPu_5000.svg",
+    "label": "Anhänger SwPu 5000"
+   },
+   {
+    "file": "Anhänger_TWAA.svg",
+    "label": "Anhänger TWAA"
+   },
+   {
+    "file": "Anhänger_Tieflader_18t.svg",
+    "label": "Anhänger Tieflader 18t"
+   },
+   {
+    "file": "Anhänger_Wechselbrücke_15t.svg",
+    "label": "Anhänger Wechselbrücke 15t"
+   },
+   {
+    "file": "Anhänger_Werkstatt.svg",
+    "label": "Anhänger Werkstatt"
+   },
+   {
+    "file": "Anhänger_kl_Boot.svg",
+    "label": "Anhänger kl Boot"
+   },
+   {
+    "file": "Bergungsräumgerät.svg",
+    "label": "Bergungsräumgerät"
+   },
+   {
+    "file": "Boot.svg",
+    "label": "Boot"
+   },
+   {
+    "file": "Container_10ft.svg",
+    "label": "Container 10ft"
+   },
+   {
+    "file": "Container_20ft.svg",
+    "label": "Container 20ft"
+   },
+   {
+    "file": "Container_BDF.svg",
+    "label": "Container BDF"
+   },
+   {
+    "file": "Container_Werkstatt.svg",
+    "label": "Container Werkstatt"
+   },
+   {
+    "file": "ERS.svg",
+    "label": "ERS"
+   },
+   {
+    "file": "FmKW.svg",
+    "label": "FmKW"
+   },
+   {
+    "file": "FüKW.svg",
+    "label": "FüKW"
+   },
+   {
+    "file": "FüKomKW.svg",
+    "label": "FüKomKW"
+   },
+   {
+    "file": "GKW_7t.svg",
+    "label": "GKW 7t"
+   },
+   {
+    "file": "GKW_I.svg",
+    "label": "GKW I"
+   },
+   {
+    "file": "GKW_II.svg",
+    "label": "GKW II"
+   },
+   {
+    "file": "Gabelstapler.svg",
+    "label": "Gabelstapler"
+   },
+   {
+    "file": "Gabelstapler_2t.svg",
+    "label": "Gabelstapler 2t"
+   },
+   {
+    "file": "Gabelstapler_3t.svg",
+    "label": "Gabelstapler 3t"
+   },
+   {
+    "file": "Geländestapler.svg",
+    "label": "Geländestapler"
+   },
+   {
+    "file": "Kettenbagger.svg",
+    "label": "Kettenbagger"
+   },
+   {
+    "file": "Kettenfahrzeug.svg",
+    "label": "Kettenfahrzeug"
+   },
+   {
+    "file": "Kipper.svg",
+    "label": "Kipper"
+   },
+   {
+    "file": "Kraftfahrzeug.svg",
+    "label": "Kraftfahrzeug"
+   },
+   {
+    "file": "Kraftfahrzeug_Geländegängig.svg",
+    "label": "Kraftfahrzeug Geländegängig"
+   },
+   {
+    "file": "LKW-Ladekran.svg",
+    "label": "LKW-Ladekran"
+   },
+   {
+    "file": "LKW-Ladekran_nicht_geländegängig.svg",
+    "label": "LKW-Ladekran nicht geländegängig"
+   },
+   {
+    "file": "LKW.svg",
+    "label": "LKW"
+   },
+   {
+    "file": "LKW_K_9t.svg",
+    "label": "LKW K 9t"
+   },
+   {
+    "file": "LKW_K_Lkr.svg",
+    "label": "LKW K Lkr"
+   },
+   {
+    "file": "LKW_K_Lkr_1_5t.svg",
+    "label": "LKW K Lkr 1 5t"
+   },
+   {
+    "file": "LKW_Lbw.svg",
+    "label": "LKW Lbw"
+   },
+   {
+    "file": "LKW_Lbw_7t.svg",
+    "label": "LKW Lbw 7t"
+   },
+   {
+    "file": "MLW_I.svg",
+    "label": "MLW I"
+   },
+   {
+    "file": "MLW_II.svg",
+    "label": "MLW II"
+   },
+   {
+    "file": "MLW_III.svg",
+    "label": "MLW III"
+   },
+   {
+    "file": "MLW_IV.svg",
+    "label": "MLW IV"
+   },
+   {
+    "file": "MLW_V.svg",
+    "label": "MLW V"
+   },
+   {
+    "file": "MLW_V_nicht_geländegängig.svg",
+    "label": "MLW V nicht geländegängig"
+   },
+   {
+    "file": "MTW-TZ.svg",
+    "label": "MTW-TZ"
+   },
+   {
+    "file": "MTW.svg",
+    "label": "MTW"
+   },
+   {
+    "file": "MTW_FGr.svg",
+    "label": "MTW FGr"
+   },
+   {
+    "file": "Mehrzweckarbeitsboot.svg",
+    "label": "Mehrzweckarbeitsboot"
+   },
+   {
+    "file": "Mehrzweckboot.svg",
+    "label": "Mehrzweckboot"
+   },
+   {
+    "file": "Mehrzweckponton.svg",
+    "label": "Mehrzweckponton"
+   },
+   {
+    "file": "MzGW.svg",
+    "label": "MzGW"
+   },
+   {
+    "file": "MzKW.svg",
+    "label": "MzKW"
+   },
+   {
+    "file": "PKW.svg",
+    "label": "PKW"
+   },
+   {
+    "file": "PKW_Geländegängig.svg",
+    "label": "PKW Geländegängig"
+   },
+   {
+    "file": "PKW_Weitverkehrstrupp.svg",
+    "label": "PKW Weitverkehrstrupp"
+   },
+   {
+    "file": "Radbagger.svg",
+    "label": "Radbagger"
+   },
+   {
+    "file": "Radlader.svg",
+    "label": "Radlader"
+   },
+   {
+    "file": "Rettungs_und_Sicherungsboot.svg",
+    "label": "Rettungs und Sicherungsboot"
+   },
+   {
+    "file": "Sattelzugmaschine.svg",
+    "label": "Sattelzugmaschine"
+   },
+   {
+    "file": "Schlauchboot.svg",
+    "label": "Schlauchboot"
+   },
+   {
+    "file": "THV.svg",
+    "label": "THV"
+   },
+   {
+    "file": "Teleskoplader.svg",
+    "label": "Teleskoplader"
+   },
+   {
+    "file": "Wechselladerfahrzeug.svg",
+    "label": "Wechselladerfahrzeug"
+   },
+   {
+    "file": "Wechselladerfahrzeug_nicht_geländegängig.svg",
+    "label": "Wechselladerfahrzeug nicht geländegängig"
+   },
+   {
+    "file": "kleines_Boot.svg",
+    "label": "kleines Boot"
+   }
+  ]
+ },
+ "THW_Gebäude": {
+  "label": "THW Gebäude",
+  "items": [
+   {
+    "file": "Ausbildungszentrum.svg",
+    "label": "Ausbildungszentrum"
+   },
+   {
+    "file": "Landesverband.svg",
+    "label": "Landesverband"
+   },
+   {
+    "file": "Leitung.svg",
+    "label": "Leitung"
+   },
+   {
+    "file": "Logistikzentrum.svg",
+    "label": "Logistikzentrum"
+   },
+   {
+    "file": "OV_Unterkunft.svg",
+    "label": "OV Unterkunft"
+   },
+   {
+    "file": "Regionalstelle.svg",
+    "label": "Regionalstelle"
+   }
+  ]
+ },
+ "THW_Personen": {
+  "label": "THW Personen",
+  "items": [
+   {
+    "file": "Abschnittsleiter_THW.svg",
+    "label": "Abschnittsleiter THW"
+   },
+   {
+    "file": "Baufachberater.svg",
+    "label": "Baufachberater"
+   },
+   {
+    "file": "Fachberater.svg",
+    "label": "Fachberater"
+   },
+   {
+    "file": "Flugleiter.svg",
+    "label": "Flugleiter"
+   },
+   {
+    "file": "Gruppenführer.svg",
+    "label": "Gruppenführer"
+   },
+   {
+    "file": "Gruppenführer_B.svg",
+    "label": "Gruppenführer B"
+   },
+   {
+    "file": "Gruppenführer_BT.svg",
+    "label": "Gruppenführer BT"
+   },
+   {
+    "file": "Gruppenführer_B_1.svg",
+    "label": "Gruppenführer B 1"
+   },
+   {
+    "file": "Gruppenführer_B_2.svg",
+    "label": "Gruppenführer B 2"
+   },
+   {
+    "file": "Gruppenführer_Bel.svg",
+    "label": "Gruppenführer Bel"
+   },
+   {
+    "file": "Gruppenführer_BrB.svg",
+    "label": "Gruppenführer BrB"
+   },
+   {
+    "file": "Gruppenführer_E.svg",
+    "label": "Gruppenführer E"
+   },
+   {
+    "file": "Gruppenführer_F.svg",
+    "label": "Gruppenführer F"
+   },
+   {
+    "file": "Gruppenführer_I.svg",
+    "label": "Gruppenführer I"
+   },
+   {
+    "file": "Gruppenführer_K.svg",
+    "label": "Gruppenführer K"
+   },
+   {
+    "file": "Gruppenführer_Log-MW.svg",
+    "label": "Gruppenführer Log-MW"
+   },
+   {
+    "file": "Gruppenführer_Log-V.svg",
+    "label": "Gruppenführer Log-V"
+   },
+   {
+    "file": "Gruppenführer_Ltr_FK.svg",
+    "label": "Gruppenführer Ltr FK"
+   },
+   {
+    "file": "Gruppenführer_MT.svg",
+    "label": "Gruppenführer MT"
+   },
+   {
+    "file": "Gruppenführer_N.svg",
+    "label": "Gruppenführer N"
+   },
+   {
+    "file": "Gruppenführer_O.svg",
+    "label": "Gruppenführer O"
+   },
+   {
+    "file": "Gruppenführer_R.svg",
+    "label": "Gruppenführer R"
+   },
+   {
+    "file": "Gruppenführer_SB.svg",
+    "label": "Gruppenführer SB"
+   },
+   {
+    "file": "Gruppenführer_Sp.svg",
+    "label": "Gruppenführer Sp"
+   },
+   {
+    "file": "Gruppenführer_TW.svg",
+    "label": "Gruppenführer TW"
+   },
+   {
+    "file": "Gruppenführer_VOST.svg",
+    "label": "Gruppenführer VOST"
+   },
+   {
+    "file": "Gruppenführer_W.svg",
+    "label": "Gruppenführer W"
+   },
+   {
+    "file": "Gruppenführer_WP.svg",
+    "label": "Gruppenführer WP"
+   },
+   {
+    "file": "Gruppenführer_Öl.svg",
+    "label": "Gruppenführer Öl"
+   },
+   {
+    "file": "Helfer.svg",
+    "label": "Helfer"
+   },
+   {
+    "file": "Helfer_Fm.svg",
+    "label": "Helfer Fm"
+   },
+   {
+    "file": "Helfer_FmFü.svg",
+    "label": "Helfer FmFü"
+   },
+   {
+    "file": "Helfer_IuK.svg",
+    "label": "Helfer IuK"
+   },
+   {
+    "file": "Helfer_Kf.svg",
+    "label": "Helfer Kf"
+   },
+   {
+    "file": "Helfer_Peer.svg",
+    "label": "Helfer Peer"
+   },
+   {
+    "file": "Helfer_RiFu.svg",
+    "label": "Helfer RiFu"
+   },
+   {
+    "file": "Helfer_SGL.svg",
+    "label": "Helfer SGL"
+   },
+   {
+    "file": "Helfer_psFK.svg",
+    "label": "Helfer psFK"
+   },
+   {
+    "file": "Stab_AB.svg",
+    "label": "Stab AB"
+   },
+   {
+    "file": "Stab_BÖ.svg",
+    "label": "Stab BÖ"
+   },
+   {
+    "file": "Stab_BÖH.svg",
+    "label": "Stab BÖH"
+   },
+   {
+    "file": "Stab_Ko.svg",
+    "label": "Stab Ko"
+   },
+   {
+    "file": "Stab_OB.svg",
+    "label": "Stab OB"
+   },
+   {
+    "file": "Stab_OJB.svg",
+    "label": "Stab OJB"
+   },
+   {
+    "file": "Stab_S1.svg",
+    "label": "Stab S1"
+   },
+   {
+    "file": "Stab_S2.svg",
+    "label": "Stab S2"
+   },
+   {
+    "file": "Stab_S3.svg",
+    "label": "Stab S3"
+   },
+   {
+    "file": "Stab_S4.svg",
+    "label": "Stab S4"
+   },
+   {
+    "file": "Stab_S5.svg",
+    "label": "Stab S5"
+   },
+   {
+    "file": "Stab_S6.svg",
+    "label": "Stab S6"
+   },
+   {
+    "file": "Stab_SM.svg",
+    "label": "Stab SM"
+   },
+   {
+    "file": "Stab_Stv_OB.svg",
+    "label": "Stab Stv OB"
+   },
+   {
+    "file": "Stab_Vw.svg",
+    "label": "Stab Vw"
+   },
+   {
+    "file": "Technischer_Berater.svg",
+    "label": "Technischer Berater"
+   },
+   {
+    "file": "Technischer_Berater_Bau.svg",
+    "label": "Technischer Berater Bau"
+   },
+   {
+    "file": "Technischer_Berater_Ortung.svg",
+    "label": "Technischer Berater Ortung"
+   },
+   {
+    "file": "Technischer_Berater_Öl.svg",
+    "label": "Technischer Berater Öl"
+   },
+   {
+    "file": "Truppführer_B.svg",
+    "label": "Truppführer B"
+   },
+   {
+    "file": "Truppführer_BT.svg",
+    "label": "Truppführer BT"
+   },
+   {
+    "file": "Truppführer_B_1.svg",
+    "label": "Truppführer B 1"
+   },
+   {
+    "file": "Truppführer_B_2.svg",
+    "label": "Truppführer B 2"
+   },
+   {
+    "file": "Truppführer_BrB.svg",
+    "label": "Truppführer BrB"
+   },
+   {
+    "file": "Truppführer_E.svg",
+    "label": "Truppführer E"
+   },
+   {
+    "file": "Truppführer_ESS.svg",
+    "label": "Truppführer ESS"
+   },
+   {
+    "file": "Truppführer_F.svg",
+    "label": "Truppführer F"
+   },
+   {
+    "file": "Truppführer_Fm.svg",
+    "label": "Truppführer Fm"
+   },
+   {
+    "file": "Truppführer_FüGeh.svg",
+    "label": "Truppführer FüGeh"
+   },
+   {
+    "file": "Truppführer_I.svg",
+    "label": "Truppführer I"
+   },
+   {
+    "file": "Truppführer_K.svg",
+    "label": "Truppführer K"
+   },
+   {
+    "file": "Truppführer_LdF.svg",
+    "label": "Truppführer LdF"
+   },
+   {
+    "file": "Truppführer_Log-M.svg",
+    "label": "Truppführer Log-M"
+   },
+   {
+    "file": "Truppführer_Log-V.svg",
+    "label": "Truppführer Log-V"
+   },
+   {
+    "file": "Truppführer_Log-VG.svg",
+    "label": "Truppführer Log-VG"
+   },
+   {
+    "file": "Truppführer_MHP.svg",
+    "label": "Truppführer MHP"
+   },
+   {
+    "file": "Truppführer_MT.svg",
+    "label": "Truppführer MT"
+   },
+   {
+    "file": "Truppführer_N.svg",
+    "label": "Truppführer N"
+   },
+   {
+    "file": "Truppführer_O.svg",
+    "label": "Truppführer O"
+   },
+   {
+    "file": "Truppführer_R.svg",
+    "label": "Truppführer R"
+   },
+   {
+    "file": "Truppführer_SB.svg",
+    "label": "Truppführer SB"
+   },
+   {
+    "file": "Truppführer_Sp.svg",
+    "label": "Truppführer Sp"
+   },
+   {
+    "file": "Truppführer_TS.svg",
+    "label": "Truppführer TS"
+   },
+   {
+    "file": "Truppführer_TW.svg",
+    "label": "Truppführer TW"
+   },
+   {
+    "file": "Truppführer_UL.svg",
+    "label": "Truppführer UL"
+   },
+   {
+    "file": "Truppführer_VOST.svg",
+    "label": "Truppführer VOST"
+   },
+   {
+    "file": "Truppführer_W.svg",
+    "label": "Truppführer W"
+   },
+   {
+    "file": "Truppführer_WP.svg",
+    "label": "Truppführer WP"
+   },
+   {
+    "file": "Truppführer_Öl.svg",
+    "label": "Truppführer Öl"
+   },
+   {
+    "file": "Zugführer_FZ_FK.svg",
+    "label": "Zugführer FZ FK"
+   },
+   {
+    "file": "Zugführer_FZ_Log.svg",
+    "label": "Zugführer FZ Log"
+   },
+   {
+    "file": "Zugführer_TZ.svg",
+    "label": "Zugführer TZ"
+   },
+   {
+    "file": "Zugführer_VOST.svg",
+    "label": "Zugführer VOST"
+   },
+   {
+    "file": "Zugtruppführer_FZ_FK.svg",
+    "label": "Zugtruppführer FZ FK"
+   },
+   {
+    "file": "Zugtruppführer_FZ_Log.svg",
+    "label": "Zugtruppführer FZ Log"
+   },
+   {
+    "file": "Zugtruppführer_TZ.svg",
+    "label": "Zugtruppführer TZ"
+   }
+  ]
+ },
+ "Wasserrettung_Einheiten": {
+  "label": "Wasserrettung Einheiten",
+  "items": [
+   {
+    "file": "Bootsgruppe.svg",
+    "label": "Bootsgruppe"
+   },
+   {
+    "file": "Bootstrupp.svg",
+    "label": "Bootstrupp"
+   },
+   {
+    "file": "Strömungsrettungsgruppe.svg",
+    "label": "Strömungsrettungsgruppe"
+   },
+   {
+    "file": "Strömungsrettungstrupp.svg",
+    "label": "Strömungsrettungstrupp"
+   },
+   {
+    "file": "Tauchgruppe.svg",
+    "label": "Tauchgruppe"
+   },
+   {
+    "file": "Tauchtrupp.svg",
+    "label": "Tauchtrupp"
+   },
+   {
+    "file": "Wasserrettungsgruppe.svg",
+    "label": "Wasserrettungsgruppe"
+   },
+   {
+    "file": "Wasserrettungstrupp.svg",
+    "label": "Wasserrettungstrupp"
+   },
+   {
+    "file": "Wasserrettungsverband.svg",
+    "label": "Wasserrettungsverband"
+   },
+   {
+    "file": "Wasserrettungszug.svg",
+    "label": "Wasserrettungszug"
+   },
+   {
+    "file": "Zugtrupp_Wasserrettung.svg",
+    "label": "Zugtrupp Wasserrettung"
+   }
+  ]
+ },
+ "Zoll_Einheiten": {
+  "label": "Zoll Einheiten",
+  "items": [
+   {
+    "file": "Einheit_des_Zoll.svg",
+    "label": "Einheit des Zoll"
+   }
+  ]
+ },
+ "Zoll_Fahrzeuge": {
+  "label": "Zoll Fahrzeuge",
+  "items": [
+   {
+    "file": "PKW.svg",
+    "label": "PKW"
+   }
+  ]
+ }
+}

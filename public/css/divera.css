@@ -1,0 +1,398 @@
+/* divera.css - DiveraMap (Fahrzeugstatus-Karte); Seite /divera, Daten ueber /api/divera. */
+
+
+/* Zusätzliche Body-Einstellungen, die nicht in pagelayout.css enthalten sind */
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Container mit Karte und Liste */
+.container {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 0;
+}
+
+/* Linke Box: Karte */
+.map-box {
+  flex: 2;
+  position: relative;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Fahrzeugliste – Einträge */
+.vehicle-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  position: relative;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Linksbündig: fmsstatus-Zahl */
+.vehicle-status {
+  flex: 0 0 auto;
+  text-align: left;
+  font-size: 1.5em;
+  font-weight: bold;
+  min-width: 40px;
+}
+
+/* Zentriert: Info (erste Zeile: {number} - {name}, zweite Zeile: {fmsstatus_note}) */
+.vehicle-info {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Rechtsbündig: Home Icon – gleiche Größe wie die fmsstatus-Zahl */
+.home-icon {
+  flex: 0 0 auto;
+  color: black;
+  font-size: 1.5em;
+  cursor: pointer;
+  text-align: right;
+  font-weight: bold;
+}
+
+/* --- Statusfarben --- */
+.status-0 {
+  background-color: red;
+  color: black; /* Textfarbe auf Schwarz */
+}
+.status-1,
+.status-2 {
+  background-color: green;
+  color: black; /* Textfarbe auf Schwarz */
+}
+.status-3 {
+  background-color: yellow;
+  color: black; /* Textfarbe auf Schwarz */
+}
+.status-4 {
+  background-color: blue;
+  color: white; /* Textfarbe auf Weiß */
+}
+.status-5 {
+  background-color: purple;
+  color: white; /* Textfarbe auf Weiß */
+}
+.status-6 {
+  background-color: lightgray;
+  color: black; /* Textfarbe auf Schwarz */
+}
+.status-7,
+.status-8,
+.status-9 {
+  background-color: darkgray;
+  color: black; /* Textfarbe auf Schwarz */
+}
+
+/* Blinking-Effekt für Status 0 und 5 */
+@keyframes blink {
+  50% {
+    opacity: 0.5;
+  }
+}
+.blinking {
+  animation: blink 1s linear infinite;
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+  .list-box {
+    max-width: 100%;
+    height: 200px;
+  }
+  .map-box {
+    flex: none;
+    height: calc(100% - 200px);
+  }
+}
+
+/* Marker-Inhalt – ähnlich wie in der Liste */
+.vehicle-marker-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.vehicle-marker-content .marker-status {
+  font-weight: bold;
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.vehicle-marker-content .marker-name {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* --- Styling für den Einsatzmarker als rotes Dreieck mit schwarzem Rand --- */
+.operation-marker {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  background: red; /* Standard: rot */
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  overflow: visible;
+}
+
+.operation-marker.closed {
+  background: lightcoral; /* Helles Rot, wenn closed === true */
+}
+
+.operation-marker::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border: 4px solid black;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  z-index: -1;
+}
+
+.operation-marker span {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Positionierung des zusätzlichen Sternchens oberhalb der Einsatznummer */
+.operation-star {
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+  line-height: 1;
+  margin-top: 5px;
+}
+
+/* --- Optional: Styling für das Einsatz-Popup --- */
+.operation-popup {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: black;
+  font-weight: bold;
+}
+
+.operation-popup a {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Rechte Box: Fahrzeugliste */
+.list-box {
+  flex: 1;
+  max-width: 400px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* Scrollbarer Bereich für die Einträge */
+.list-content {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+/* Bereich für die Druck-Buttons am unteren Ende der Listbox */
+.print-buttons {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Styling für die Buttons */
+.print-buttons button {
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* --- Bestätigungs-Popup: Overlay & Dialog --- */
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.4);
+  z-index: 9999;
+}
+
+.confirm-dialog {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 420px;
+  width: calc(100% - 40px);
+  font-weight: bold;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* Label, Fehlermeldung, Input */
+.confirm-label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.confirm-error {
+  color: red;
+  margin-bottom: 8px;
+}
+
+.confirm-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;   /* abgerundete Ecken */
+  outline: none;
+  font-weight: bold;
+}
+
+.confirm-input:focus {
+  border-color: #888;
+}
+
+/* Button-Zeile */
+.confirm-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.confirm-btn {
+  padding: 8px 14px;
+  border: 1px solid #333;
+  border-radius: 12px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.confirm-btn.ok {
+  background: #e8ffe8;   /* leicht grünlich, fügt sich zu Statusfarben */
+}
+
+.confirm-btn.cancel {
+  background: #fff;
+}
+
+/* Kleine Einsatz-Badge im Marker */
+/* Wrapper um Box + Badge */
+/* Marker-Box + Badge nebeneinander, ohne Zeilenumbruch */
+.marker-with-badge {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap; /* niemals umbrechen */
+}
+
+/* Die Box selbst soll nur so breit wie ihr eigener Inhalt sein */
+.marker-with-badge .vehicle-marker-content {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;        /* kein Umbruch in der Box */
+}
+
+/* WICHTIG: Name soll nicht flexen -> keine zweite Zeile */
+.marker-with-badge .marker-name {
+  flex: 0 0 auto;             /* nimmt genau so viel Platz wie nötig */
+  white-space: nowrap;        /* sicherheitshalber doppelt */
+}
+
+/* Statuszahl ebenfalls nicht flexen */
+.marker-with-badge .marker-status {
+  flex: 0 0 auto;
+  margin-right: 6px;
+}
+
+/* Badge rechts mit 8px Abstand (wie gewünscht) */
+.marker-opid {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 6px;
+  border: 1px solid #333;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  color: black; /* Textfarbe auf Schwarz */
+}
+
+/* Einsatz-Badge in der Fahrzeugliste */
+.vehicle-opid {
+  flex: 0 0 auto;
+  margin-left: 8px;
+  margin-right: 16px; /* ⬅ extra Abstand zum Home-Icon */
+  padding: 2px 8px;
+  border: 1px solid #333;
+  border-radius: 10px;
+  background: #fff;
+  font-weight: bold;
+  color: black; /* Textfarbe auf Schwarz */
+}
+
+/* Abgeschlossene Einsätze – stärker ausgeblendet */
+.operation-marker-closed {
+  opacity: 0.65;          /* deutlich blasser */
+  filter: grayscale(40%); /* leicht entsättigt, optional */
+}
+
+/* Kompletter Seitenhintergrund rot bei Status 0 */
+body.status-0-background {
+  background-color: red !important;
+}
+
+/* Fehlerhinweis ueber der Fahrzeugliste (Server-/Divera-Fehler) */
+.divera-error {
+  display: none;
+  background: #ffe6e6;
+  border: 1px solid #ffb3b3;
+  color: #b00000;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-weight: bold;
+}

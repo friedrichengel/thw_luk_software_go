@@ -1,0 +1,48 @@
+/* verwaltung.css - Einsatz-Verwaltung */
+/* Ganze Bildschirmhoehe nutzen: Header, Inhalt (scrollt), Footer unten. Keine
+   feste Hoehe fuer Kopf/Fuss annehmen - die Fussleiste bricht auf schmalen
+   Bildschirmen (Notebook) auf zwei Zeilen um. */
+.vw-body { color: #222; display: flex; flex-direction: column; height: 100vh; margin: 0; }
+.vw-container { flex: 1 1 auto; min-height: 0; padding: 12px; overflow: auto; }
+.vw-row { gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+.vw-box { flex: 1 1 380px; min-width: 320px; max-height: none; }
+.vw-box label { display: block; font-weight: 600; font-size: 0.9em; margin: 8px 0 4px; }
+.vw-box input[type="text"], .vw-box input[type="datetime-local"], .vw-box select, .vw-box textarea {
+  width: 100%; padding: 7px 9px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95em; box-sizing: border-box; font-family: inherit;
+}
+.vw-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+.vw-add-row { display: flex; gap: 6px; margin-bottom: 10px; }
+.vw-add-row > * { flex: 1; }
+.vw-add-row > button { flex: 0 0 auto; }
+
+.vw-member { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; background: #f8f9fb; margin-bottom: 6px; }
+.vw-member-main { flex: 1; min-width: 0; }
+.vw-member-name { font-weight: 600; }
+.vw-member-roles { margin-top: 3px; }
+.vw-member-owner { background: #e7f1ff; border-color: #b6d4fe; }
+
+.vw-roles-list { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; max-height: 50vh; overflow: auto; }
+.vw-roles-list label { display: flex; gap: 6px; align-items: flex-start; font-weight: normal; font-size: 0.92em; padding: 3px 0; }
+.vw-roles-list .vw-role-caps { color: #777; font-size: 0.85em; display: block; }
+
+.vw-share { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; background: #f8f9fb; margin-bottom: 6px; }
+.vw-share-revoked { opacity: 0.6; }
+.vw-share-main { flex: 1; min-width: 0; }
+.vw-share-url { word-break: break-all; font-family: ui-monospace, Consolas, monospace; font-size: 0.85em; margin-top: 4px; }
+
+.vw-snapshots { margin-top: 8px; }
+.vw-snapshot { display: flex; justify-content: space-between; gap: 8px; padding: 5px 0; border-bottom: 1px solid #eee; font-size: 0.9em; }
+.vw-snapshot:last-child { border-bottom: 0; }
+.vw-check { display: flex !important; align-items: center; gap: 8px; font-weight: 600; font-size: 0.9em; margin: 10px 0 4px; }
+.vw-check input { width: auto; }
+
+/* Kraeftekatalog-Kachel: Adresssuche, Karten-Overlay */
+.vw-geo-row { margin-bottom: 4px; }
+.vw-geo-row input { flex: 1 1 auto; }
+.vw-geo-treffer { display: flex; flex-direction: column; gap: 4px; margin: 4px 0 8px; }
+.vw-geo-hit { text-align: left; background: #f3f5fa; border: 1px solid #d8dde6; border-radius: 4px; padding: 6px 8px; cursor: pointer; font-size: 0.9em; color: #222; }
+.vw-geo-hit:hover { background: #e7f1ff; border-color: #9ec5fe; }
+.vw-map { width: 100%; height: min(60vh, 520px); border: 1px solid #ccc; border-radius: 6px; }
+/* Knopf neben Eingabefeldern: buendig mit der Unterkante der Felder */
+.luk-field-row > .vw-field-btn { flex: 0 0 auto; display: flex; align-items: flex-end; }
+.luk-field-row > .vw-field-btn .luk-btn { padding: 8px 12px; margin-bottom: 0; }

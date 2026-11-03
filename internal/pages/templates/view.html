@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Freigabelink – {{.AppName}}</title>
+<link rel="icon" type="image/png" href="/images/favicon_steinmap.png">
+<link rel="stylesheet" href="/css/luk.css?v={{.AssetVersion}}" />
+<link rel="stylesheet" href="/css/auth.css?v={{.AssetVersion}}" />
+</head>
+<body class="auth-page">
+<div class="card">
+  <div class="logo"><img src="/images/THW.svg" alt="THW-Logo" class="logo-img"></div>
+{{if not .Link}}
+  <h1>Freigabelink ungültig</h1>
+  <p>Dieser Link ist unbekannt, abgelaufen oder wurde vom Stab widerrufen.</p>
+  <p><a href="/einsatz">Zur Einsatzliste</a></p>
+{{else}}
+  <h1>Freigabelink</h1>
+  <p>Dieser Link gehört zum Einsatz <strong>{{.Link.Title}}</strong>
+    {{if .Link.StabName}}({{.Link.StabName}}){{end}}.</p>
+  {{if .Info}}
+    <div class="info" style="background:#e7f3ff;padding:10px;border-radius:8px;border:1px solid #b6d7ff">{{.Info}}</div>
+    <p><a href="/einsatz">Zur Einsatzliste</a></p>
+  {{else}}
+    {{if .Error}}<div class="error">{{.Error}}</div>{{end}}
+    <p>Ein Freigabelink öffnet den Einsatz nicht direkt. Trage ihn für einen eigenen Einsatz ein; danach können alle
+      Mitglieder dieses Einsatzes „{{.Link.Title}}" lesend öffnen. Der Ersteller sieht,
+      welche Einsätze den Link nutzen, und kann ihn jederzeit widerrufen.</p>
+    {{if .Own}}
+      <form method="post" action="/view">
+        <input type="hidden" name="csrf" value="{{.CSRF}}" />
+        <input type="hidden" name="t" value="{{.Token}}" />
+        <label>Für welchen eigenen Einsatz?
+          <select name="einsatz">
+            {{range .Own}}
+              <option value="{{.UUID}}">{{.Title}}{{if .StabName}} – {{.StabName}}{{end}}</option>
+            {{end}}
+          </select>
+        </label>
+        <label>Bezeichnung (optional)
+          <input type="text" name="label" maxlength="120" autocomplete="off" placeholder="z.B. Nachbarstab OV Musterstadt" />
+        </label>
+        <button type="submit">Verknüpfen</button>
+      </form>
+    {{else}}
+      <p class="luk-muted">Du bist für keinen offenen Einsatz Eigentümer. Bitte gib den Link an den Leiter deines Stabes weiter;
+        er trägt ihn in der Verwaltung des Einsatzes unter „Verknüpfte Einsätze" ein.</p>
+    {{end}}
+    <p><a href="/einsatz">Zur Einsatzliste</a></p>
+  {{end}}
+{{end}}
+</div>
+</body>
+</html>
