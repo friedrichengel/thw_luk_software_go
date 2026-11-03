@@ -181,6 +181,13 @@ scripts/           build.sh (Cross-Compile der Binaries)
   und die Login-Seiten; `public/daten/` wird **nicht** ausgeliefert (Stammdaten
   nur ueber `api/kraefte?action=stamm`). Neue statische Pfade auch in
   `STATIC_PREFIX` des Service Workers eintragen.
+- **CSP ohne `unsafe-inline` für Scripts**: jeder Request bekommt einen Nonce
+  (`httpx.Nonce(r)`, in Vorlagen `{{.Nonce}}` aus `base`). Jedes Inline-`<script>`
+  braucht `nonce="{{.Nonce}}"` (Go-Helfer: `httpx.NonceAttr(r)`), Event-Handler-
+  Attribute (`onclick=`, `onsubmit=`, `onerror=`) und `javascript:`-URLs sind tabu,
+  auch in `innerHTML`-Strings; stattdessen `data-*`-Attribute plus `addEventListener`
+  (`admin.js`, `tabs.js`). `TestPagesCSPNonce` lädt alle Seiten und schlägt sonst fehl.
+  Seiten, die `base` nicht über `pageBase` füllen, setzen `Nonce` selbst.
 - **Sitzungen** liegen in der Tabelle `sessions` (JSON) und überleben Neustarts.
   Cookie `luk_session`, Leerlauf `SESSION_IDLE_MIN`.
 - **Changelog**: Bei jeder nutzersichtbaren Änderung `public/daten/changelog.json`

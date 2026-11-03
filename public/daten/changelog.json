@@ -2,6 +2,16 @@
   "hinweis": "Changelog fuer Nutzer (Dialog 'Was ist neu', Versionsstempel im Footer). Neuester Eintrag zuerst. 'show': true loest nach dem Login einmalig ein Overlay aus; kleinere Korrekturen mit 'show': false bleiben nur in der Liste. Version muss zu APP_VERSION in config/.env passen.",
   "entries": [
     {
+      "version": "3.2.7",
+      "date": "2026-11-03",
+      "title": "Strengere Script-Regeln, Webhook-Limit",
+      "show": false,
+      "items": [
+        "Die Sicherheitsregeln der Seiten (Content Security Policy) erlauben Inline-Scripts nur noch mit einem je Aufruf erzeugten Nonce. Eingeschleuster Script-Code, etwa aus Fremddaten, wird vom Browser nicht mehr ausgeführt. Alle Schaltflächen und Formulare der Serververwaltung und des Dashboards arbeiten jetzt ohne Inline-Handler.",
+        "STEIN-Webhook: Nach 20 abgelehnten Aufrufen (unbekannter Token oder falsches Secret) von einer IP-Adresse antwortet der Endpunkt 15 Minuten lang mit „zu viele Anfragen“. Gültige Aufrufe zählen nicht mit."
+      ]
+    },
+    {
       "version": "3.2.6",
       "date": "2026-11-03",
       "title": "Sicherheitskorrekturen",
