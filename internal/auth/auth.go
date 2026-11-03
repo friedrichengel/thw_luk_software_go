@@ -43,6 +43,8 @@ const (
 	pwResetWindow    = 1800
 	pwResetMax       = 3
 	pwResetMaxIP     = 10
+	hookWindow       = 900 // STEIN-Webhook: abgelehnte Aufrufe je IP
+	hookMaxFail      = 20
 	PasswordMinChars = 10
 )
 
@@ -360,6 +362,26 @@ func (a *Auth) recordFailedTfa(uid int64) error {
 func (a *Auth) clearTfaAttempts(uid int64) error {
 	_, err := a.DB.Exec("DELETE FROM tfa_attempts WHERE user_id = ?", uid)
 	return err
+}
+
+// --- STEIN-Webhook: abgelehnte Aufrufe je IP -------------------------------
+
+// IsWebhookRateLimited: zu viele abgelehnte Webhook-Aufrufe (unbekannter
+// Token oder falsches X-Secret) von dieser IP im Zeitfenster. Gueltige
+// Aufrufe zaehlen nicht, STEIN sperrt sich also nicht selbst aus.
+func (a *Auth) IsWebhookRateLimited(ipHash string) (bool, error) {
+	n, err := db.QueryInt(a.DB, "SELECT COUNT(*) FROM login_attempts WHERE username = 'webhook' AND ip_hash = ? AND created_at >= ?", ipHash, db.Ago(hookWindow*time.Second))
+	return n >= hookMaxFail, err
+}
+
+// RecordWebhookFailure zaehlt einen abgelehnten Aufruf; true genau dann, wenn
+// damit die Grenze erreicht ist (eine Log-Zeile je Sperre).
+func (a *Auth) RecordWebhookFailure(ipHash string) (bool, error) {
+	if _, err := a.DB.Exec("INSERT INTO login_attempts (ip_hash, username, created_at) VALUES (?, 'webhook', ?)", ipHash, db.Now()); err != nil {
+		return false, err
+	}
+	n, err := db.QueryInt(a.DB, "SELECT COUNT(*) FROM login_attempts WHERE username = 'webhook' AND ip_hash = ? AND created_at >= ?", ipHash, db.Ago(hookWindow*time.Second))
+	return n == hookMaxFail, err
 }
 
 // --- Password-Reset Throttling --------------------------------------------

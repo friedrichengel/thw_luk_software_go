@@ -29,7 +29,10 @@ import (
 	"github.com/friedrichengel/thw_luk_software_go/internal/org"
 )
 
-const maxBody = 256 * 1024
+const (
+	maxBody       = 256 * 1024
+	hookWindowMin = 15 // Sperrfenster fuer abgelehnte Aufrufe (auth.hookWindow)
+)
 
 // seen: eventId -> Zeitpunkt, fuer die Duplikaterkennung (at least once).
 var (
@@ -103,15 +106,27 @@ func handle(w http.ResponseWriter, r *http.Request, app *httpx.App, kat *kraefte
 		reply(w, 405, map[string]any{"error": "method not allowed"})
 		return
 	}
+	// Abgelehnte Aufrufe je IP begrenzen (Token oder Secret durchprobieren).
+	ipHash := app.Auth.IPHash(r)
+	if limited, _ := app.Auth.IsWebhookRateLimited(ipHash); limited {
+		reply(w, 429, map[string]any{"error": "too many requests"})
+		return
+	}
+	reject := func(status int, msg string) {
+		if hit, _ := app.Auth.RecordWebhookFailure(ipHash); hit {
+			app.Log.Printf("stein-webhook: zu viele abgelehnte Aufrufe von einer IP, vorerst gesperrt (%d min)", hookWindowMin)
+		}
+		reply(w, status, map[string]any{"error": msg})
+	}
 	o, err := org.FindByWebhookToken(app.DB, app.Cfg.Secret, r.PathValue("token"))
 	if err != nil || o == nil {
-		reply(w, 404, map[string]any{"error": "not found"})
+		reject(404, "not found")
 		return
 	}
 	provided := strings.TrimSpace(r.Header.Get("X-Secret"))
 	secrets, err := org.WebhookSecrets(app.DB, o.ID, app.Cfg.Secret)
 	if err != nil || provided == "" {
-		reply(w, 403, map[string]any{"error": "forbidden"})
+		reject(403, "forbidden")
 		return
 	}
 	label := ""
@@ -123,7 +138,7 @@ func handle(w http.ResponseWriter, r *http.Request, app *httpx.App, kat *kraefte
 	}
 	if label == "" {
 		app.Log.Printf("stein-webhook: Organisation %d: X-Secret abgelehnt", o.ID)
-		reply(w, 403, map[string]any{"error": "forbidden"})
+		reject(403, "forbidden")
 		return
 	}
 	raw, err := io.ReadAll(io.LimitReader(r.Body, maxBody+1))
