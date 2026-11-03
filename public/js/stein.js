@@ -1,3 +1,5 @@
+// escHtml: Text fuer innerHTML/Template-Literale entschaerfen (STEIN-, Nominatim- und Stammdaten sind Fremddaten).
+function escHtml(s) { const d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
 // Konfiguration: Stammdaten (Ortsverbaende, Einheiten, Regionalstellen) kommen
 // ueber api/kraefte?action=stamm - gemeinsam mit STEINmap und den Einsatz-Seiten
 // (lib/KraefteKatalog.php) - und werden in steinInit() per KraefteStamm.load()
@@ -444,7 +446,7 @@ function displayAssets() {
   summaryDiv.className = "summary-field";
   summaryDiv.innerHTML = groupOrder
     .filter(g => groupCounts[g] > 0)
-    .map(g => `${groupNames[g]||"Gruppe "+g}: ${groupCounts[g]}`)
+    .map(g => `${escHtml(groupNames[g]||"Gruppe "+g)}: ${groupCounts[g]}`)
     .join(" &nbsp;&nbsp; ");
   container.appendChild(summaryDiv);
 
@@ -524,8 +526,8 @@ function appendAssetBox(asset, parent) {
   const box = document.createElement("div");
   box.className = "asset-box";
   box.innerHTML = `
-    <div style="font-weight:bold;margin-bottom:4px;">${asset.buname}</div>
-    <div>${text}</div>
+    <div style="font-weight:bold;margin-bottom:4px;">${escHtml(asset.buname)}</div>
+    <div>${escHtml(text)}</div>
     <div>Tage seit Änderung: ${diffDays}</div>
   `;
   box.style.background = getBackground(asset.status, asset.operationReservation);
@@ -543,14 +545,14 @@ function appendAssetBox(asset, parent) {
     e.stopPropagation();
     const tooltip = document.getElementById("tooltip");
     tooltip.innerHTML = `
-      <strong>Label:</strong> ${asset.label || ""}<br>
-      <strong>Name:</strong> ${asset.name || ""}<br>
-      <strong>RadioName:</strong> ${asset.radioName || ""}<br>
-      <strong>ISSI:</strong> ${asset.issi || ""}<br>
-      <strong>Kommentar:</strong> ${asset.comment || ""}<br>
-      <strong>Kategorie:</strong> ${asset.category || ""}<br>
-      <strong>Zuletzt geändert:</strong> ${asset.lastModified || ""}<br>
-      <strong>Von:</strong> ${asset.lastModifiedBy || ""}
+      <strong>Label:</strong> ${escHtml(asset.label)}<br>
+      <strong>Name:</strong> ${escHtml(asset.name)}<br>
+      <strong>RadioName:</strong> ${escHtml(asset.radioName)}<br>
+      <strong>ISSI:</strong> ${escHtml(asset.issi)}<br>
+      <strong>Kommentar:</strong> ${escHtml(asset.comment)}<br>
+      <strong>Kategorie:</strong> ${escHtml(asset.category)}<br>
+      <strong>Zuletzt geändert:</strong> ${escHtml(asset.lastModified)}<br>
+      <strong>Von:</strong> ${escHtml(asset.lastModifiedBy)}
     `;
     tooltip.style.top = (e.pageY + 5) + "px";
     tooltip.style.left = (e.pageX + 5) + "px";

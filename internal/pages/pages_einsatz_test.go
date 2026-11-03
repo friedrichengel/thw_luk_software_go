@@ -65,7 +65,7 @@ func TestEinsatzPagesRender(t *testing.T) {
 	res, _ = c.PostForm(base+"/settings", url.Values{"csrf": {csrf}, "action": {"2fa_start"}})
 	b, _ = io.ReadAll(res.Body)
 	res.Body.Close()
-	if res.StatusCode != 200 || !strings.Contains(string(b), "api.qrserver.com") || !strings.Contains(string(b), "otpauth") {
+	if res.StatusCode != 200 || strings.Contains(string(b), "qrserver") || !strings.Contains(string(b), `data-otpauth="otpauth://totp/`) || !strings.Contains(string(b), "/js/qrcode-generator.min.js") {
 		t.Fatalf("settings 2fa_start: %d", res.StatusCode)
 	}
 	res, _ = c.PostForm(base+"/settings", url.Values{"csrf": {csrf}, "action": {"update_profile"}, "display_name": {"Leiter Eins"}, "email": {"l@example.org"}})

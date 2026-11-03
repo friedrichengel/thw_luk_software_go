@@ -479,6 +479,7 @@ Laufzeitabhängigkeiten außerhalb des Binaries.
 | html2canvas | 1.4.1 | MIT | Niklas von Hertzen, https://github.com/niklasvh/html2canvas |
 | pdf-lib | im Bundle nicht ausgewiesen (1.x) | MIT | Andrew Dillon, https://github.com/Hopding/pdf-lib |
 | ExcelJS | 4.4.0 | MIT | Guyon Roche und Mitwirkende, https://github.com/exceljs/exceljs |
+| qrcode-generator | 1.4.4 | MIT | Kazuhiko Arase, https://github.com/kazuhikoarase/qrcode-generator (QR-Code der 2FA-Einrichtung, lokal im Browser) |
 | Font Awesome Free | 6.7.2 | Icons CC BY 4.0, Schriften SIL OFL 1.1, Code MIT | Fonticons, Inc., https://github.com/FortAwesome/Font-Awesome |
 
 ### Daten (`assets/`, `public/daten/`)

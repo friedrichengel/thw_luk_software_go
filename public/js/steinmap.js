@@ -1,4 +1,6 @@
 // js/steinmap.js
+// escHtml: Text fuer innerHTML/Template-Literale entschaerfen (STEIN-, Nominatim- und Stammdaten sind Fremddaten).
+function escHtml(s) { const d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
 
 // === Konfiguration ===
 // Stammdaten (Ortsverbaende mit Koordinaten, Einheiten, Nachbar-OVs anderer
@@ -248,10 +250,10 @@ function showGeocodePopup(lat, lng, displayName) {
     regionalstellen = [...new Set(regionalstellen)];
   }
 
-  const ortsHtml = ortsverbande.length ? `<strong>Ortsverband:</strong> ${ortsverbande.join(', ')}` : '';
-  const regHtml = regionalstellen.length ? `<strong>Regionalstelle:</strong> ${regionalstellen.join(', ')}` : '';
+  const ortsHtml = ortsverbande.length ? `<strong>Ortsverband:</strong> ${escHtml(ortsverbande.join(', '))}` : '';
+  const regHtml = regionalstellen.length ? `<strong>Regionalstelle:</strong> ${escHtml(regionalstellen.join(', '))}` : '';
 
-  const popupParts = [displayName, coordsHtml, lkHtml, bzHtml, ortsHtml, regHtml].filter(s => s);
+  const popupParts = [escHtml(displayName), coordsHtml, lkHtml, bzHtml, ortsHtml, regHtml].filter(s => s);
   const popupHtml = popupParts.join('<br>');
 
   // Marker setzen bzw. erneuern
@@ -507,9 +509,9 @@ function onNachbarUnitClick(unit) {
   }
 
   // Basis Popup-Inhalt
-  let content = `<strong>${unit.name}</strong>`;
-  content += `<br><br><strong>LV:</strong> ${unit.lv}`;
-  content += `<br><br><strong>Landkreis:</strong> ${unit.zust_landkreis}`;
+  let content = `<strong>${escHtml(unit.name)}</strong>`;
+  content += `<br><br><strong>LV:</strong> ${escHtml(unit.lv)}`;
+  content += `<br><br><strong>Landkreis:</strong> ${escHtml(unit.zust_landkreis)}`;
 
   // Routing-/Distanz-Infos nur, wenn Geocode-Marker existiert
   if (geocodeMarker) {
@@ -631,9 +633,9 @@ function onUnitClick(unit) {
   showVehiclesForUnit(unit);
 
   // Basis Popup-Inhalt
-  let content = `<strong>${unit.name}</strong>`;
+  let content = `<strong>${escHtml(unit.name)}</strong>`;
   if (unit.sammel !== unit.name && unit.sammel.includes('Regionalstelle')) {
-    content += `<br><br><strong>Regionalstelle:</strong> ${unit.sammel}`;
+    content += `<br><br><strong>Regionalstelle:</strong> ${escHtml(unit.sammel)}`;
   }
 
   // Routing-/Distanz-Infos nur, wenn Geocode-Marker existiert
@@ -772,8 +774,8 @@ function showVehiclesForUnit(unit) {
       const box = document.createElement('div');
       box.className = 'asset-box';
       box.innerHTML = `
-        <div style="font-weight:bold;">${asset.buname}</div>
-        <div>${text}</div>
+        <div style="font-weight:bold;">${escHtml(asset.buname)}</div>
+        <div>${escHtml(text)}</div>
         <div>Tage seit Änderung: ${diffDays}</div>
       `;
       box.style.background = getBackground(asset.status, asset.operationReservation);
@@ -792,14 +794,14 @@ function showVehiclesForUnit(unit) {
         e.stopPropagation();
         const tooltip = document.getElementById('tooltip');
         tooltip.innerHTML = `
-          <strong>Label:</strong> ${asset.label}<br>
-          <strong>Name:</strong> ${asset.name || ''}<br>
-          <strong>RadioName:</strong> ${asset.radioName || ''}<br>
-          <strong>ISSI:</strong> ${asset.issi || ''}<br>
-          <strong>Comment:</strong> ${asset.comment || ''}<br>
-          <strong>Category:</strong> ${asset.category || ''}<br>
-          <strong>Last Modified:</strong> ${asset.lastModified || ''}<br>
-          <strong>Last Modified By:</strong> ${asset.lastModifiedBy || ''}
+          <strong>Label:</strong> ${escHtml(asset.label)}<br>
+          <strong>Name:</strong> ${escHtml(asset.name)}<br>
+          <strong>RadioName:</strong> ${escHtml(asset.radioName)}<br>
+          <strong>ISSI:</strong> ${escHtml(asset.issi)}<br>
+          <strong>Comment:</strong> ${escHtml(asset.comment)}<br>
+          <strong>Category:</strong> ${escHtml(asset.category)}<br>
+          <strong>Last Modified:</strong> ${escHtml(asset.lastModified)}<br>
+          <strong>Last Modified By:</strong> ${escHtml(asset.lastModifiedBy)}
         `;
         let top = e.pageY + 5, left = e.pageX + 5;
         tooltip.style.display = 'block';
@@ -1229,8 +1231,8 @@ function renderSteinSearchResults(searchToken, units, matchedAssets = []) {
         const box = document.createElement('div');
         box.className = 'asset-box';
         box.innerHTML = `
-          <div style="font-weight:bold;">${asset.buname}</div>
-          <div>${text}</div>
+          <div style="font-weight:bold;">${escHtml(asset.buname)}</div>
+          <div>${escHtml(text)}</div>
           <div>Tage seit Änderung: ${diffDays}</div>
         `;
         box.style.background = getBackground(asset.status, asset.operationReservation);
@@ -1251,8 +1253,8 @@ function renderSteinSearchResults(searchToken, units, matchedAssets = []) {
     const box = document.createElement('div');
     box.className = 'asset-box';
     box.innerHTML = `
-      <div style="font-weight:bold;">${unit.name}</div>
-      <div>${matches.join(', ')}</div>
+      <div style="font-weight:bold;">${escHtml(unit.name)}</div>
+      <div>${escHtml(matches.join(', '))}</div>
     `;
     box.style.background = getBackground('dummy', false);
     box.style.color = 'white';
