@@ -118,6 +118,7 @@ type base struct {
 	CSRF         string
 	UUID         string
 	Title        string
+	Nonce        string // CSP-Nonce fuer Inline-Scripts der Vorlage
 }
 
 // pageBase baut die gemeinsamen Teile: Kopf, Fussleiste, window.STAB.
@@ -130,6 +131,7 @@ func (p *Pages) pageBase(r *http.Request, ctx *access.Ctx, subtitle, pageName, e
 		StabScript:   p.app.StabScript(r, ctx, stabExtra),
 		MapCenter:    p.app.MapCenterScript(r),
 		CSRF:         auth.CSRFToken(p.app.Sess(r)),
+		Nonce:        httpx.Nonce(r),
 	}
 	if ctx != nil {
 		b.UUID = ctx.Einsatz.UUID
@@ -199,6 +201,7 @@ func (p *Pages) divera(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	d := base{}
+	d.Nonce = httpx.Nonce(r)
 	d.AppName = p.app.Cfg.Name
 	d.AssetVersion = p.app.Cfg.AssetVersion
 	d.PwaHead = p.app.PwaHead(r)

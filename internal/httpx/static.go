@@ -1,6 +1,9 @@
 package httpx
 
 import (
+	"context"
+	"crypto/rand"
+	"encoding/base64"
 	"io/fs"
 	"mime"
 	"net/http"
@@ -116,15 +119,21 @@ func SecurityHeadersWith(tileOrigin string) func(http.Handler) http.Handler {
 		}
 		connectSrc += " " + tileOrigin
 	}
-	csp := "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; " + imgSrc + "; font-src 'self' data:; " + connectSrc + "; worker-src 'self'; manifest-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'; object-src 'none'"
+	// script-src ohne 'unsafe-inline': jedes Inline-Script traegt den Nonce des
+	// Requests (httpx.Nonce), Event-Handler-Attribute (onclick=...) sind damit
+	// ausgeschlossen. style-src bleibt bei 'unsafe-inline' (viele style=-Attribute).
+	cspHead := "default-src 'self'; script-src 'self' 'nonce-"
+	cspTail := "'; style-src 'self' 'unsafe-inline'; " + imgSrc + "; font-src 'self' data:; " + connectSrc + "; worker-src 'self'; manifest-src 'self'; frame-ancestors 'self'; form-action 'self'; base-uri 'self'; object-src 'none'"
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			nonce := newNonce()
+			r = r.WithContext(context.WithValue(r.Context(), nonceKey{}, nonce))
 			h := w.Header()
 			h.Set("X-Frame-Options", "SAMEORIGIN")
 			h.Set("X-Content-Type-Options", "nosniff")
 			h.Set("Referrer-Policy", "strict-origin-when-cross-origin")
 			h.Set("Permissions-Policy", "geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()")
-			h.Set("Content-Security-Policy", csp)
+			h.Set("Content-Security-Policy", cspHead+nonce+cspTail)
 			if r.TLS != nil || strings.EqualFold(r.Header.Get("X-Forwarded-Proto"), "https") {
 				h.Set("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
 			}
@@ -133,4 +142,30 @@ func SecurityHeadersWith(tileOrigin string) func(http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 		})
 	}
+}
+
+type nonceKey struct{}
+
+// newNonce: 16 Zufallsbytes, base64url ohne Padding - der CSP-Nonce eines
+// Requests. Kein "+", "/" oder "=": html/template wuerde sie in Attributen
+// als Entities schreiben, und der Nonce soll in Header und Attribut gleich sein.
+func newNonce() string {
+	var b [16]byte
+	if _, err := rand.Read(b[:]); err != nil {
+		panic("csp nonce: " + err.Error())
+	}
+	return base64.RawURLEncoding.EncodeToString(b[:])
+}
+
+// Nonce liefert den CSP-Nonce des Requests (leer ausserhalb der Middleware).
+// Jedes Inline-Script muss ihn als nonce-Attribut tragen, sonst fuehrt der
+// Browser es nicht aus.
+func Nonce(r *http.Request) string {
+	n, _ := r.Context().Value(nonceKey{}).(string)
+	return n
+}
+
+// NonceAttr: ` nonce="..."` fuer handgebaute <script>-Tags.
+func NonceAttr(r *http.Request) string {
+	return ` nonce="` + E(Nonce(r)) + `"`
 }

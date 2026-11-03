@@ -214,6 +214,7 @@
     }
   }
   if ($suchBtn) $suchBtn.addEventListener('click', sucheAdresse);
+  document.querySelectorAll('form[data-nosubmit]').forEach(f => f.addEventListener('submit', e => e.preventDefault()));
   if ($such) $such.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sucheAdresse(); } });
 
   // Karten-Overlay: Punkt setzen / verschieben

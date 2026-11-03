@@ -111,7 +111,7 @@ func (p *Pages) logout(w http.ResponseWriter, r *http.Request) {
 	s := p.app.Sess(r)
 	if !auth.IsLoggedIn(s) || (r.Method == http.MethodPost && auth.CSRFCheck(s, r.FormValue("csrf"))) {
 		auth.Logout(s)
-		p.render(w, "logout.html", nil)
+		p.render(w, "logout.html", map[string]any{"Nonce": httpx.Nonce(r)})
 		return
 	}
 	p.render(w, "logout_confirm.html", map[string]any{"CSRF": auth.CSRFToken(s), "AssetVersion": p.app.Cfg.AssetVersion})

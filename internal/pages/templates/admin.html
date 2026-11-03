@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}">
 <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
 <link rel="stylesheet" href="/css/admin.css?v={{.AssetVersion}}">
+    <script src="/js/admin.js?v={{.AssetVersion}}" defer></script>
 {{if eq .Tab "einstellungen"}}<link rel="stylesheet" href="/css/leaflet.css"><script src="/js/leaflet.js"></script>{{end}}
 </head>
 <body>
@@ -101,7 +102,7 @@
               <input type="hidden" name="csrf" value="{{$csrf}}">
               <input type="hidden" name="action" value="set_username">
               <input type="hidden" name="uid" value="{{.ID}}">
-              <input type="text" name="username" value="{{.Username}}" style="font-weight:bold;width:150px;" onchange="this.form.submit()">
+              <input type="text" name="username" value="{{.Username}}" style="font-weight:bold;width:150px;" data-autosubmit>
             </form>
             {{if .MustChange}}<span class="badge tfa-off" title="Initialpasswort noch nicht geändert">PW-Wechsel offen</span>{{end}}
           </td>
@@ -110,7 +111,7 @@
               <input type="hidden" name="csrf" value="{{$csrf}}">
               <input type="hidden" name="action" value="set_display_name">
               <input type="hidden" name="uid" value="{{.ID}}">
-              <input type="text" name="display_name" value="{{.DisplayName}}" placeholder="Anzeigename" style="width:150px;" onchange="this.form.submit()">
+              <input type="text" name="display_name" value="{{.DisplayName}}" placeholder="Anzeigename" style="width:150px;" data-autosubmit>
             </form>
           </td>
           <td style="white-space:nowrap;">
@@ -120,9 +121,9 @@
               <input type="hidden" name="uid" value="{{.ID}}">
               {{$role := .Role}}
               {{if and .IsSelf $global}}
-              <select name="role" onchange="this.form.submit()" disabled title="Eigene Rolle kann nicht geändert werden">
+              <select name="role" data-autosubmit disabled title="Eigene Rolle kann nicht geändert werden">
               {{else}}
-              <select name="role" onchange="this.form.submit()">
+              <select name="role" data-autosubmit>
               {{end}}
                 {{range $roles}}
                   <option value="{{.Key}}" {{if eq $role .Key}}selected{{end}}>{{.Label}}</option>
@@ -139,7 +140,7 @@
               <input type="hidden" name="action" value="set_org">
               <input type="hidden" name="uid" value="{{.ID}}">
               {{$oid := .OrgID}}
-              <select name="org_id" onchange="this.form.submit()">
+              <select name="org_id" data-autosubmit>
                 <option value="" {{if eq $oid 0}}selected{{end}}>– keine –</option>
                 {{range $orgs}}<option value="{{.ID}}" {{if eq $oid .ID}}selected{{end}}>{{.Name}}</option>{{end}}
               </select>
@@ -154,7 +155,7 @@
               <input type="hidden" name="action" value="set_org_admin">
               <input type="hidden" name="uid" value="{{.ID}}">
               <input type="hidden" name="org_admin" value="{{if .OrgAdmin}}0{{else}}1{{end}}">
-              <label style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><input type="checkbox" {{if .OrgAdmin}}checked{{end}} onchange="this.form.submit()"> {{if .OrgAdmin}}<span class="badge tfa-on">Org-Admin</span>{{else}}<span style="font-size:12px;color:#666;">nein</span>{{end}}</label>
+              <label style="cursor:pointer;display:inline-flex;align-items:center;gap:4px;"><input type="checkbox" {{if .OrgAdmin}}checked{{end}} data-autosubmit> {{if .OrgAdmin}}<span class="badge tfa-on">Org-Admin</span>{{else}}<span style="font-size:12px;color:#666;">nein</span>{{end}}</label>
             </form>
             {{end}}
           </td>
@@ -165,7 +166,7 @@
               <input type="hidden" name="action" value="set_divera">
               <input type="hidden" name="uid" value="{{.ID}}">
               {{$dv := .Divera}}
-              <select name="divera" onchange="this.form.submit()">
+              <select name="divera" data-autosubmit>
                 {{range $divera}}<option value="{{.Key}}" {{if eq $dv .Key}}selected{{end}}>{{.Label}}</option>{{end}}
               </select>
             </form>
@@ -186,14 +187,14 @@
           </td>
           <td style="font-size:12px;color:#666;white-space:nowrap;">{{.CreatedAt}}</td>
           <td style="white-space:nowrap;">
-            <form method="post" class="inline" onsubmit="return confirm('Passwort zurücksetzen und neues Initialpasswort setzen?')">
+            <form method="post" class="inline" data-confirm="Passwort zurücksetzen und neues Initialpasswort setzen?">
               <input type="hidden" name="csrf" value="{{$csrf}}">
               <input type="hidden" name="action" value="reset_password">
               <input type="hidden" name="uid" value="{{.ID}}">
               <button type="submit">PW rücksetzen</button>
             </form>
             {{if .TwoFactor}}
-              <form method="post" class="inline" onsubmit="return confirm('2FA für diesen Nutzer deaktivieren?')">
+              <form method="post" class="inline" data-confirm="2FA für diesen Nutzer deaktivieren?">
                 <input type="hidden" name="csrf" value="{{$csrf}}">
                 <input type="hidden" name="action" value="disable_2fa">
                 <input type="hidden" name="uid" value="{{.ID}}">
@@ -201,7 +202,7 @@
               </form>
             {{end}}
             {{if not .IsSelf}}
-              <form method="post" class="inline" onsubmit="return confirm('Nutzer „{{.Username}}“ endgültig löschen?')">
+              <form method="post" class="inline" data-confirm="Nutzer „{{.Username}}“ endgültig löschen?">
                 <input type="hidden" name="csrf" value="{{$csrf}}">
                 <input type="hidden" name="action" value="delete_user">
                 <input type="hidden" name="uid" value="{{.ID}}">
@@ -251,11 +252,11 @@
         </div>
         <div class="stamm-actions">
           <button type="submit">Ausgewählte anlegen</button>
-          <button type="submit" class="secondary" onclick="document.getElementById('stamm-all').value='1'; return confirm('Alle fehlenden Einträge (Landesverband, Regionalstellen, Ortsverbände) als Organisationen anlegen?')">Alle anlegen</button>
+          <button type="submit" class="secondary" data-set="stamm-all=1" data-confirm="Alle fehlenden Einträge (Landesverband, Regionalstellen, Ortsverbände) als Organisationen anlegen?">Alle anlegen</button>
         </div>
       </form>
     </details>
-    <script>
+    <script nonce="{{.Nonce}}">
       document.querySelectorAll('.stamm-toggle').forEach(function (b) {
         b.addEventListener('click', function () {
           var boxes = document.querySelectorAll('.stamm-ovs[data-group="' + b.dataset.group + '"] input:not(:disabled)');
@@ -318,7 +319,7 @@
           <td>{{.Creds}} / 3</td>
           <td style="white-space:nowrap;">
             {{if and (eq .Users 0) (eq .Einsaetze 0)}}
-            <form method="post" class="inline" onsubmit="return confirm('Organisation „{{.Name}}“ löschen? Hinterlegte Zugänge werden mit gelöscht.')">
+            <form method="post" class="inline" data-confirm="Organisation „{{.Name}}“ löschen? Hinterlegte Zugänge werden mit gelöscht.">
               <input type="hidden" name="csrf" value="{{$csrf}}">
               <input type="hidden" name="action" value="delete_org">
               <input type="hidden" name="tab" value="orgs">
@@ -351,7 +352,7 @@
           <input type="text" id="tile_source" name="tile_source" value="{{.TileSource}}" placeholder="https://luk-lv.example/tiles/{z}/{x}/{y}.png?key=TOKEN">
           <div class="srv-actions">
             <button type="submit">Speichern</button>
-            <button type="submit" class="secondary" onclick="document.getElementById('tiles-action').value='test_tiles'">Testabruf</button>
+            <button type="submit" class="secondary" data-set="tiles-action=test_tiles">Testabruf</button>
             <span class="srv-muted">Testabruf holt eine Probekachel von der eingetragenen Quelle, ohne zu speichern.</span>
           </div>
           <div class="srv-status">Wirksame Quelle: <code>{{.TileEffective}}</code></div>
@@ -420,7 +421,7 @@
           </div>
           <div class="srv-actions">
             <button type="submit">Speichern</button>
-            <button type="submit" class="secondary" onclick="document.getElementById('mail-action').value='test_mail'">Testmail senden an</button>
+            <button type="submit" class="secondary" data-set="mail-action=test_mail">Testmail senden an</button>
             <input type="text" name="mail_test_to" value="{{.MailTestTo}}" placeholder="empfaenger@example.org" class="srv-inline">
             <span class="srv-muted">Die Testmail nutzt die Eingaben oben, ohne zu speichern. Das Passwort wird verschlüsselt abgelegt und nie angezeigt.</span>
           </div>
@@ -472,7 +473,7 @@
         </section>
       </div>
     </form>
-    <script>
+    <script nonce="{{.Nonce}}">
     (function () {
       var el = document.getElementById('map-preview');
       if (!el || typeof L === 'undefined') return;
@@ -524,7 +525,7 @@
       </div>
       <div class="srv-actions" style="margin-top:12px;">
         <button type="submit">Speichern</button>
-        <button type="submit" class="secondary" onclick="document.getElementById('feeds-action').value='reset_feeds'">Alle auf Standard zurücksetzen</button>
+        <button type="submit" class="secondary" data-set="feeds-action=reset_feeds">Alle auf Standard zurücksetzen</button>
       </div>
     </form>
     {{end}}
@@ -572,7 +573,7 @@
               <input type="hidden" name="kind" value="{{.Kind}}">
               <button type="submit" class="secondary" title="Einmal live gegen den Dienst prüfen">Verbindung prüfen</button>
             </form>
-            <form method="post" class="inline" onsubmit="return confirm('{{.Label}} entfernen? Die Funktion steht der Organisation dann nicht mehr zur Verfügung.')">
+            <form method="post" class="inline" data-confirm="{{.Label}} entfernen? Die Funktion steht der Organisation dann nicht mehr zur Verfügung.">
               <input type="hidden" name="csrf" value="{{$csrf}}">
               <input type="hidden" name="action" value="delete_credential">
               <input type="hidden" name="tab" value="zugaenge">
@@ -659,7 +660,7 @@
           <td><span class="pw">{{.Hint}}</span></td>
           <td style="font-size:12px;color:#666;white-space:nowrap;">{{.SetAt}}{{if .SetByLabel}} von {{.SetByLabel}}{{end}}</td>
           <td>
-            <form method="post" class="inline" onsubmit="return confirm('Webhook-Secret „{{.Label}}“ entfernen?')">
+            <form method="post" class="inline" data-confirm="Webhook-Secret „{{.Label}}“ entfernen?">
               <input type="hidden" name="csrf" value="{{$csrf}}">
               <input type="hidden" name="action" value="delete_webhook_secret">
               <input type="hidden" name="tab" value="zugaenge">

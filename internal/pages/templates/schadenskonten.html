@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/css/pagelayout.css?v={{.AssetVersion}}" />
     <link rel="stylesheet" href="/css/schadenskonten.css?v={{.AssetVersion}}" />
     {{.StabScript}}
-    <script>
+    <script nonce="{{.Nonce}}">
       // Katalog-Pfade der taktischen Zeichen + Fokus-Konto aus der URL.
       window.SK_CONFIG = {{.Config}};
     </script>

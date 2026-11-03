@@ -26,7 +26,7 @@
           {{if .Neu}}
             <div class="ez-status ez-status-ok">Einsatz angelegt. Lege jetzt die Mitglieder des Stabes und ihre Rollen fest.</div>
           {{end}}
-          <form id="vw-meta-form" onsubmit="return false;">
+          <form id="vw-meta-form" data-nosubmit>
             <label>Titel
               <input type="text" id="vw-title" maxlength="200" autocomplete="off" />
             </label>
@@ -73,7 +73,7 @@
 
         <section class="luk-box vw-box">
           <h2>Kräftekatalog</h2>
-          <form id="vw-katalog-form" onsubmit="return false;">
+          <form id="vw-katalog-form" data-nosubmit>
             <label>Eigener Bereich
               <select id="vw-bereich"></select>
             </label>

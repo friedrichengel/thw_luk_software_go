@@ -9,7 +9,7 @@
 <script src="/js/taktische_zeit.js?v={{.AssetVersion}}"></script>
 <link rel="stylesheet" href="/css/admin.css?v={{.AssetVersion}}">
 <link rel="stylesheet" href="/css/admin_update.css?v={{.AssetVersion}}">
-<script>window.LUK_UPDATE = {{.Config}};</script>
+<script nonce="{{.Nonce}}">window.LUK_UPDATE = {{.Config}};</script>
 </head>
 <body>
   {{.Header}}

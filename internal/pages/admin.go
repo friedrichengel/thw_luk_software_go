@@ -1043,6 +1043,7 @@ func (p *Pages) adminUpdate(w http.ResponseWriter, r *http.Request) {
 	d.Header = p.app.Header(nil, "System-Update")
 	d.Footer = p.app.Footer(r, nil, "System-Update", "")
 	d.CSRF = csrf
+	d.Nonce = httpx.Nonce(r)
 	p.render(w, "admin_update.html", d)
 }
 

@@ -695,9 +695,9 @@
     const size = p.baseSize || 40;
     const rot = p.rotation || 0;
     const li = resolveLinked(row);
-    let html = '<img src="' + symbolUrl(p.file) + '"'
+    let html = '<img class="lk-sym-img" src="' + symbolUrl(p.file) + '"'
       + ' style="width:' + size + 'px;height:' + size + 'px;transform:rotate(' + rot + 'deg);transform-origin:50% 50%;user-select:none;-webkit-user-drag:none;"'
-      + ' onerror="this.style.border=\'2px dashed red\';this.alt=\'Bild fehlt\';" alt="" />';
+      + ' alt="" />';
     if (li) {
       html += '<span class="lk-link-badge' + (li.orphan ? ' lk-link-badge-orphan' : '') + '" title="'
         + (li.orphan ? 'Verknüpfte Einheit existiert nicht mehr' : 'Verknüpft mit ' + esc(li.label)) + '">' + (li.orphan ? '!' : '🔗') + '</span>';
@@ -2241,3 +2241,13 @@
     }
   });
 })();
+
+// Fehlende Symbolbilder markieren (Ersatz fuer ein onerror-Attribut, das die
+// CSP ohne 'unsafe-inline' nicht zulaesst). Fehler-Ereignisse blubbern nicht,
+// deshalb in der Capture-Phase.
+document.addEventListener('error', function (e) {
+  const img = e.target;
+  if (!img || !img.classList || !img.classList.contains('lk-sym-img')) return;
+  img.style.border = '2px dashed red';
+  img.alt = 'Bild fehlt';
+}, true);

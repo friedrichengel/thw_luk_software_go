@@ -803,7 +803,7 @@ function getOperationPopupContent(operation) {
       <strong>Sonderrechte:</strong> ${operation.priority ? "Ja" : "Nein"}<br>
       <strong>Fahrzeug:</strong> ${
         (vehicleId && !Number.isNaN(vehicleIdNum))
-          ? `<a href="#" onclick="jumpToVehicle(${vehicleIdNum}); return false;">${_esc(vehicleName)}</a>`
+          ? `<a href="#" data-jump-vehicle="${vehicleIdNum}">${_esc(vehicleName)}</a>`
           : "n/a"
       }<br>
       <strong>Titel:</strong> ${_esc(operation.title)}<br>
@@ -910,3 +910,12 @@ async function printOperationList() {
   if (mapBtn) mapBtn.addEventListener("click", printMap);
   if (opsBtn) opsBtn.addEventListener("click", printOperationList);
 })();
+
+// Fahrzeug-Links in Einsatz-Popups (data-jump-vehicle) ohne Inline-Handler.
+document.addEventListener('click', function (e) {
+  const a = e.target.closest('a[data-jump-vehicle]');
+  if (!a) return;
+  e.preventDefault();
+  const id = Number(a.dataset.jumpVehicle);
+  if (!Number.isNaN(id)) jumpToVehicle(id);
+});

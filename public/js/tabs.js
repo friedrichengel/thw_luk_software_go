@@ -19,3 +19,17 @@ function switchTab(button, contentId) {
       }, 200);
     }
   }
+
+// Tab-Schaltflaechen und externe Links ohne Inline-Handler (CSP ohne
+// 'unsafe-inline'): data-tab="content-id" bzw. data-href="https://...".
+document.addEventListener('click', function (e) {
+  const tab = e.target.closest('.tab-btn[data-tab]');
+  if (tab) { switchTab(tab, tab.dataset.tab); return; }
+  const link = e.target.closest('[data-href]');
+  if (link && /^https?:\/\//i.test(link.dataset.href)) window.open(link.dataset.href, '_blank', 'noopener');
+});
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const link = e.target.closest ? e.target.closest('[data-href]') : null;
+  if (link && /^https?:\/\//i.test(link.dataset.href)) { e.preventDefault(); window.open(link.dataset.href, '_blank', 'noopener'); }
+});

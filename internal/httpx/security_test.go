@@ -75,3 +75,33 @@ func TestSafeRedirect(t *testing.T) {
 		}
 	}
 }
+
+// script-src traegt je Request einen frischen Nonce und kein 'unsafe-inline';
+// der Nonce des Requests steht ueber Nonce(r) fuer die Vorlagen bereit.
+func TestSecurityHeadersScriptNonce(t *testing.T) {
+	var seen []string
+	for i := 0; i < 2; i++ {
+		got := ""
+		h := SecurityHeadersWith("")(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			got = Nonce(r)
+			w.WriteHeader(204)
+		}))
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/", nil))
+		csp := rec.Header().Get("Content-Security-Policy")
+		script := directive(csp, "script-src")
+		if got == "" || script != "script-src 'self' 'nonce-"+got+"'" {
+			t.Fatalf("script-src = %q, Nonce(r) = %q", script, got)
+		}
+		if strings.Contains(script, "unsafe-inline") {
+			t.Fatalf("script-src mit unsafe-inline: %s", script)
+		}
+		seen = append(seen, got)
+	}
+	if seen[0] == seen[1] {
+		t.Fatal("Nonce nicht je Request neu")
+	}
+	if Nonce(httptest.NewRequest(http.MethodGet, "/", nil)) != "" {
+		t.Fatal("Nonce ohne Middleware muss leer sein")
+	}
+}

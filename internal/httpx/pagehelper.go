@@ -202,7 +202,7 @@ func (a *App) PwaHead(r *http.Request) template.HTML {
 	b.WriteString(`<link rel="stylesheet" href="/css/tablet.css?v=` + v + `">` + "\n")
 	b.WriteString(`<link rel="stylesheet" href="/css/luk.css?v=` + v + `">` + "\n")
 	b.WriteString(`<script src="/js/pwa.js?v=` + v + `" defer></script>` + "\n")
-	b.WriteString(`<script>window.LUK_CHANGELOG = ` + string(JS(cl)) + ";</script>\n")
+	b.WriteString(`<script` + NonceAttr(r) + `>window.LUK_CHANGELOG = ` + string(JS(cl)) + ";</script>\n")
 	b.WriteString(`<script src="/js/changelog.js?v=` + v + `" defer></script>` + "\n")
 	b.WriteString(`<script src="/js/footer_menu.js?v=` + v + `" defer></script>` + "\n")
 	return template.HTML(b.String())
@@ -228,7 +228,7 @@ func (a *App) MapCenterScript(r *http.Request) template.HTML {
 		// Kachel-URL der Karten (TILE_URL): zentraler Kachel-Cache
 		"tile_url": a.Cfg.TileURL,
 	}
-	return template.HTML("<script>window.CURRENT_OV = " + string(JS(payload)) + ";\nwindow.LUK_FEEDS = " + string(JS(a.RSSFeeds(orgID))) + ";</script>\n")
+	return template.HTML("<script" + NonceAttr(r) + ">window.CURRENT_OV = " + string(JS(payload)) + ";\nwindow.LUK_FEEDS = " + string(JS(a.RSSFeeds(orgID))) + ";</script>\n")
 }
 
 // StabScript: window.STAB mit Rollenmatrix, Statuswerten, Einsatz-Kontext,
@@ -271,7 +271,7 @@ func (a *App) StabScript(r *http.Request, ctx *access.Ctx, extra map[string]any)
 	for k, v := range extra {
 		cfg[k] = v
 	}
-	return template.HTML("<script>window.STAB = " + string(JS(cfg)) + ";</script>\n")
+	return template.HTML("<script" + NonceAttr(r) + ">window.STAB = " + string(JS(cfg)) + ";</script>\n")
 }
 
 // Header: Standard-Kopf (taktische Zeit, Titel, Logo).
